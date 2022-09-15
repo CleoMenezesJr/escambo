@@ -225,7 +225,7 @@ Emoji | Description
 :tada: `:tada:` | When you added a cool new feature.
 :wrench: `:wrench:` | When you added a piece of code.
 :recycle: `:recycle:` | When you refactored a part of the code.
-:sparkles: `:sparkles:` | When you applied clang-format.
+:sparkles: `:sparkles:` | When you applied code-format.
 :globe_with_meridians: `:globe_with_meridians:` | When you worked on translations.
 :art: `:art:` | When you improved / added assets like themes.
 :lipstick: `:lipstick:` | When you worked on the UI of the preferences dialog.
