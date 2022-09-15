@@ -37,12 +37,9 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.btn_send_request.connect("clicked", self.on_send, self.entry_url)
-        # print(dir(self.entry_method))
-        # print(self.entry_method.get_selected())
-        # print(eita())
+        self.btn_send_request.connect("clicked", self.on_send)
 
-    def on_send(self, _, entry):
+    def on_send(self, _):
         regex = re.compile(
             r"^(?:http|ftp)s?://"
             r"(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|"
@@ -52,12 +49,21 @@ class GetoverhereWindow(Adw.ApplicationWindow):
             r"(?:/?|[/?]\S+)$",
             re.IGNORECASE,
         )
-        if not entry.get_text():
-            self.toast_overlay.add_toast(Adw.Toast.new(('Enter a URL')))
+        url = self.entry_url.get_text()
+        method = self.entry_method.get_selected()
+
+        if not url:
+            self.toast_overlay.add_toast(Adw.Toast.new(("Enter a URL")))
         else:
-            if re.match(regex, entry.get_text()) is not None:
-                print(ResolveRequests(entry.get_text())._resolve_get())
+            if re.match(regex, url) is None:
+                self.toast_overlay.add_toast(
+                    Adw.Toast.new((
+                        "URL using bad/illegal format or missing URL"
+                    ))
+                )
             else:
-                self.toast_overlay.add_toast(Adw.Toast.new(('URL using bad/illegal format or missing URL')))
-        # print(entry.get_selected())
-        # print(entry.get_text())
+                self.which_method(method, url)
+
+    def which_method(self, selected, url):
+        if selected == 0:
+            print(ResolveRequests(url)._resolve_get())
