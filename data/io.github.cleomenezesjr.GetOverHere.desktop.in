@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=getoverhere
+Exec=getoverhere
+Icon=io.github.cleomenezesjr.GetOverHere
+Terminal=false
+Type=Application
+Categories=GTK;
+StartupNotify=true

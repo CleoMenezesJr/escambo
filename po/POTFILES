@@ -1,0 +1,6 @@
+data/io.github.cleomenezesjr.GetOverHere.desktop.in
+data/io.github.cleomenezesjr.GetOverHere.appdata.xml.in
+data/io.github.cleomenezesjr.GetOverHere.gschema.xml
+src/main.py
+src/window.py
+src/window.ui
