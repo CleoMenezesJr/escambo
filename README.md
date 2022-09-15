@@ -11,7 +11,7 @@
 <!-- <a href="scripts/cloc.sh"><img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/Schneegans/8cf45f23253ff09b21196e7271378762/raw/comments.json" /></a> -->
 <!-- </p> -->
 
-Get Over Here is an application is an HTTP-based APIs test application made in GTK4/libadwaita
+Get Over Here is a HTTP-based APIs test application made in GTK4/Libadwaita
 
 <!-- Effect | Preview -->
 <!-- -----|-------- -->
