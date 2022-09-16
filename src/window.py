@@ -22,7 +22,7 @@ import re
 from gi.repository import Adw
 from gi.repository import Gtk
 
-from .restapi import ResolveRequests
+from getoverhere.restapi import ResolveRequests
 
 
 @Gtk.Template(resource_path="/io/github/cleomenezesjr/GetOverHere/window.ui")
@@ -33,6 +33,9 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     btn_send_request = Gtk.Template.Child()
     entry_method = Gtk.Template.Child()
     toast_overlay = Gtk.Template.Child()
+    leaflet = Gtk.Template.Child()
+    details_page = Gtk.Template.Child()
+    src_text = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -66,4 +69,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
 
     def __which_method(self, selected, url):
         if selected == 0:
-            print(ResolveRequests(url).resolve_get())
+            buffer = self.src_text.get_buffer()
+            buffer.set_text(ResolveRequests(url).resolve_get())
+            self.leaflet.set_visible_child(self.details_page)
