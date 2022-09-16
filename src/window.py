@@ -37,9 +37,9 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.btn_send_request.connect("clicked", self.on_send)
+        self.btn_send_request.connect("clicked", self.__on_send)
 
-    def on_send(self, _):
+    def __on_send(self, *_args):
         regex = re.compile(
             r"^(?:http|ftp)s?://"
             r"(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|"
@@ -62,8 +62,8 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     ))
                 )
             else:
-                self.which_method(method, url)
+                self.__which_method(method, url)
 
-    def which_method(self, selected, url):
+    def __which_method(self, selected, url):
         if selected == 0:
-            print(ResolveRequests(url)._resolve_get())
+            print(ResolveRequests(url).resolve_get())
