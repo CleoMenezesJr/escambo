@@ -1,4 +1,5 @@
 import requests
+import json
 
 
 class ResolveRequests:
@@ -7,4 +8,6 @@ class ResolveRequests:
         self.url = url
 
     def resolve_get(self):
-        return requests.get(self.url).text
+        data = requests.get(self.url).json()
+        format_data = json.dumps(data, indent=4)
+        return format_data
