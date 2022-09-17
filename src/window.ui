@@ -9,213 +9,211 @@
       <class name="devel"/>
     </style>
     <child>
-      <object class="GtkBox">
-        <property name="orientation">vertical</property>
+      <object class="AdwLeaflet" id="leaflet">
+        <property name="can-unfold">false</property>
         <child>
-          <object class="AdwHeaderBar" id="header_color">
-            <property name="centering-policy">strict</property>
-            <property name="title-widget">
-              <object class="AdwViewSwitcherTitle" id="switcher_title">
-                <property name="stack">stack</property>
-                <property name="title" bind-source="GetoverhereWindow" bind-property="title" bind-flags="sync-create"/>
-              </object>
-            </property>
-            <child type="end">
-              <object class="GtkMenuButton">
-                <property name="icon-name">open-menu-symbolic</property>
-                <property name="menu-model">primary_menu</property>
+          <!-- Leaflet page 1 -->
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="AdwHeaderBar" id="header_color">
+                <property name="centering-policy">strict</property>
+                <property name="title-widget">
+                  <object class="AdwViewSwitcherTitle" id="switcher_title">
+                    <property name="stack">stack</property>
+                    <property name="title" bind-source="GetoverhereWindow" bind-property="title" bind-flags="sync-create"/>
+                  </object>
+                </property>
+                <child type="end">
+                  <object class="GtkMenuButton">
+                    <property name="icon-name">open-menu-symbolic</property>
+                    <property name="menu-model">primary_menu</property>
+                  </object>
+                </child>
               </object>
             </child>
-          </object>
-        </child>
-        <child>
-          <object class="AdwViewStack" id="stack">
-            <property name="vexpand">True</property>
-            <!-- Endpoint start -->
             <child>
-              <object class="AdwViewStackPage">
-                <property name="name">endpoint</property>
-                <property name="title" translatable="yes">_Endpoint</property>
-                <property name="icon-name">network-transmit-receive-symbolic</property>
-                <property name="use-underline">True</property>
-                <property name="child">
-                  <object class="AdwLeaflet" id="leaflet">
-                    <property name="can-unfold">false</property>
-                    <child>
-                      <!-- Leaflet page 1 -->
-                      <object class="GtkBox">
+              <object class="AdwViewStack" id="stack">
+                <property name="vexpand">True</property>
+                <!-- Endpoint start -->
+                <child>
+                  <object class="AdwViewStackPage">
+                    <property name="name">endpoint</property>
+                    <property name="title" translatable="yes">_Endpoint</property>
+                    <property name="icon-name">network-transmit-receive-symbolic</property>
+                    <property name="use-underline">True</property>
+                    <property name="child">
+                      <object class="AdwToastOverlay" id="toast_overlay">
                         <child>
-                          <object class="AdwToastOverlay" id="toast_overlay"><child>
-                              <object class="AdwClamp">
-                                <property name="tightening-threshold">100</property>
-                                <property name="child">
-                                  <object class="GtkBox">
-                                    <property name="orientation">vertical</property>
-                                    <property name="spacing">20</property>
-                                    <!-- <property name="halign">center</property> -->
-                                    <property name="valign">center</property>
+                          <object class="AdwClamp">
+                            <property name="tightening-threshold">100</property>
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">20</property>
+                                <!-- <property name="halign">center</property> -->
+                                <property name="valign">center</property>
+                                <child>
+                                  <object class="AdwPreferencesGroup">
+                                    <property name="title" translatable="yes">Parameters</property>
                                     <child>
-                                      <object class="AdwPreferencesGroup">
-                                        <property name="title" translatable="yes">Parameters</property>
-                                        <child>
-                                          <object class="AdwComboRow" id="entry_method">
-                                            <property name="subtitle" translatable="yes">Lorem ipsum dolor sit amet, officia excepteur ex fugiat</property>
-                                            <property name="title" translatable="yes">Method</property>
-                                            <property name="model">
-                                              <object class="GtkStringList">
-                                                <items>
-                                                  <item>GET</item>
-                                                  <item>POST</item>
-                                                  <item>PUT</item>
-                                                  <item>PATCH</item>
-                                                  <item>DELETE</item>
-                                                  <item>OPTIONS</item>
-                                                  <item>HEAD</item>
-                                                </items>
-                                              </object>
-                                            </property>
+                                      <object class="AdwComboRow" id="entry_method">
+                                        <property name="subtitle" translatable="yes">Lorem ipsum dolor sit amet, officia excepteur ex fugiat</property>
+                                        <property name="title" translatable="yes">Method</property>
+                                        <property name="model">
+                                          <object class="GtkStringList">
+                                            <items>
+                                              <item>GET</item>
+                                              <item>POST</item>
+                                              <item>PUT</item>
+                                              <item>PATCH</item>
+                                              <item>DELETE</item>
+                                              <item>OPTIONS</item>
+                                              <item>HEAD</item>
+                                            </items>
                                           </object>
-                                        </child>
-                                        <child>
-                                          <object class="AdwEntryRow" id="entry_url">
-                                            <property name="title" translatable="yes">URL</property>
-                                            <property name="use_underline">True</property>
-                                          </object>
-                                        </child>
+                                        </property>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="AdwPreferencesGroup">
-                                        <property name="title" translatable="yes">Body</property>
-                                        <child>
-                                          <object class="AdwComboRow" id="transition_row">
-                                            <property name="subtitle" translatable="yes"></property>
-                                            <property name="title" translatable="yes">Type</property>
-                                            <property name="selected" bind-source="GetoverhereWindow" bind-property="transition-type" bind-flags="bidirectional|sync-create"/>
-                                            <property name="model">
-                                              <object class="GtkStringList">
-                                                <items>
-                                                  <item>Text</item>
-                                                  <item>JSON</item>
-                                                  <item>XML</item>
-                                                </items>
-                                              </object>
-                                            </property>
-                                          </object>
-                                        </child>
-                                        <child>
-                                          <object class="AdwActionRow">
-                                            <property name="title" translatable="yes">Go to edit structure</property>
-                                            <property name="use_underline">True</property>
-                                            <property name="activatable">True</property>
-                                            <!-- <signal name="activated" handler="next_row_activated_cb" swapped="yes"/> -->
-                                            <child>
-                                              <object class="GtkImage">
-                                                <property name="icon_name">go-next-symbolic</property>
-                                              </object>
-                                            </child>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton" id="btn_send_request">
-                                        <property name="halign">center</property>
-                                        <property name="label" translatable="yes">Send Resquest</property>
-                                        <!-- <property name="action-name">some.run</property> -->
-                                        <property name="tooltip-text">Send REST</property>
-                                        <style>
-                                          <class name="pill"/>
-                                          <class name="suggested-action"/>
-                                        </style>
+                                      <object class="AdwEntryRow" id="entry_url">
+                                        <property name="title" translatable="yes">URL</property>
+                                        <property name="use_underline">True</property>
                                       </object>
                                     </child>
                                   </object>
-                                </property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <!-- Leaflet page 2 -->
-                      <object class="GtkBox" id="details_page">
-                        <property name="orientation">vertical</property>
-                        <child>
-                          <object class="GtkScrolledWindow" id="src_scroller">
-                            <property name="vexpand">true</property>
-                            <property name="child">
-                              <object class="GtkTextView" id="src_text">
-                                <property name="wrap-mode">word-char</property>
-                                <property name="left-margin">9</property>
-                                <property name="right-margin">9</property>
-                                <property name="top-margin">9</property>
-                                <property name="bottom-margin">9</property>
+                                </child>
                                 <child>
-                                  <object class="GtkEventControllerKey" id="src_key_ctrlr"></object>
+                                  <object class="AdwPreferencesGroup">
+                                    <property name="title" translatable="yes">Body</property>
+                                    <child>
+                                      <object class="AdwComboRow" id="transition_row">
+                                        <property name="subtitle" translatable="yes"></property>
+                                        <property name="title" translatable="yes">Type</property>
+                                        <property name="selected" bind-source="GetoverhereWindow" bind-property="transition-type" bind-flags="bidirectional|sync-create"/>
+                                        <property name="model">
+                                          <object class="GtkStringList">
+                                            <items>
+                                              <item>Text</item>
+                                              <item>JSON</item>
+                                              <item>XML</item>
+                                            </items>
+                                          </object>
+                                        </property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwActionRow">
+                                        <property name="title" translatable="yes">Go to edit structure</property>
+                                        <property name="use_underline">True</property>
+                                        <property name="activatable">True</property>
+                                        <!-- <signal name="activated" handler="next_row_activated_cb" swapped="yes"/> -->
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="icon_name">go-next-symbolic</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="btn_send_request">
+                                    <property name="halign">center</property>
+                                    <property name="label" translatable="yes">Send Resquest</property>
+                                    <!-- <property name="action-name">some.run</property> -->
+                                    <property name="tooltip-text">Send REST</property>
+                                    <style>
+                                      <class name="pill"/>
+                                      <class name="suggested-action"/>
+                                    </style>
+                                  </object>
                                 </child>
                               </object>
                             </property>
                           </object>
                         </child>
                       </object>
+                    </property>
+                  </object>
+                </child>
+                <!-- Endpoint end -->
+                <!-- Cookies start -->
+                <child>
+                  <object class="AdwViewStackPage">
+                    <property name="name">cookies</property>
+                    <property name="title" translatable="yes">_Cookies</property>
+                    <property name="icon-name">auth-fingerprint-symbolic</property>
+                    <property name="use-underline">True</property>
+                    <property name="child">
+                      <object class="GtkBox" id="spreadsheets_page">
+                        <property name="homogeneous">True</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwViewStackPage">
+                    <property name="name">headers</property>
+                    <property name="title" translatable="yes">_Headers</property>
+                    <property name="icon-name">user-info-symbolic</property>
+                    <property name="use-underline">True</property>
+                    <property name="child">
+                      <object class="GtkBox" id="presentation_page">
+                        <property name="homogeneous">True</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <!-- <child> -->
+                <!--   <object class="AdwViewStackPage"> -->
+                <!--     <property name="name">forms</property> -->
+                <!--     <property name="title" translatable="yes">_Forms</property> -->
+                <!--     <property name="icon-name">emblem-documents-symbolic</property> -->
+                <!--     <property name="use-underline">True</property> -->
+                <!--     <property name="child"> -->
+                <!--       <object class="GtkBox" id="forms_page"> -->
+                <!--         <property name="homogeneous">True</property> -->
+                <!--       </object> -->
+                <!--     </property> -->
+                <!--   </object> -->
+                <!-- </child> -->
+              </object>
+            </child>
+            <child>
+              <object class="AdwViewSwitcherBar" id="switcher_bar">
+                <property name="stack">stack</property>
+                <property name="reveal" bind-source="switcher_title" bind-property="title-visible" bind-flags="sync-create"/>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <!-- Leaflet page 2 -->
+          <object class="GtkBox" id="details_page">
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkScrolledWindow" id="src_scroller">
+                <property name="vexpand">true</property>
+                <property name="child">
+                  <object class="GtkTextView" id="src_text">
+                    <property name="wrap-mode">word-char</property>
+                    <property name="left-margin">9</property>
+                    <property name="right-margin">9</property>
+                    <property name="top-margin">9</property>
+                    <property name="bottom-margin">9</property>
+                    <child>
+                      <object class="GtkEventControllerKey" id="src_key_ctrlr"></object>
                     </child>
                   </object>
                 </property>
               </object>
             </child>
-            <!-- Endpoint end -->
-            <!-- Cookies start -->
-            <child>
-              <object class="AdwViewStackPage">
-                <property name="name">cookies</property>
-                <property name="title" translatable="yes">_Cookies</property>
-                <property name="icon-name">auth-fingerprint-symbolic</property>
-                <property name="use-underline">True</property>
-                <property name="child">
-                  <object class="GtkBox" id="spreadsheets_page">
-                    <property name="homogeneous">True</property>
-                  </object>
-                </property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwViewStackPage">
-                <property name="name">headers</property>
-                <property name="title" translatable="yes">_Headers</property>
-                <property name="icon-name">user-info-symbolic</property>
-                <property name="use-underline">True</property>
-                <property name="child">
-                  <object class="GtkBox" id="presentation_page">
-                    <property name="homogeneous">True</property>
-                  </object>
-                </property>
-              </object>
-            </child>
-            <!-- <child> -->
-            <!--   <object class="AdwViewStackPage"> -->
-            <!--     <property name="name">forms</property> -->
-            <!--     <property name="title" translatable="yes">_Forms</property> -->
-            <!--     <property name="icon-name">emblem-documents-symbolic</property> -->
-            <!--     <property name="use-underline">True</property> -->
-            <!--     <property name="child"> -->
-            <!--       <object class="GtkBox" id="forms_page"> -->
-            <!--         <property name="homogeneous">True</property> -->
-            <!--       </object> -->
-            <!--     </property> -->
-            <!--   </object> -->
-            <!-- </child> -->
-          </object>
-        </child>
-        <child>
-          <object class="AdwViewSwitcherBar" id="switcher_bar">
-            <property name="stack">stack</property>
-            <property name="reveal" bind-source="switcher_title" bind-property="title-visible" bind-flags="sync-create"/>
           </object>
         </child>
       </object>
     </child>
+
   </template>
   <menu id="primary_menu">
     <section>
