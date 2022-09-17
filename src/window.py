@@ -36,11 +36,13 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     leaflet = Gtk.Template.Child()
     details_page = Gtk.Template.Child()
     src_text = Gtk.Template.Child()
+    btn_go_back = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         self.btn_send_request.connect("clicked", self.__on_send)
+        self.btn_go_back.connect("clicked", self.__go_back)
 
     def __on_send(self, *_args):
         regex = re.compile(
@@ -72,3 +74,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
             buffer = self.src_text.get_buffer()
             buffer.set_text(ResolveRequests(url).resolve_get())
             self.leaflet.set_visible_child(self.details_page)
+
+    def __go_back(self, *_args):
+        self.leaflet.navigate(Adw.NavigationDirection.BACK)
