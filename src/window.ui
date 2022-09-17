@@ -193,6 +193,21 @@
           <object class="GtkBox" id="details_page">
             <property name="orientation">vertical</property>
             <child>
+              <object class="AdwHeaderBar">
+                <property name="title-widget">
+                  <object class="GtkBox"/>
+                </property>
+                <child type="start">
+                  <object class="GtkButton" id="btn_go_back">
+                    <property name="valign">center</property>
+                    <property name="tooltip-text" translatable="yes">Back</property>
+                    <property name="icon-name">go-previous-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
               <object class="GtkScrolledWindow" id="src_scroller">
                 <property name="vexpand">true</property>
                 <property name="child">
