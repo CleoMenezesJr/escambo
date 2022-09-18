@@ -34,7 +34,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     entry_method = Gtk.Template.Child()
     toast_overlay = Gtk.Template.Child()
     leaflet = Gtk.Template.Child()
-    details_page = Gtk.Template.Child()
+    response_page = Gtk.Template.Child()
     src_text = Gtk.Template.Child()
     btn_go_back = Gtk.Template.Child()
 
@@ -73,7 +73,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         if selected == 0:
             buffer = self.src_text.get_buffer()
             buffer.set_text(ResolveRequests(url).resolve_get())
-            self.leaflet.set_visible_child(self.details_page)
+            self.leaflet.set_visible_child(self.response_page)
 
     def __go_back(self, *_args):
         self.leaflet.navigate(Adw.NavigationDirection.BACK)
