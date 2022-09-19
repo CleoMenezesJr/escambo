@@ -23,6 +23,7 @@ from gi.repository import Adw
 from gi.repository import Gtk
 
 from getoverhere.restapi import ResolveRequests
+from requests import Session
 
 
 @Gtk.Template(resource_path="/io/github/cleomenezesjr/GetOverHere/window.ui")
@@ -35,14 +36,30 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     toast_overlay = Gtk.Template.Child()
     leaflet = Gtk.Template.Child()
     response_page = Gtk.Template.Child()
-    src_text = Gtk.Template.Child()
+    raw_page = Gtk.Template.Child()
+    response_text = Gtk.Template.Child()
+    raw_text = Gtk.Template.Child()
     btn_go_back = Gtk.Template.Child()
+    btn_raw_go_back = Gtk.Template.Child()
+    form_data_toggle_button = Gtk.Template.Child()
+    raw_toggle_button = Gtk.Template.Child()
+    btn_edit_param = Gtk.Template.Child()
+    home = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+        with Session() as session:
+            self.session = session
         self.btn_send_request.connect("clicked", self.__on_send)
         self.btn_go_back.connect("clicked", self.__go_back)
+        self.btn_raw_go_back.connect("clicked", self.__go_back, True)
+        self.btn_edit_param.connect("activated", self.__on_edit_param)
+        # print(dir(self.btn_edit_param.connect()))
+        # self.raw_toggle_button.connect("clicked", self.__go_back)
+        # print(dir(self.query_type))
+        # print(self.query_type.get_focusable())
+        # self.response_page.connect("insert-text", self.eita)
 
     def __on_send(self, *_args):
         regex = re.compile(
@@ -70,10 +87,32 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 self.__which_method(method, url)
 
     def __which_method(self, selected, url):
-        if selected == 0:
-            buffer = self.src_text.get_buffer()
-            buffer.set_text(ResolveRequests(url).resolve_get())
-            self.leaflet.set_visible_child(self.response_page)
+        match selected:
+            case 0:
+                buffer = self.response_text.get_buffer()
+                buffer.set_text(
+                    ResolveRequests(url, self.session).resolve_get()
+                )
+                self.leaflet.set_visible_child(self.response_page)
+            case 1:
+                payload = self.post_parameters
+                buffer = self.response_text.get_buffer()
+                response = ResolveRequests(
+                    url,
+                    self.session,
+                    payload,
+                ).resolve_post()
+                buffer.set_text(response)
+                self.leaflet.set_visible_child(self.response_page)
+
+    def __on_edit_param(self, *_args):
+        self.leaflet.set_visible_child(self.raw_page)
 
     def __go_back(self, *_args):
-        self.leaflet.navigate(Adw.NavigationDirection.BACK)
+        if any(x for x in _args if x is True):
+            buffer = self.raw_text.get_buffer()
+            start_iter = buffer.get_start_iter()
+            end_iter = buffer.get_end_iter()
+            self.post_parameters = buffer.get_text(start_iter, end_iter, True)
+
+        self.leaflet.set_visible_child(self.home)
