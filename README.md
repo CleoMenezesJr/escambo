@@ -2,6 +2,10 @@
 <h1 align="center">🔄 Get Over Here!</h1>
 <p align="center">(Work in Progress)</p>
 
+<p align="center">
+  <img src ="screenshot.png" /></a>
+</p>
+
 <!-- <p align="center"> -->
 <!-- <a href="https://extensions.gnome.org/extension/4679/burn-my-windows/"><img src="https://img.shields.io/badge/Download-extensions.gnome.org-e67f4d.svg?logo=gnome&logoColor=lightgrey&labelColor=303030" /></a><br/> -->
 <!-- <a href="https://github.com/Schneegans/Burn-My-Windows/actions"><img src="https://github.com/Schneegans/Burn-My-Windows/workflows/Checks/badge.svg?branch=main" /></a> -->
@@ -11,7 +15,7 @@
 <!-- <a href="scripts/cloc.sh"><img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/Schneegans/8cf45f23253ff09b21196e7271378762/raw/comments.json" /></a> -->
 <!-- </p> -->
 
-Get Over Here is a HTTP-based APIs test application made in GTK4/Libadwaita
+Get Over Here is an HTTP-based APIs test application made in GTK4/Libadwaita
 
 <!-- Effect | Preview -->
 <!-- -----|-------- -->
@@ -212,6 +216,7 @@ Get Over Here is a HTTP-based APIs test application made in GTK4/Libadwaita
 <!--  -->
 
 ## :octocat: I want to contribute!
+_(At the moment I am not accepting contributions because Get Over Here is in a very initial stage.)_
 
 That's great!
 
