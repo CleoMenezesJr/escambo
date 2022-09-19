@@ -13,7 +13,7 @@
         <property name="can-unfold">false</property>
         <child>
           <!-- Leaflet page 1 -->
-          <object class="GtkBox">
+          <object class="GtkBox" id="home">
             <property name="orientation">vertical</property>
             <child>
               <object class="AdwHeaderBar" id="header_color">
@@ -55,7 +55,7 @@
                                 <property name="valign">center</property>
                                 <child>
                                   <object class="AdwPreferencesGroup">
-                                    <property name="title" translatable="yes">Parameters</property>
+                                    <property name="title" translatable="yes">Request</property>
                                     <child>
                                       <object class="AdwComboRow" id="entry_method">
                                         <property name="subtitle" translatable="yes">Lorem ipsum dolor sit amet, officia excepteur ex fugiat</property>
@@ -85,26 +85,36 @@
                                 </child>
                                 <child>
                                   <object class="AdwPreferencesGroup">
-                                    <property name="title" translatable="yes">Body</property>
+                                    <property name="title" translatable="yes">Parameters</property>
                                     <child>
-                                      <object class="AdwComboRow" id="transition_row">
-                                        <property name="subtitle" translatable="yes"></property>
-                                        <property name="title" translatable="yes">Type</property>
-                                        <property name="selected" bind-source="GetoverhereWindow" bind-property="transition-type" bind-flags="bidirectional|sync-create"/>
-                                        <property name="model">
-                                          <object class="GtkStringList">
-                                            <items>
-                                              <item>Text</item>
-                                              <item>JSON</item>
-                                              <item>XML</item>
-                                            </items>
+                                      <object class="AdwActionRow">
+                                        <property name="title" translatable="yes">Query Type</property>
+                                        <child>
+                                          <object class="GtkBox">
+                                            <property name="valign">center</property>
+                                            <style>
+                                              <class name="linked"/>
+                                            </style>
+                                            <child>
+                                              <object class="GtkToggleButton" id="form_data_toggle_button">
+                                                <property name="label" translatable="yes">Form Data</property>
+                                                <property name="active">True</property>
+                                                <!-- <signal name="toggled" handler="start_toggle_button_toggled_cb"/> -->
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkToggleButton" id="raw_toggle_button">
+                                                <property name="label" translatable="yes">Raw</property>
+                                                <property name="group">form_data_toggle_button</property>
+                                              </object>
+                                            </child>
                                           </object>
-                                        </property>
+                                        </child>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="AdwActionRow">
-                                        <property name="title" translatable="yes">Go to edit structure</property>
+                                      <object class="AdwActionRow" id="btn_edit_param">
+                                        <property name="title" translatable="yes">Go to edit parameters</property>
                                         <property name="use_underline">True</property>
                                         <property name="activatable">True</property>
                                         <!-- <signal name="activated" handler="next_row_activated_cb" swapped="yes"/> -->
@@ -190,7 +200,7 @@
         </child>
         <child>
           <!-- Leaflet page 2 -->
-          <object class="GtkBox" id="details_page">
+          <object class="GtkBox" id="response_page">
             <property name="orientation">vertical</property>
             <child>
               <object class="AdwHeaderBar">
@@ -211,7 +221,7 @@
               <object class="GtkScrolledWindow" id="src_scroller">
                 <property name="vexpand">true</property>
                 <property name="child">
-                  <object class="GtkTextView" id="src_text">
+                  <object class="GtkTextView" id="response_text">
                     <property name="wrap-mode">word-char</property>
                     <property name="left-margin">9</property>
                     <property name="right-margin">9</property>
@@ -219,6 +229,44 @@
                     <property name="bottom-margin">9</property>
                     <child>
                       <object class="GtkEventControllerKey" id="src_key_ctrlr"></object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <!-- Leaflet page 3 -->
+          <object class="GtkBox" id="raw_page">
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="AdwHeaderBar">
+                <property name="title-widget">
+                  <object class="GtkBox"/>
+                </property>
+                <child type="start">
+                  <object class="GtkButton" id="btn_raw_go_back">
+                    <property name="valign">center</property>
+                    <property name="tooltip-text" translatable="yes">Back</property>
+                    <property name="icon-name">go-previous-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkScrolledWindow" id="src_scroller2">
+                <property name="vexpand">true</property>
+                <property name="child">
+                  <object class="GtkTextView" id="raw_text">
+                    <property name="wrap-mode">word-char</property>
+                    <property name="left-margin">9</property>
+                    <property name="right-margin">9</property>
+                    <property name="top-margin">9</property>
+                    <property name="bottom-margin">9</property>
+                    <child>
+                      <object class="GtkEventControllerKey" id="src_key_ctrlr2"></object>
                     </child>
                   </object>
                 </property>
