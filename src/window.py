@@ -61,6 +61,17 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.btn_raw_go_back.connect("clicked", self.__go_back, True)
         self.btn_edit_param.connect("activated", self.__on_edit_param)
         self.post_parameters = None
+        self.is_raw_query_type = False
+        self.raw_toggle_button.connect(
+            "clicked",
+            self.__which_query_type,
+            True
+        )
+        self.form_data_toggle_button.connect(
+            "clicked",
+            self.__which_query_type,
+            False
+        )
         # print(dir(self.btn_edit_param.connect()))
         # self.raw_toggle_button.connect("clicked", self.__go_back)
         # print(dir(self.query_type))
@@ -111,8 +122,13 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 buffer.set_text(response)
                 self.leaflet.set_visible_child(self.response_page)
 
+    def __which_query_type(self, *_args):
+        status = any(x for x in _args if x is True)
+        self.is_raw_query_type = status
+
     def __on_edit_param(self, *_args):
-        self.leaflet.set_visible_child(self.raw_page)
+        if self.is_raw_query_type:
+            self.leaflet.set_visible_child(self.raw_page)
 
     def __go_back(self, *_args):
         if any(x for x in _args if x is True):
