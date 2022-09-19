@@ -30,21 +30,26 @@ from requests import Session
 class GetoverhereWindow(Adw.ApplicationWindow):
     __gtype_name__ = "GetoverhereWindow"
 
-    entry_url = Gtk.Template.Child()
-    btn_send_request = Gtk.Template.Child()
-    entry_method = Gtk.Template.Child()
     toast_overlay = Gtk.Template.Child()
     leaflet = Gtk.Template.Child()
+
+    entry_method = Gtk.Template.Child()
+    entry_url = Gtk.Template.Child()
+
     response_page = Gtk.Template.Child()
     raw_page = Gtk.Template.Child()
     response_text = Gtk.Template.Child()
     raw_text = Gtk.Template.Child()
+
     btn_go_back = Gtk.Template.Child()
     btn_raw_go_back = Gtk.Template.Child()
+    btn_edit_param = Gtk.Template.Child()
+
     form_data_toggle_button = Gtk.Template.Child()
     raw_toggle_button = Gtk.Template.Child()
-    btn_edit_param = Gtk.Template.Child()
     home = Gtk.Template.Child()
+
+    btn_send_request = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
