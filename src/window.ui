@@ -58,7 +58,7 @@
                                     <property name="title" translatable="yes">Request</property>
                                     <child>
                                       <object class="AdwComboRow" id="entry_method">
-                                        <property name="subtitle" translatable="yes">Lorem ipsum dolor sit amet, officia excepteur ex fugiat</property>
+                                        <property name="subtitle" translatable="yes">Check the method that is being used before sending a request</property>
                                         <property name="title" translatable="yes">Method</property>
                                         <property name="model">
                                           <object class="GtkStringList">
@@ -175,19 +175,19 @@
                     </property>
                   </object>
                 </child>
-                <!-- <child> -->
-                <!--   <object class="AdwViewStackPage"> -->
-                <!--     <property name="name">forms</property> -->
-                <!--     <property name="title" translatable="yes">_Forms</property> -->
-                <!--     <property name="icon-name">emblem-documents-symbolic</property> -->
-                <!--     <property name="use-underline">True</property> -->
-                <!--     <property name="child"> -->
-                <!--       <object class="GtkBox" id="forms_page"> -->
-                <!--         <property name="homogeneous">True</property> -->
-                <!--       </object> -->
-                <!--     </property> -->
-                <!--   </object> -->
-                <!-- </child> -->
+                <child>
+                  <object class="AdwViewStackPage">
+                    <property name="name">auth</property>
+                    <property name="title" translatable="yes">Auth</property>
+                    <property name="icon-name">channel-secure-symbolic</property>
+                    <property name="use-underline">True</property>
+                    <property name="child">
+                      <object class="GtkBox" id="forms_page">
+                        <property name="homogeneous">True</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
