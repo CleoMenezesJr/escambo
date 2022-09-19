@@ -11,13 +11,16 @@ class ResolveRequests:
         # TODO
         # If header is None, guess header content_type
         head = requests.head(self.url)
-        type = head.headers["content-type"]
-        self.headers = {"Content-Type": type}
+        if "Content-Type" in head.headers:
+            type = head.headers["Content-Type"]
+            self.headers = {"Content-Type": type}
 
     def resolve_get(self):
-        data = requests.get(self.url).json()
-        format_data = json.dumps(data, indent=4)
-        return format_data
+        response = requests.get(self.url).json()
+        try:
+            return json.dumps(response, indent=4)
+        except requests.exceptions.JSONDecodeError:
+            return response.text
 
     def resolve_post(self):
         data = json.loads(self.payload)
