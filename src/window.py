@@ -60,6 +60,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.btn_go_back.connect("clicked", self.__go_back)
         self.btn_raw_go_back.connect("clicked", self.__go_back, True)
         self.btn_edit_param.connect("activated", self.__on_edit_param)
+        self.post_parameters = None
         # print(dir(self.btn_edit_param.connect()))
         # self.raw_toggle_button.connect("clicked", self.__go_back)
         # print(dir(self.query_type))
