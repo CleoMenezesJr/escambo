@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.0"/>
+  <requires lib="gtk" version="4.0" />
   <template class="GetoverhereWindow" parent="AdwApplicationWindow">
     <property name="default-width">800</property>
     <property name="default-height">500</property>
     <property name="title">Get Over Here</property>
     <style>
-      <class name="devel"/>
+      <class name="devel" />
     </style>
     <child>
       <object class="AdwLeaflet" id="leaflet">
@@ -21,7 +21,7 @@
                 <property name="title-widget">
                   <object class="AdwViewSwitcherTitle" id="switcher_title">
                     <property name="stack">stack</property>
-                    <property name="title" bind-source="GetoverhereWindow" bind-property="title" bind-flags="sync-create"/>
+                    <property name="title" bind-source="GetoverhereWindow" bind-property="title" bind-flags="sync-create" />
                   </object>
                 </property>
                 <child type="end">
@@ -46,12 +46,14 @@
                       <object class="AdwToastOverlay" id="toast_overlay">
                         <child>
                           <object class="AdwClamp">
-                            <property name="tightening-threshold">100</property>
+                            <property name="margin-start">12</property>
+                            <property name="margin-end">12</property>
+                            <!-- <property name="maximum-size">500</property> -->
+                            <property name="tightening-threshold">300</property>
                             <property name="child">
                               <object class="GtkBox">
                                 <property name="orientation">vertical</property>
-                                <property name="spacing">20</property>
-                                <!-- <property name="halign">center</property> -->
+                                <property name="spacing">24</property>
                                 <property name="valign">center</property>
                                 <child>
                                   <object class="AdwPreferencesGroup">
@@ -93,7 +95,7 @@
                                           <object class="GtkBox">
                                             <property name="valign">center</property>
                                             <style>
-                                              <class name="linked"/>
+                                              <class name="linked" />
                                             </style>
                                             <child>
                                               <object class="GtkToggleButton" id="form_data_toggle_button">
@@ -131,11 +133,12 @@
                                   <object class="GtkButton" id="btn_send_request">
                                     <property name="halign">center</property>
                                     <property name="label" translatable="yes">Send Resquest</property>
+                                    <property name="margin-bottom">12</property>
                                     <!-- <property name="action-name">some.run</property> -->
                                     <property name="tooltip-text">Send REST</property>
                                     <style>
-                                      <class name="pill"/>
-                                      <class name="suggested-action"/>
+                                      <class name="pill" />
+                                      <class name="suggested-action" />
                                     </style>
                                   </object>
                                 </child>
@@ -156,12 +159,67 @@
                     <property name="icon-name">auth-fingerprint-symbolic</property>
                     <property name="use-underline">True</property>
                     <property name="child">
-                      <object class="GtkBox" id="spreadsheets_page">
-                        <property name="homogeneous">True</property>
+                      <object class="GtkScrolledWindow">
+                        <property name="child">
+                          <object class="AdwToastOverlay" id="toast_overla">
+                            <child>
+                              <object class="AdwClamp">
+                                <property name="margin-top">24</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <property name="tightening-threshold">300</property>
+                                <property name="child">
+                                  <object class="GtkBox">
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">20</property>
+                                    <!-- <property name="halign">center</property> -->
+                                    <!-- <property name="valign">center</property> -->
+                                    <child>
+                                      <object class="AdwPreferencesGroup">
+                                        <property name="title" translatable="yes">New Cookie</property>
+                                        <property name="header-suffix">
+                                          <object class="GtkButton" id="btn_add_cookie">
+                                            <property name="child">
+                                              <object class="AdwButtonContent">
+                                                <property name="icon-name">list-add-symbolic</property>
+                                                <property name="label" translatable="yes">Add</property>
+                                              </object>
+                                            </property>
+                                            <style>
+                                              <class name="flat" />
+                                            </style>
+                                          </object>
+                                        </property>
+                                        <child>
+                                          <object class="AdwEntryRow" id="entry_cookie_key">
+                                            <property name="title" translatable="yes">Key</property>
+                                            <property name="use_underline">True</property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="AdwEntryRow" id="entry_cookie_value">
+                                            <property name="title" translatable="yes">Value</property>
+                                            <property name="use_underline">True</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwPreferencesGroup" id="group_overrides">
+                                        <!-- <property name="title" translatable="true"></property> -->
+                                      </object>
+                                    </child>
+                                  </object>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
                       </object>
                     </property>
                   </object>
                 </child>
+                <!-- Cookies end -->
                 <child>
                   <object class="AdwViewStackPage">
                     <property name="name">headers</property>
@@ -193,7 +251,7 @@
             <child>
               <object class="AdwViewSwitcherBar" id="switcher_bar">
                 <property name="stack">stack</property>
-                <property name="reveal" bind-source="switcher_title" bind-property="title-visible" bind-flags="sync-create"/>
+                <property name="reveal" bind-source="switcher_title" bind-property="title-visible" bind-flags="sync-create" />
               </object>
             </child>
           </object>
@@ -205,7 +263,7 @@
             <child>
               <object class="AdwHeaderBar">
                 <property name="title-widget">
-                  <object class="GtkBox"/>
+                  <object class="GtkBox" />
                 </property>
                 <child type="start">
                   <object class="GtkButton" id="btn_go_back">
@@ -216,7 +274,6 @@
                 </child>
               </object>
             </child>
-
             <child>
               <object class="GtkScrolledWindow" id="src_scroller">
                 <property name="vexpand">true</property>
@@ -228,7 +285,7 @@
                     <property name="top-margin">9</property>
                     <property name="bottom-margin">9</property>
                     <child>
-                      <object class="GtkEventControllerKey" id="src_key_ctrlr"></object>
+                      <object class="GtkEventControllerKey" id="src_key_ctrlr" />
                     </child>
                   </object>
                 </property>
@@ -243,7 +300,7 @@
             <child>
               <object class="AdwHeaderBar">
                 <property name="title-widget">
-                  <object class="GtkBox"/>
+                  <object class="GtkBox" />
                 </property>
                 <child type="start">
                   <object class="GtkButton" id="btn_raw_go_back">
@@ -254,7 +311,6 @@
                 </child>
               </object>
             </child>
-
             <child>
               <object class="GtkScrolledWindow" id="src_scroller2">
                 <property name="vexpand">true</property>
@@ -266,7 +322,7 @@
                     <property name="top-margin">9</property>
                     <property name="bottom-margin">9</property>
                     <child>
-                      <object class="GtkEventControllerKey" id="src_key_ctrlr2"></object>
+                      <object class="GtkEventControllerKey" id="src_key_ctrlr2" />
                     </child>
                   </object>
                 </property>
@@ -276,7 +332,6 @@
         </child>
       </object>
     </child>
-
   </template>
   <menu id="primary_menu">
     <section>

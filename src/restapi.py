@@ -3,9 +3,10 @@ import json
 
 
 class ResolveRequests:
-    def __init__(self, url, session, payload=None):
+    def __init__(self, url, session, cookies=None, payload=None):
         self.url = url
         self.session = session
+        self.cookies = cookies
         if not payload:
             self.payload = payload
         else:
@@ -24,7 +25,8 @@ class ResolveRequests:
         response = self.session.get(
             self.url,
             json=self.payload,
-            headers=self.headers
+            headers=self.headers,
+            cookies=self.cookies
         )
         try:
             return json.dumps(response.json(), indent=4)

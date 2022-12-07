@@ -30,6 +30,7 @@ getoverhere_sources = [
   'main.py',
   'window.py',
   'restapi.py',
+  'populator_entry.py',
 ]
 
 install_data(getoverhere_sources, install_dir: moduledir)

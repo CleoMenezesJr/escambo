@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0" />
+  <template class="PupulatorEntry" parent="AdwActionRow">
+    <property name="title">Pupulator Entry</property>
+    <property name="subtitle" translatable="yes">Pupulator Entry</property>
+    <child>
+      <object class="GtkButton" id="btn_remove">
+        <property name="valign">center</property>
+        <property name="icon-name">user-trash-symbolic</property>
+        <property name="tooltip-text" translatable="true">Remove</property>
+        <style>
+          <class name="flat" />
+        </style>
+      </object>
+    </child>
+  </template>
+</interface>

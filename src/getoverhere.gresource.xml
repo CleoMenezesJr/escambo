@@ -2,5 +2,6 @@
 <gresources>
   <gresource prefix="/io/github/cleomenezesjr/GetOverHere">
     <file preprocess="xml-stripblanks">window.ui</file>
+    <file>populator-entry.ui</file>
   </gresource>
 </gresources>
