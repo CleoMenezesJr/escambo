@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="getoverhere">
-	<schema id="io.github.cleomenezesjr.GetOverHere" path="/io/github/cleomenezesjr/GetOverHere/">
-	</schema>
+  <schema id="io.github.cleomenezesjr.GetOverHere" path="/io/github/cleomenezesjr/GetOverHere/"></schema>
 </schemalist>
