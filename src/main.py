@@ -54,7 +54,7 @@ class GetoverhereApplication(Adw.Application):
         """Callback for the app.about action."""
         about = Adw.AboutWindow(
             transient_for=self.props.active_window,
-            application_name="getoverhere",
+            application_name="Get Over Here",
             application_icon="io.github.cleomenezesjr.GetOverHere",
             developer_name="Cleo Menezes Jr.",
             version="0.1.0",
