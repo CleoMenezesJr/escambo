@@ -1,7 +1,7 @@
 {
   "app-id": "io.github.cleomenezesjr.GetOverHere",
   "runtime": "org.gnome.Platform",
-  "runtime-version": "master",
+  "runtime-version": "43",
   "sdk": "org.gnome.Sdk",
   "command": "getoverhere",
   "finish-args": [
@@ -61,8 +61,8 @@
       "buildsystem": "meson",
       "sources": [
         {
-          "type": "git",
-          "url": "file:///var/home/cleomenezesjr/Projects"
+          "type": "dir",
+          "path": "."
         }
       ]
     }
