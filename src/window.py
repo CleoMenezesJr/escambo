@@ -51,7 +51,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     btn_edit_param = Gtk.Template.Child()
 
     form_data_toggle_button = Gtk.Template.Child()
-    raw_toggle_button = Gtk.Template.Child()
     home = Gtk.Template.Child()
 
     btn_send_request = Gtk.Template.Child()
@@ -75,17 +74,12 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.btn_go_back.connect("clicked", self.__go_back)
         self.btn_raw_go_back.connect("clicked", self.__go_back, True)
         self.btn_edit_param.connect("activated", self.__on_edit_param)
-        self.payload = None
-        self.is_raw_query_type = False
-        self.raw_toggle_button.connect(
-            "clicked", self.__which_query_type, True)
-        self.form_data_toggle_button.connect(
-            "clicked", self.__which_query_type, False)
+        self.btn_add_cookie.connect("clicked", self.__save_override)
 
+        # var
         self.__populate_overrides_list()
         self.cookies = {}
-
-        self.btn_add_cookie.connect("clicked", self.__save_override)
+        self.payload = None
 
         # GSettings object
         self.settings = Gio.Settings.new("io.github.cleomenezesjr.GetOverHere")
@@ -145,13 +139,11 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 buffer.set_text(response)
                 self.leaflet.set_visible_child(self.response_page)
 
-    def __which_query_type(self, *_args):
-        status = any(x for x in _args if x is True)
-        self.is_raw_query_type = status
-
     def __on_edit_param(self, *_args):
-        if self.is_raw_query_type:
+        if not self.form_data_toggle_button.props.active:
             self.leaflet.set_visible_child(self.raw_page)
+        else:
+            self.leaflet.set_visible_child(self.form_data_page)
 
     def __go_back(self, *_args):
         """
