@@ -70,8 +70,6 @@
                                               <item>PUT</item>
                                               <item>PATCH</item>
                                               <item>DELETE</item>
-                                              <item>OPTIONS</item>
-                                              <item>HEAD</item>
                                             </items>
                                           </object>
                                         </property>
@@ -90,7 +88,7 @@
                                     <property name="title" translatable="yes">Parameters</property>
                                     <child>
                                       <object class="AdwActionRow">
-                                        <property name="title" translatable="yes">Query Type</property>
+                                        <property name="title" translatable="yes">Type</property>
                                         <child>
                                           <object class="GtkBox">
                                             <property name="valign">center</property>
@@ -101,7 +99,6 @@
                                               <object class="GtkToggleButton" id="form_data_toggle_button">
                                                 <property name="label" translatable="yes">Form Data</property>
                                                 <property name="active">True</property>
-                                                <!-- <signal name="toggled" handler="start_toggle_button_toggled_cb"/> -->
                                               </object>
                                             </child>
                                             <child>
@@ -205,7 +202,7 @@
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="AdwPreferencesGroup" id="group_overrides">
+                                      <object class="AdwPreferencesGroup" id="group_overrides_cookie">
                                         <!-- <property name="title" translatable="true"></property> -->
                                       </object>
                                     </child>
@@ -256,14 +253,14 @@
             </child>
           </object>
         </child>
+        <!-- Leaflet Response -->
         <child>
-          <!-- Leaflet page 2 -->
           <object class="GtkBox" id="response_page">
             <property name="orientation">vertical</property>
             <child>
               <object class="AdwHeaderBar">
                 <property name="title-widget">
-                  <object class="GtkBox" />
+                  <object class="GtkBox"/>
                 </property>
                 <child type="start">
                   <object class="GtkButton" id="btn_go_back">
@@ -293,8 +290,9 @@
             </child>
           </object>
         </child>
+        <!-- Leaflet Response end -->
+        <!-- Leaflet Raw -->
         <child>
-          <!-- Leaflet page 3 -->
           <object class="GtkBox" id="raw_page">
             <property name="orientation">vertical</property>
             <child>
@@ -330,6 +328,88 @@
             </child>
           </object>
         </child>
+        <!-- Leaflet Raw end -->
+        <!-- Leaflet Form Data -->
+        <child>
+          <object class="GtkBox" id="form_data_page">
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="AdwHeaderBar">
+                <property name="title-widget">
+                  <object class="GtkBox" />
+                </property>
+                <child type="start">
+                  <object class="GtkButton" id="btn_form_data_go_back">
+                    <property name="valign">center</property>
+                    <property name="tooltip-text" translatable="yes">Back</property>
+                    <property name="icon-name">go-previous-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="vexpand">true</property>
+                <property name="child">
+                  <object class="AdwToastOverlay" id="toast_overlaa">
+                    <child>
+                      <object class="AdwClamp">
+                        <property name="margin-top">24</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="tightening-threshold">300</property>
+                        <property name="child">
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">20</property>
+                            <!-- <property name="halign">center</property> -->
+                            <!-- <property name="valign">center</property> -->
+                            <child>
+                              <object class="AdwPreferencesGroup">
+                                <property name="title" translatable="yes">New Parameter</property>
+                                <property name="header-suffix">
+                                  <object class="GtkButton" id="btn_add_parameter">
+                                    <property name="child">
+                                      <object class="AdwButtonContent">
+                                        <property name="icon-name">list-add-symbolic</property>
+                                        <property name="label" translatable="yes">Add</property>
+                                      </object>
+                                    </property>
+                                    <style>
+                                      <class name="flat" />
+                                    </style>
+                                  </object>
+                                </property>
+                                <child>
+                                  <object class="AdwEntryRow" id="entry_parameter_key">
+                                    <property name="title" translatable="yes">Key</property>
+                                    <property name="use_underline">True</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="AdwEntryRow" id="entry_parameter_value">
+                                    <property name="title" translatable="yes">Value</property>
+                                    <property name="use_underline">True</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="AdwPreferencesGroup" id="group_overrides_parameter">
+                                <!-- <property name="title" translatable="true"></property> -->
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <!-- Leaflet Form Data end -->
       </object>
     </child>
   </template>

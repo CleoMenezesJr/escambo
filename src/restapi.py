@@ -1,16 +1,14 @@
-import requests
 import json
+
+import requests
 
 
 class ResolveRequests:
-    def __init__(self, url, session, cookies=None, payload=None):
+    def __init__(self, url, session, cookies=None, parameters=None):
         self.url = url
         self.session = session
         self.cookies = cookies
-        if not payload:
-            self.payload = payload
-        else:
-            self.payload = json.loads(payload)
+        self.parameters = parameters
 
         # TODO
         # If header is None, guess header content_type
@@ -24,20 +22,21 @@ class ResolveRequests:
     def resolve_get(self):
         response = self.session.get(
             self.url,
-            json=self.payload,
+            json=self.parameters,
             headers=self.headers,
-            cookies=self.cookies
+            cookies=self.cookies,
         )
         try:
-            return json.dumps(response.json(), indent=4)
+            return [
+                json.dumps(response.json(), indent=4),
+                response.status_code,
+            ]
         except requests.exceptions.JSONDecodeError:
-            return response.text
+            return [response.text, response.status_code]
 
     def resolve_post(self):
         response = self.session.post(
-            self.url,
-            json=self.payload,
-            headers=self.headers
+            self.url, json=self.parameters, headers=self.headers
         )
         try:
             return json.dumps(response.json(), indent=4)
