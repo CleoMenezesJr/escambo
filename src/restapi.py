@@ -26,19 +26,36 @@ class ResolveRequests:
             headers=self.headers,
             cookies=self.cookies,
         )
+
+        status_code = response.status_code
+        msg_status_code = requests.status_codes._codes[status_code]
+
         try:
             return [
                 json.dumps(response.json(), indent=4),
-                response.status_code,
+                f"{status_code} {msg_status_code[0].title()}",
             ]
         except requests.exceptions.JSONDecodeError:
-            return [response.text, response.status_code]
+            return [
+                response.text,
+                f"{status_code} {msg_status_code[0].title()}",
+            ]
 
     def resolve_post(self):
         response = self.session.post(
             self.url, json=self.parameters, headers=self.headers
         )
+
+        status_code = response.status_code
+        msg_status_code = requests.status_codes._codes[status_code]
+
         try:
-            return json.dumps(response.json(), indent=4)
+            return [
+                json.dumps(response.json(), indent=4),
+                f"{status_code} {msg_status_code[0].title()}",
+            ]
         except requests.exceptions.JSONDecodeError:
-            return response.text
+            return [
+                response.text,
+                f"{status_code} {msg_status_code[0].title()}",
+            ]

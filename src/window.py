@@ -153,10 +153,11 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 ).resolve_get()
 
                 buffer.set_text(response)
+                self.response_page_header.set_subtitle(str(status_code))
                 self.leaflet.set_visible_child(self.response_page)
             case 1:
                 buffer = self.response_text.get_buffer()
-                response = ResolveRequests(
+                response, status_code = ResolveRequests(
                     url,
                     self.session,
                     cookies=self.cookies,
@@ -164,6 +165,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 ).resolve_post()
 
                 buffer.set_text(response)
+                self.response_page_header.set_subtitle(str(status_code))
                 self.leaflet.set_visible_child(self.response_page)
 
     def __on_edit_param(self, *_args):

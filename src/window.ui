@@ -260,7 +260,9 @@
             <child>
               <object class="AdwHeaderBar">
                 <property name="title-widget">
-                  <object class="GtkBox"/>
+                  <object class="AdwWindowTitle" id="response_page_header">
+                    <property name="title">Response</property>
+                  </object>
                 </property>
                 <child type="start">
                   <object class="GtkButton" id="btn_go_back">
