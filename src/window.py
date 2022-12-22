@@ -142,9 +142,9 @@ class GetoverhereWindow(Adw.ApplicationWindow):
             parameters = json.loads(
                 buffer.get_text(start_iter, end_iter, True))
 
+        buffer = self.response_text.get_buffer()
         match method:
             case 0:
-                buffer = self.response_text.get_buffer()
                 response, status_code = ResolveRequests(
                     url,
                     self.session,
@@ -153,10 +153,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 ).resolve_get()
 
                 buffer.set_text(response)
-                self.response_page_header.set_subtitle(str(status_code))
-                self.leaflet.set_visible_child(self.response_page)
             case 1:
-                buffer = self.response_text.get_buffer()
                 response, status_code = ResolveRequests(
                     url,
                     self.session,
@@ -164,9 +161,9 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     parameters=parameters,
                 ).resolve_post()
 
-                buffer.set_text(response)
-                self.response_page_header.set_subtitle(str(status_code))
-                self.leaflet.set_visible_child(self.response_page)
+        buffer.set_text(response)
+        self.response_page_header.set_subtitle(str(status_code))
+        self.leaflet.set_visible_child(self.response_page)
 
     def __on_edit_param(self, *_args):
         if not self.form_data_toggle_button.props.active:

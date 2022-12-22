@@ -28,18 +28,9 @@ class ResolveRequests:
         )
 
         status_code = response.status_code
-        msg_status_code = requests.status_codes._codes[status_code]
+        msg_status_code = requests.status_codes._codes[status_code][0]
 
-        try:
-            return [
-                json.dumps(response.json(), indent=4),
-                f"{status_code} {msg_status_code[0].title()}",
-            ]
-        except requests.exceptions.JSONDecodeError:
-            return [
-                response.text,
-                f"{status_code} {msg_status_code[0].title()}",
-            ]
+        return self.formated_response(response, status_code, msg_status_code)
 
     def resolve_post(self):
         response = self.session.post(
@@ -47,15 +38,17 @@ class ResolveRequests:
         )
 
         status_code = response.status_code
-        msg_status_code = requests.status_codes._codes[status_code]
+        msg_status_code = requests.status_codes._codes[status_code][0]
+
+        return self.formated_response(response, status_code, msg_status_code)
+
+    def formated_response(self, response, status_code, msg_status_code):
+        status = f"{status_code} {msg_status_code}".title().replace("_", " ")
 
         try:
             return [
                 json.dumps(response.json(), indent=4),
-                f"{status_code} {msg_status_code[0].title()}",
+                status,
             ]
         except requests.exceptions.JSONDecodeError:
-            return [
-                response.text,
-                f"{status_code} {msg_status_code[0].title()}",
-            ]
+            return [response.text, status]
