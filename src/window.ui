@@ -150,7 +150,7 @@
                 <!-- Endpoint end -->
                 <!-- Cookies start -->
                 <child>
-                  <object class="AdwViewStackPage">
+                  <object class="AdwViewStackPage" id="cookie_page">
                     <property name="name">cookies</property>
                     <property name="title" translatable="yes">_Cookies</property>
                     <property name="icon-name">auth-fingerprint-symbolic</property>

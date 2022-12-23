@@ -71,6 +71,8 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     btn_add_cookie = Gtk.Template.Child()
     group_overrides_cookie = Gtk.Template.Child()
 
+    cookie_page = Gtk.Template.Child()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -208,6 +210,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                             json.dump(file_content, file, indent=2)
 
                     self.cookies = file_content
+                    self.cookie_page.set_badge_number(len(file_content))
 
                     # Clean up fields
                     self.group_overrides_cookie.set_description("")
@@ -252,11 +255,13 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         """
         This function populate the list of cookies
         """
+        print(dir(self.cookie_page))
         # Populate cookies
         if os.path.exists(COOKIES):
             with open(COOKIES, "r") as file:
                 overrides = json.load(file)
                 overrides = dict(reversed(list(overrides.items())))
+                self.cookie_page.set_badge_number(len(overrides))
                 self.cookies = overrides
                 if not bool(overrides):
                     self.group_overrides_cookie.set_description(

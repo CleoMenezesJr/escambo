@@ -46,9 +46,11 @@ class PupulatorEntry(Adw.ActionRow):
                 self.window.get_template_child(
                     self.window, "group_overrides_cookie"
                 ).set_description("No cookie added.")
+
             elif "parameters" in self.content:
                 self.window.get_template_child(
                     self.window, "group_overrides_parameter"
                 ).set_description("No parameter added.")
 
+        self.window.cookie_page.set_badge_number(len(file_content))
         self.get_parent().remove(self)
