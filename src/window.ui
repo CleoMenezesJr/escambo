@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.0" />
+  <requires lib="gtk" version="4.0"/>
   <template class="GetoverhereWindow" parent="AdwApplicationWindow">
     <property name="default-width">800</property>
     <property name="default-height">500</property>
     <property name="title">Get Over Here</property>
     <style>
-      <class name="devel" />
+      <class name="devel"/>
     </style>
     <child>
       <object class="AdwLeaflet" id="leaflet">
@@ -21,7 +21,7 @@
                 <property name="title-widget">
                   <object class="AdwViewSwitcherTitle" id="switcher_title">
                     <property name="stack">stack</property>
-                    <property name="title" bind-source="GetoverhereWindow" bind-property="title" bind-flags="sync-create" />
+                    <property name="title" bind-source="GetoverhereWindow" bind-property="title" bind-flags="sync-create"/>
                   </object>
                 </property>
                 <child type="end">
@@ -93,7 +93,7 @@
                                           <object class="GtkBox">
                                             <property name="valign">center</property>
                                             <style>
-                                              <class name="linked" />
+                                              <class name="linked"/>
                                             </style>
                                             <child>
                                               <object class="GtkToggleButton" id="form_data_toggle_button">
@@ -111,8 +111,8 @@
                                                         <property name="valign">end</property>
                                                         <!-- <property name="halign">center</property> -->
                                                         <style>
-                                                          <class name="status-badge" />
-                                                          <class name="numeric" />
+                                                          <class name="status-badge"/>
+                                                          <class name="numeric"/>
                                                         </style>
                                                       </object>
                                                     </child>
@@ -153,8 +153,8 @@
                                     <!-- <property name="action-name">some.run</property> -->
                                     <property name="tooltip-text">Send REST</property>
                                     <style>
-                                      <class name="pill" />
-                                      <class name="suggested-action" />
+                                      <class name="pill"/>
+                                      <class name="suggested-action"/>
                                     </style>
                                   </object>
                                 </child>
@@ -202,7 +202,7 @@
                                               </object>
                                             </property>
                                             <style>
-                                              <class name="flat" />
+                                              <class name="flat"/>
                                             </style>
                                           </object>
                                         </property>
@@ -267,7 +267,7 @@
             <child>
               <object class="AdwViewSwitcherBar" id="switcher_bar">
                 <property name="stack">stack</property>
-                <property name="reveal" bind-source="switcher_title" bind-property="title-visible" bind-flags="sync-create" />
+                <property name="reveal" bind-source="switcher_title" bind-property="title-visible" bind-flags="sync-create"/>
               </object>
             </child>
           </object>
@@ -303,7 +303,7 @@
                     <property name="top-margin">9</property>
                     <property name="bottom-margin">9</property>
                     <child>
-                      <object class="GtkEventControllerKey" id="src_key_ctrlr" />
+                      <object class="GtkEventControllerKey" id="src_key_ctrlr"/>
                     </child>
                   </object>
                 </property>
@@ -319,7 +319,9 @@
             <child>
               <object class="AdwHeaderBar">
                 <property name="title-widget">
-                  <object class="GtkBox" />
+                  <object class="AdwWindowTitle">
+                    <property name="title">Raw</property>
+                  </object>
                 </property>
                 <child type="start">
                   <object class="GtkButton" id="btn_raw_go_back">
@@ -341,7 +343,7 @@
                     <property name="top-margin">9</property>
                     <property name="bottom-margin">9</property>
                     <child>
-                      <object class="GtkEventControllerKey" id="src_key_ctrlr2" />
+                      <object class="GtkEventControllerKey" id="src_key_ctrlr2"/>
                     </child>
                   </object>
                 </property>
@@ -357,7 +359,9 @@
             <child>
               <object class="AdwHeaderBar">
                 <property name="title-widget">
-                  <object class="GtkBox" />
+                  <object class="AdwWindowTitle">
+                    <property name="title">Form Data</property>
+                  </object>
                 </property>
                 <child type="start">
                   <object class="GtkButton" id="btn_form_data_go_back">
@@ -397,7 +401,7 @@
                                       </object>
                                     </property>
                                     <style>
-                                      <class name="flat" />
+                                      <class name="flat"/>
                                     </style>
                                   </object>
                                 </property>
