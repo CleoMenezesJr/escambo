@@ -53,4 +53,6 @@ class PupulatorEntry(Adw.ActionRow):
                 ).set_description("No parameter added.")
 
         self.window.cookie_page.set_badge_number(len(file_content))
+        self.window.parameter_counter(file_content)
+
         self.get_parent().remove(self)

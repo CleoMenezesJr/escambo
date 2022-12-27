@@ -65,13 +65,13 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     entry_parameter_value = Gtk.Template.Child()
     btn_add_parameter = Gtk.Template.Child()
     group_overrides_parameter = Gtk.Template.Child()
+    counter_label_form_data = Gtk.Template.Child()
 
+    cookie_page = Gtk.Template.Child()
     entry_cookie_key = Gtk.Template.Child()
     entry_cookie_value = Gtk.Template.Child()
     btn_add_cookie = Gtk.Template.Child()
     group_overrides_cookie = Gtk.Template.Child()
-
-    cookie_page = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -245,6 +245,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                             json.dump(file_content, file, indent=2)
 
                     self.parameters = file_content
+                    self.parameter_counter(file_content)
 
                     # Clean up fields
                     self.group_overrides_parameter.set_description("")
@@ -255,13 +256,11 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         """
         This function populate the list of cookies
         """
-        print(dir(self.cookie_page))
         # Populate cookies
         if os.path.exists(COOKIES):
             with open(COOKIES, "r") as file:
                 overrides = json.load(file)
                 overrides = dict(reversed(list(overrides.items())))
-                self.cookie_page.set_badge_number(len(overrides))
                 self.cookies = overrides
                 if not bool(overrides):
                     self.group_overrides_cookie.set_description(
@@ -276,6 +275,9 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                             content=COOKIES,
                         )
                         GLib.idle_add(self.group_overrides_cookie.add, _entry)
+
+                self.cookie_page.set_badge_number(len(overrides))
+
         # Populate entries
         if os.path.exists(PARAMETERS):
             with open(PARAMETERS, "r") as file:
@@ -297,3 +299,15 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         )
                         GLib.idle_add(
                             self.group_overrides_parameter.add, _entry)
+
+                self.parameter_counter(overrides)
+
+    def parameter_counter(self, overrides):
+        """Parameter counter and its visibility"""
+        counter_label = self.counter_label_form_data
+        if len(overrides) > 0:
+            if counter_label.get_visible() is False:
+                counter_label.set_visible(True)
+            counter_label.set_label(str(len(overrides)))
+        else:
+            counter_label.set_visible(False)

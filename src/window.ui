@@ -97,8 +97,27 @@
                                             </style>
                                             <child>
                                               <object class="GtkToggleButton" id="form_data_toggle_button">
-                                                <property name="label" translatable="yes">Form Data</property>
                                                 <property name="active">True</property>
+                                                <property name="child">
+                                                  <object class="GtkBox">
+                                                    <property name="valign">center</property>
+                                                    <child>
+                                                      <object class="GtkLabel">
+                                                        <property name="label">Form Data </property>
+                                                      </object>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkLabel" id="counter_label_form_data">
+                                                        <property name="valign">end</property>
+                                                        <!-- <property name="halign">center</property> -->
+                                                        <style>
+                                                          <class name="status-badge" />
+                                                          <class name="numeric" />
+                                                        </style>
+                                                      </object>
+                                                    </child>
+                                                  </object>
+                                                </property>
                                               </object>
                                             </child>
                                             <child>
