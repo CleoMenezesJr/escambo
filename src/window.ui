@@ -107,7 +107,8 @@
                                                     </child>
                                                     <child>
                                                       <object class="GtkLabel" id="counter_label_form_data">
-                                                        <property name="valign">end</property>
+                                                        <property name="valign">center</property>
+                                                        <property name="margin-top">1</property>
                                                         <style>
                                                           <class name="status-badge" />
                                                           <class name="numeric" />
