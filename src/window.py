@@ -49,6 +49,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     entry_method = Gtk.Template.Child()
     entry_url = Gtk.Template.Child()
 
+    response_stack = Gtk.Template.Child()
     response_page = Gtk.Template.Child()
     response_page_header = Gtk.Template.Child()
     raw_page = Gtk.Template.Child()
@@ -78,6 +79,8 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     entry_cookie_value = Gtk.Template.Child()
     btn_add_cookie = Gtk.Template.Child()
     group_overrides_cookie = Gtk.Template.Child()
+
+    spinner = Gtk.Template.Child()
 
     def __init__(self, **kwargs: dict) -> None:
         super().__init__(**kwargs)
@@ -154,6 +157,10 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 which_method_thread.daemon = True
                 which_method_thread.start()
 
+                self.spinner.props.spinning = True
+                self.leaflet.set_visible_child(self.response_page)
+                self.response_stack.props.visible_child_name = "loading"
+
     def __which_parameters(self, parameter_type: bool) -> dict | None:
         if parameter_type:
             parameters = self.parameters
@@ -205,7 +212,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         # Setup response
         GLib.idle_add(self.response_buffer.set_text, response, -1)
         GLib.idle_add(self.response_page_header.set_subtitle, str(status_code))
-        GLib.idle_add(self.leaflet.set_visible_child, self.response_page)
+        self.response_stack.props.visible_child_name = "response"
 
     def __on_edit_param(self, *_args: tuple) -> None:
         if not self.form_data_toggle_button.props.active:

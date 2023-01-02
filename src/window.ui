@@ -274,30 +274,90 @@
         <!-- Leaflet Response -->
         <child>
           <object class="GtkBox" id="response_page">
-            <property name="orientation">vertical</property>
+            <!-- <property name="orientation">vertical</property> -->
             <child>
-              <object class="AdwHeaderBar">
-                <property name="title-widget">
-                  <object class="AdwWindowTitle" id="response_page_header">
-                    <property name="title">Response</property>
-                  </object>
-                </property>
-                <child type="start">
-                  <object class="GtkButton" id="btn_go_back">
-                    <property name="valign">center</property>
-                    <property name="tooltip-text" translatable="yes">Back</property>
-                    <property name="icon-name">go-previous-symbolic</property>
+              <object class="GtkStack" id="response_stack">
+                <property name="transition-type">crossfade</property>
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">loading</property>
+                    <property name="child">
+                      <object class="GtkWindowHandle">
+                        <property name="vexpand">True</property>
+                        <property name="hexpand">True</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <property name="margin-top">12</property>
+                            <property name="margin-bottom">12</property>
+                            <property name="margin-start">12</property>
+                            <property name="margin-end">12</property>
+                            <property name="halign">center</property>
+                            <property name="valign">center</property>
+                            <child>
+                              <object class="GtkSpinner" id="spinner">
+                                <!-- <property name="spinning">true</property> -->
+                                <property name="width-request">32</property>
+                                <property name="height-request">32</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="wrap">true</property>
+                                <property name="label" translatable="true">Loading…</property>
+                                <style>
+                                  <class name="title-1" />
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkScrolledWindow">
-                <property name="hexpand">True</property>
-                <property name="vexpand">True</property>
-                <property name="child">
-                  <object class="SourceView" id="response_source_view" />
-                </property>
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">response</property>
+                    <property name="child">
+                      <object class="GtkWindowHandle">
+                        <property name="vexpand">True</property>
+                        <property name="hexpand">True</property>
+                        <property name="child">
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="AdwHeaderBar">
+                                <property name="title-widget">
+                                  <object class="AdwWindowTitle" id="response_page_header">
+                                    <property name="title">Response</property>
+                                  </object>
+                                </property>
+                                <child type="start">
+                                  <object class="GtkButton" id="btn_go_back">
+                                    <property name="valign">center</property>
+                                    <property name="tooltip-text" translatable="yes">Back</property>
+                                    <property name="icon-name">go-previous-symbolic</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkScrolledWindow">
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">True</property>
+                                <property name="child">
+                                  <object class="SourceView" id="response_source_view" />
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -371,8 +431,6 @@
                           <object class="GtkBox">
                             <property name="orientation">vertical</property>
                             <property name="spacing">20</property>
-                            <!-- <property name="halign">center</property> -->
-                            <!-- <property name="valign">center</property> -->
                             <child>
                               <object class="AdwPreferencesGroup">
                                 <property name="title" translatable="yes">New Parameter</property>
