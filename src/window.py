@@ -20,6 +20,8 @@
 import json
 import os
 import re
+import threading
+from time import sleep
 from typing import Callable
 
 from getoverhere.populator_entry import PupulatorEntry
@@ -141,12 +143,10 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     )
                 )
             else:
-                self.__which_method(method, url, parameter_type)
+                parameters = self.__which_parameter_type(parameter_type)
+                self.__which_method(method, url, parameters)
 
-    def __which_method(
-        self, method: int, url: str, parameter_type: bool
-    ) -> Callable | None:
-
+    def __which_parameter_type(self, parameter_type: bool) -> dict | None:
         if parameter_type:
             parameters = self.parameters
         else:
@@ -162,6 +162,12 @@ class GetoverhereWindow(Adw.ApplicationWindow):
             else:
                 parameters = None
 
+        return parameters
+
+    def __which_method(
+        self, method: int, url: str, parameters: dict | None
+    ) -> Callable | None:
+        sleep(3)
         try:
             match method:
                 case 0:
@@ -173,7 +179,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     ).resolve_get()
 
                 case 1:
-                    response, status_code = ResolveRequests(
+                    response, status_code, code_type = ResolveRequests(
                         url,
                         self.session,
                         cookies=self.cookies,
