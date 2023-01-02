@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.0"/>
+  <requires lib="gtk" version="4.0" />
   <template class="GetoverhereWindow" parent="AdwApplicationWindow">
     <property name="default-width">800</property>
     <property name="default-height">500</property>
     <property name="title">Get Over Here</property>
     <style>
-      <class name="devel"/>
+      <class name="devel" />
     </style>
     <child>
       <object class="AdwLeaflet" id="leaflet">
@@ -21,7 +21,7 @@
                 <property name="title-widget">
                   <object class="AdwViewSwitcherTitle" id="switcher_title">
                     <property name="stack">stack</property>
-                    <property name="title" bind-source="GetoverhereWindow" bind-property="title" bind-flags="sync-create"/>
+                    <property name="title" bind-source="GetoverhereWindow" bind-property="title" bind-flags="sync-create" />
                   </object>
                 </property>
                 <child type="end">
@@ -93,11 +93,10 @@
                                           <object class="GtkBox">
                                             <property name="valign">center</property>
                                             <style>
-                                              <class name="linked"/>
+                                              <class name="linked" />
                                             </style>
                                             <child>
                                               <object class="GtkToggleButton" id="form_data_toggle_button">
-                                                <property name="active">True</property>
                                                 <property name="child">
                                                   <object class="GtkBox">
                                                     <property name="valign">center</property>
@@ -109,10 +108,9 @@
                                                     <child>
                                                       <object class="GtkLabel" id="counter_label_form_data">
                                                         <property name="valign">end</property>
-                                                        <!-- <property name="halign">center</property> -->
                                                         <style>
-                                                          <class name="status-badge"/>
-                                                          <class name="numeric"/>
+                                                          <class name="status-badge" />
+                                                          <class name="numeric" />
                                                         </style>
                                                       </object>
                                                     </child>
@@ -122,6 +120,7 @@
                                             </child>
                                             <child>
                                               <object class="GtkToggleButton" id="raw_toggle_button">
+                                                <property name="active">True</property>
                                                 <property name="label" translatable="yes">Raw</property>
                                                 <property name="group">form_data_toggle_button</property>
                                               </object>
@@ -153,8 +152,8 @@
                                     <!-- <property name="action-name">some.run</property> -->
                                     <property name="tooltip-text">Send REST</property>
                                     <style>
-                                      <class name="pill"/>
-                                      <class name="suggested-action"/>
+                                      <class name="pill" />
+                                      <class name="suggested-action" />
                                     </style>
                                   </object>
                                 </child>
@@ -202,7 +201,7 @@
                                               </object>
                                             </property>
                                             <style>
-                                              <class name="flat"/>
+                                              <class name="flat" />
                                             </style>
                                           </object>
                                         </property>
@@ -267,7 +266,7 @@
             <child>
               <object class="AdwViewSwitcherBar" id="switcher_bar">
                 <property name="stack">stack</property>
-                <property name="reveal" bind-source="switcher_title" bind-property="title-visible" bind-flags="sync-create"/>
+                <property name="reveal" bind-source="switcher_title" bind-property="title-visible" bind-flags="sync-create" />
               </object>
             </child>
           </object>
@@ -293,19 +292,11 @@
               </object>
             </child>
             <child>
-              <object class="GtkScrolledWindow" id="src_scroller">
-                <property name="vexpand">true</property>
+              <object class="GtkScrolledWindow">
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
                 <property name="child">
-                  <object class="GtkTextView" id="response_text">
-                    <property name="wrap-mode">word-char</property>
-                    <property name="left-margin">9</property>
-                    <property name="right-margin">9</property>
-                    <property name="top-margin">9</property>
-                    <property name="bottom-margin">9</property>
-                    <child>
-                      <object class="GtkEventControllerKey" id="src_key_ctrlr"/>
-                    </child>
-                  </object>
+                  <object class="SourceView" id="response_source_view" />
                 </property>
               </object>
             </child>
@@ -321,6 +312,7 @@
                 <property name="title-widget">
                   <object class="AdwWindowTitle">
                     <property name="title">Raw</property>
+                    <property name="subtitle">JSON Format</property>
                   </object>
                 </property>
                 <child type="start">
@@ -333,19 +325,11 @@
               </object>
             </child>
             <child>
-              <object class="GtkScrolledWindow" id="src_scroller2">
-                <property name="vexpand">true</property>
+              <object class="GtkScrolledWindow">
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
                 <property name="child">
-                  <object class="GtkTextView" id="raw_text">
-                    <property name="wrap-mode">word-char</property>
-                    <property name="left-margin">9</property>
-                    <property name="right-margin">9</property>
-                    <property name="top-margin">9</property>
-                    <property name="bottom-margin">9</property>
-                    <child>
-                      <object class="GtkEventControllerKey" id="src_key_ctrlr2"/>
-                    </child>
-                  </object>
+                  <object class="SourceView" id="raw_source_view" />
                 </property>
               </object>
             </child>
@@ -401,7 +385,7 @@
                                       </object>
                                     </property>
                                     <style>
-                                      <class name="flat"/>
+                                      <class name="flat" />
                                     </style>
                                   </object>
                                 </property>

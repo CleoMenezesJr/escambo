@@ -20,17 +20,21 @@
 import json
 import os
 import re
+from typing import Callable
 
 from getoverhere.populator_entry import PupulatorEntry
 from getoverhere.restapi import ResolveRequests
+from getoverhere.sourceview import SourceView
 from gi.repository import Adw, Gio, GLib, Gtk
-from requests import Session
+from requests import Session, exceptions
 
 # constants
-COOKIES = os.path.join(GLib.get_user_config_dir(),
-                       "getoverhere", "cookies.json")
-PARAMETERS = os.path.join(GLib.get_user_config_dir(),
-                          "getoverhere", "parameters.json")
+COOKIES = os.path.join(
+    GLib.get_user_config_dir(), "getoverhere", "cookies.json"
+)
+PARAMETERS = os.path.join(
+    GLib.get_user_config_dir(), "getoverhere", "parameters.json"
+)
 
 
 @Gtk.Template(resource_path="/io/github/cleomenezesjr/GetOverHere/window.ui")
@@ -48,8 +52,9 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     response_page_header = Gtk.Template.Child()
     raw_page = Gtk.Template.Child()
     form_data_page = Gtk.Template.Child()
-    response_text = Gtk.Template.Child()
-    raw_text = Gtk.Template.Child()
+
+    response_source_view: SourceView = Gtk.Template.Child()
+    raw_source_view: SourceView = Gtk.Template.Child()
 
     btn_go_back = Gtk.Template.Child()
     btn_raw_go_back = Gtk.Template.Child()
@@ -73,7 +78,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     btn_add_cookie = Gtk.Template.Child()
     group_overrides_cookie = Gtk.Template.Child()
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: dict) -> None:
         super().__init__(**kwargs)
 
         self.kwargs = kwargs
@@ -86,7 +91,8 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.btn_edit_param.connect("activated", self.__on_edit_param)
         self.btn_add_cookie.connect("clicked", self.__save_override, "cookies")
         self.btn_add_parameter.connect(
-            "clicked", self.__save_override, "parameters")
+            "clicked", self.__save_override, "parameters"
+        )
 
         self.btn_go_back.connect("clicked", self.__go_back)
         self.btn_raw_go_back.connect("clicked", self.__go_back)
@@ -97,11 +103,14 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.parameters = {}
 
         self.__populate_overrides_list()
+        self.raw_buffer = self.raw_source_view.get_buffer()
+        self.response_buffer = self.response_source_view.get_buffer()
+        self.response_source_view.props.editable = False
 
         # GSettings object
         self.settings = Gio.Settings.new("io.github.cleomenezesjr.GetOverHere")
 
-    def __on_send(self, *_args):
+    def __on_send(self, *_args: tuple) -> None:
         """
         This function checks if the submitted URL is validself.
 
@@ -128,55 +137,73 @@ class GetoverhereWindow(Adw.ApplicationWindow):
             if re.match(regex, url) is None:
                 self.toast_overlay.add_toast(
                     Adw.Toast.new(
-                        ("URL using bad/illegal format or missing URL"))
+                        ("URL using bad/illegal format or missing URL")
+                    )
                 )
             else:
                 self.__which_method(method, url, parameter_type)
 
-    def __which_method(self, method, url, parameter_type):
+    def __which_method(
+        self, method: int, url: str, parameter_type: bool
+    ) -> Callable | None:
 
         if parameter_type:
             parameters = self.parameters
         else:
-            buffer = self.raw_text.get_buffer()
-            start_iter = buffer.get_start_iter()
-            end_iter = buffer.get_end_iter()
-            parameters = json.loads(
-                buffer.get_text(start_iter, end_iter, True))
+            start, end = self.raw_buffer.get_bounds()
+            raw_code = self.raw_buffer.get_text(start, end, True)
+            if not len(raw_code) == 0:
+                try:
+                    parameters = json.loads(raw_code)
+                except ValueError:
+                    return self.toast_overlay.add_toast(
+                        Adw.Toast.new(("Parameters must be in JSON format"))
+                    )
+            else:
+                parameters = None
 
-        buffer = self.response_text.get_buffer()
-        match method:
-            case 0:
-                response, status_code = ResolveRequests(
-                    url,
-                    self.session,
-                    cookies=self.cookies,
-                    parameters=parameters,
-                ).resolve_get()
+        try:
+            match method:
+                case 0:
+                    response, status_code, code_type = ResolveRequests(
+                        url,
+                        self.session,
+                        cookies=self.cookies,
+                        parameters=parameters,
+                    ).resolve_get()
 
-                buffer.set_text(response)
-            case 1:
-                response, status_code = ResolveRequests(
-                    url,
-                    self.session,
-                    cookies=self.cookies,
-                    parameters=parameters,
-                ).resolve_post()
+                case 1:
+                    response, status_code = ResolveRequests(
+                        url,
+                        self.session,
+                        cookies=self.cookies,
+                        parameters=parameters,
+                    ).resolve_post()
+        except exceptions.ConnectionError:
+            return self.toast_overlay.add_toast(
+                Adw.Toast.new(("Error: Couldn't resolve host name "))
+            )
 
-        buffer.set_text(response)
+        # Dynamically change syntax highlight
+        self._lm = SourceView()._lm
+        language = self._lm.get_language(code_type)
+        self.response_buffer.set_language(language)
+
+        # Setup response
+        self.response_buffer.set_text(response, -1)
         self.response_page_header.set_subtitle(str(status_code))
         self.leaflet.set_visible_child(self.response_page)
 
-    def __on_edit_param(self, *_args):
+    def __on_edit_param(self, *_args: tuple) -> None:
         if not self.form_data_toggle_button.props.active:
             self.leaflet.set_visible_child(self.raw_page)
         else:
             self.leaflet.set_visible_child(self.form_data_page)
 
-    def __go_back(self, *_args):
+    def __go_back(self, *_args: tuple) -> None:
         self.leaflet.set_visible_child(self.home)
 
-    def __save_override(self, *_args):
+    def __save_override(self, *_args: tuple) -> None:
         """
         This function check if the override name is not empty, then
         store it in the configuration and add a new entry to
@@ -189,7 +216,8 @@ class GetoverhereWindow(Adw.ApplicationWindow):
 
                 if cookie_key != "" and cookie_value != "":
                     json_cookie = json.dumps(
-                        {cookie_key: cookie_value}, indent=2)
+                        {cookie_key: cookie_value}, indent=2
+                    )
                     _entry = PupulatorEntry(
                         window=self,
                         override=[cookie_key, cookie_value],
@@ -240,7 +268,8 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         with open(PARAMETERS, "r+") as file:
                             file_content = json.load(file)
                             file_content.update(
-                                {parameter_key: parameter_value})
+                                {parameter_key: parameter_value}
+                            )
                             file.seek(0)
                             json.dump(file_content, file, indent=2)
 
@@ -252,7 +281,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     self.entry_parameter_key.set_text("")
                     self.entry_parameter_value.set_text("")
 
-    def __populate_overrides_list(self):
+    def __populate_overrides_list(self) -> None:
         """
         This function populate the list of cookies
         """
@@ -264,7 +293,8 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 self.cookies = overrides
                 if not bool(overrides):
                     self.group_overrides_cookie.set_description(
-                        ("No cookie added."))
+                        ("No cookie added.")
+                    )
                 else:
                     self.cookies = overrides
                     self.group_overrides_cookie.set_description("")
@@ -298,7 +328,8 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                             content=PARAMETERS,
                         )
                         GLib.idle_add(
-                            self.group_overrides_parameter.add, _entry)
+                            self.group_overrides_parameter.add, _entry
+                        )
 
                 self.parameter_counter(overrides)
 
