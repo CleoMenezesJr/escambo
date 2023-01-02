@@ -21,7 +21,6 @@ import json
 import os
 import re
 import threading
-from time import sleep
 from typing import Callable
 
 from getoverhere.populator_entry import PupulatorEntry
@@ -143,10 +142,19 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     )
                 )
             else:
-                parameters = self.__which_parameter_type(parameter_type)
-                self.__which_method(method, url, parameters)
+                parameters = self.__which_parameters(parameter_type)
+                which_method_thread = threading.Thread(
+                    target=self.__which_method,
+                    args=(
+                        method,
+                        url,
+                        parameters,
+                    ),
+                )
+                which_method_thread.daemon = True
+                which_method_thread.start()
 
-    def __which_parameter_type(self, parameter_type: bool) -> dict | None:
+    def __which_parameters(self, parameter_type: bool) -> dict | None:
         if parameter_type:
             parameters = self.parameters
         else:
@@ -167,7 +175,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     def __which_method(
         self, method: int, url: str, parameters: dict | None
     ) -> Callable | None:
-        sleep(3)
         try:
             match method:
                 case 0:
@@ -193,12 +200,12 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         # Dynamically change syntax highlight
         self._lm = SourceView()._lm
         language = self._lm.get_language(code_type)
-        self.response_buffer.set_language(language)
+        GLib.idle_add(self.response_buffer.set_language, language)
 
         # Setup response
-        self.response_buffer.set_text(response, -1)
-        self.response_page_header.set_subtitle(str(status_code))
-        self.leaflet.set_visible_child(self.response_page)
+        GLib.idle_add(self.response_buffer.set_text, response, -1)
+        GLib.idle_add(self.response_page_header.set_subtitle, str(status_code))
+        GLib.idle_add(self.leaflet.set_visible_child, self.response_page)
 
     def __on_edit_param(self, *_args: tuple) -> None:
         if not self.form_data_toggle_button.props.active:
