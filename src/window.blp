@@ -14,6 +14,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
     Adw.Leaflet leaflet {
       can-unfold: false;
 
+      //Leaflet page 1
       Box home {
         orientation: vertical;
 
@@ -37,6 +38,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
         Adw.ViewStack stack {
           vexpand: true;
 
+          //Endpoint start
           Adw.ViewStackPage {
             name: "endpoint";
             title: _("_Endpoint");
@@ -152,7 +154,9 @@ template GetoverhereWindow : Adw.ApplicationWindow {
 
             ;
           }
+          //Endpoint end
 
+          //Cookies start
           Adw.ViewStackPage cookie_page {
             name: "cookies";
             title: _("_Cookies");
@@ -160,7 +164,8 @@ template GetoverhereWindow : Adw.ApplicationWindow {
             use-underline: true;
             child:
             ScrolledWindow {
-              child:               Adw.Clamp {
+              child:
+              Adw.Clamp {
                 margin-top: 24;
                 margin-start: 12;
                 margin-end: 12;
@@ -211,7 +216,9 @@ template GetoverhereWindow : Adw.ApplicationWindow {
 
             ;
           }
+          //Cookies end
 
+          //Headers start
           Adw.ViewStackPage {
             name: "headers";
             title: _("_Headers");
@@ -271,7 +278,9 @@ template GetoverhereWindow : Adw.ApplicationWindow {
 
             ;
           }
+          //Headers end
 
+          //Auth start
           Adw.ViewStackPage {
             name: "auth";
             title: _("Auth");
@@ -333,6 +342,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
             ;
           }
         }
+        //Auth end
 
         Adw.ViewSwitcherBar switcher_bar {
           stack: stack;
@@ -340,6 +350,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
         }
       }
 
+      //Leaflet Response
       Box response_page {
         Stack response_stack {
           transition-type: crossfade;
@@ -391,7 +402,8 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                 orientation: vertical;
 
                 Adw.HeaderBar {
-                  title-widget:                   Adw.WindowTitle response_page_header {
+                  title-widget:
+                  Adw.WindowTitle response_page_header {
                     title: "Response";
                   }
 
@@ -423,12 +435,15 @@ template GetoverhereWindow : Adw.ApplicationWindow {
           }
         }
       }
+      //Leaflet Response end
 
+      //Leaflet Raw
       Box raw_page {
         orientation: vertical;
 
         Adw.HeaderBar {
-          title-widget:           Adw.WindowTitle {
+          title-widget:
+          Adw.WindowTitle {
             title: "Raw";
             subtitle: "JSON Format";
           }
@@ -453,12 +468,15 @@ template GetoverhereWindow : Adw.ApplicationWindow {
           ;
         }
       }
+      //Leaflet Raw end
 
+      //Leaflet Form Data
       Box form_data_page {
         orientation: vertical;
 
         Adw.HeaderBar {
-          title-widget:           Adw.WindowTitle {
+          title-widget:
+          Adw.WindowTitle {
             title: "Form Data";
           }
 
@@ -490,7 +508,8 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                   title: _("New Parameter");
                   header-suffix:
                   Button btn_add_parameter {
-                    child:                     Adw.ButtonContent {
+                    child:
+                    Adw.ButtonContent {
                       icon-name: "list-add-symbolic";
                       label: _("Add");
                     }
@@ -526,6 +545,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
           ;
         }
       }
+      //Leaflet Form Data end
     }
   }
 }
