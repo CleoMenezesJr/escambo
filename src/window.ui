@@ -228,6 +228,7 @@
                       </object>
                     </child>
                     <!-- Cookies end -->
+                    <!-- Headers start -->
                     <child>
                       <object class="AdwViewStackPage">
                         <property name="name">headers</property>
@@ -235,12 +236,62 @@
                         <property name="icon-name">user-info-symbolic</property>
                         <property name="use-underline">True</property>
                         <property name="child">
-                          <object class="GtkBox" id="presentation_page">
-                            <property name="homogeneous">True</property>
+                          <object class="GtkScrolledWindow">
+                            <property name="child">
+                              <object class="AdwClamp">
+                                <property name="margin-top">24</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <property name="tightening-threshold">300</property>
+                                <property name="child">
+                                  <object class="GtkBox">
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">20</property>
+                                    <child>
+                                      <object class="AdwPreferencesGroup">
+                                        <property name="title" translatable="yes">New Header</property>
+                                        <property name="header-suffix">
+                                          <object class="GtkButton" id="btn_add_header">
+                                            <property name="child">
+                                              <object class="AdwButtonContent">
+                                                <property name="icon-name">list-add-symbolic</property>
+                                                <property name="label" translatable="yes">Add</property>
+                                              </object>
+                                            </property>
+                                            <style>
+                                              <class name="flat" />
+                                            </style>
+                                          </object>
+                                        </property>
+                                        <child>
+                                          <object class="AdwEntryRow" id="entry_header_key">
+                                            <property name="title" translatable="yes">Key</property>
+                                            <property name="use_underline">True</property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="AdwEntryRow" id="entry_header_value">
+                                            <property name="title" translatable="yes">Value</property>
+                                            <property name="use_underline">True</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwPreferencesGroup" id="group_overrides_header">
+                                        <!-- <property name="title" translatable="true"></property> -->
+                                      </object>
+                                    </child>
+                                  </object>
+                                </property>
+                              </object>
+                            </property>
                           </object>
                         </property>
                       </object>
                     </child>
+                    <!-- Headers end -->
+                    <!-- Auth start -->
                     <child>
                       <object class="AdwViewStackPage">
                         <property name="name">auth</property>
@@ -248,12 +299,61 @@
                         <property name="icon-name">channel-secure-symbolic</property>
                         <property name="use-underline">True</property>
                         <property name="child">
-                          <object class="GtkBox" id="forms_page">
-                            <property name="homogeneous">True</property>
+                          <object class="GtkScrolledWindow">
+                            <property name="child">
+                              <object class="AdwClamp">
+                                <property name="margin-top">24</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <property name="tightening-threshold">300</property>
+                                <property name="child">
+                                  <object class="GtkBox">
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">20</property>
+                                    <child>
+                                      <object class="AdwPreferencesGroup">
+                                        <property name="title" translatable="yes">New Auth</property>
+                                        <property name="header-suffix">
+                                          <object class="GtkButton" id="btn_add_auth">
+                                            <property name="child">
+                                              <object class="AdwButtonContent">
+                                                <property name="icon-name">list-add-symbolic</property>
+                                                <property name="label" translatable="yes">Add</property>
+                                              </object>
+                                            </property>
+                                            <style>
+                                              <class name="flat" />
+                                            </style>
+                                          </object>
+                                        </property>
+                                        <child>
+                                          <object class="AdwEntryRow" id="entry_auth_key">
+                                            <property name="title" translatable="yes">Key</property>
+                                            <property name="use_underline">True</property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="AdwEntryRow" id="entry_auth_value">
+                                            <property name="title" translatable="yes">Value</property>
+                                            <property name="use_underline">True</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwPreferencesGroup" id="group_overrides_auth">
+                                        <!-- <property name="title" translatable="true"></property> -->
+                                      </object>
+                                    </child>
+                                  </object>
+                                </property>
+                              </object>
+                            </property>
                           </object>
                         </property>
                       </object>
                     </child>
+                    <!-- Auth end -->
                   </object>
                 </child>
                 <child>
@@ -264,6 +364,9 @@
                 </child>
               </object>
             </child>
+
+
+
             <!-- Leaflet Response -->
             <child>
               <object class="GtkBox" id="response_page">
@@ -356,6 +459,7 @@
               </object>
             </child>
             <!-- Leaflet Response end -->
+
             <!-- Leaflet Raw -->
             <child>
               <object class="GtkBox" id="raw_page">
@@ -389,6 +493,7 @@
               </object>
             </child>
             <!-- Leaflet Raw end -->
+
             <!-- Leaflet Form Data -->
             <child>
               <object class="GtkBox" id="form_data_page">
