@@ -1,0 +1,550 @@
+using Gtk 4.0;
+using Adw 1;
+
+template GetoverhereWindow : Adw.ApplicationWindow {
+  default-width: 800;
+  default-height: 500;
+  title: "Get Over Here";
+
+  styles [
+    "devel",
+  ]
+
+  Adw.ToastOverlay toast_overlay {
+    Adw.Leaflet leaflet {
+      can-unfold: false;
+
+      Box home {
+        orientation: vertical;
+
+        Adw.HeaderBar header_color {
+          centering-policy: strict;
+          title-widget:
+          Adw.ViewSwitcherTitle switcher_title {
+            stack: stack;
+            title: bind GetoverhereWindow.title;
+          }
+
+          ;
+
+          [end]
+          MenuButton {
+            icon-name: "open-menu-symbolic";
+            menu-model: primary_menu;
+          }
+        }
+
+        Adw.ViewStack stack {
+          vexpand: true;
+
+          Adw.ViewStackPage {
+            name: "endpoint";
+            title: _("_Endpoint");
+            icon-name: "network-transmit-receive-symbolic";
+            use-underline: true;
+            child:
+            Adw.Clamp {
+              margin-start: 12;
+              margin-end: 12;
+              tightening-threshold: 300;
+              child:
+              Box {
+                orientation: vertical;
+                spacing: 24;
+                valign: center;
+
+                Adw.PreferencesGroup {
+                  title: _("Request");
+
+                  Adw.ComboRow entry_method {
+                    subtitle: _("Check the method that is being used before sending a request");
+                    title: _("Method");
+                    model:
+                    StringList {
+                      strings [
+                      _("GET"),
+                      _("POST"),
+                      _("PUT"),
+                      _("PATCH"),
+                      _("DELETE")
+                      ]
+                    }
+
+                    ;
+                  }
+
+                  Adw.EntryRow entry_url {
+                    title: _("URL");
+                    use-underline: true;
+                  }
+                }
+
+                Adw.PreferencesGroup {
+                  title: _("Parameters");
+
+                  Adw.ActionRow {
+                    title: _("Type");
+
+                    Box {
+                      valign: center;
+
+                      styles [
+                        "linked",
+                      ]
+
+                      ToggleButton form_data_toggle_button {
+                        child:
+                        Box {
+                          valign: center;
+
+                          Label {
+                            label: "Form Data ";
+                          }
+
+                          Label counter_label_form_data {
+                            valign: center;
+                            margin-top: 1;
+
+                            styles [
+                              "status-badge",
+                              "numeric",
+                            ]
+                          }
+                        }
+
+                        ;
+                      }
+
+                      ToggleButton raw_toggle_button {
+                        active: true;
+                        label: _("Raw");
+                        group: form_data_toggle_button;
+                      }
+                    }
+                  }
+
+                  Adw.ActionRow btn_edit_param {
+                    title: _("Go to edit parameters");
+                    use-underline: true;
+                    activatable: true;
+
+                    Image {
+                      icon-name: "go-next-symbolic";
+                    }
+                  }
+                }
+
+                Button btn_send_request {
+                  halign: center;
+                  label: _("Send Resquest");
+                  margin-bottom: 12;
+                  tooltip-text: "Send REST";
+
+                  styles [
+                    "pill",
+                    "suggested-action",
+                  ]
+                }
+              }
+
+              ;
+            }
+
+            ;
+          }
+
+          Adw.ViewStackPage cookie_page {
+            name: "cookies";
+            title: _("_Cookies");
+            icon-name: "auth-fingerprint-symbolic";
+            use-underline: true;
+            child:
+            ScrolledWindow {
+              child:               Adw.Clamp {
+                margin-top: 24;
+                margin-start: 12;
+                margin-end: 12;
+                tightening-threshold: 300;
+                child:
+                Box {
+                  orientation: vertical;
+                  spacing: 20;
+
+                  Adw.PreferencesGroup {
+                    title: _("New Cookie");
+                    header-suffix:
+                    Button btn_add_cookie {
+                      child:                       Adw.ButtonContent {
+                        icon-name: "list-add-symbolic";
+                        label: _("Add");
+                      }
+
+                      ;
+
+                      styles [
+                        "flat",
+                      ]
+                    }
+
+                    ;
+
+                    Adw.EntryRow entry_cookie_key {
+                      title: _("Key");
+                      use-underline: true;
+                    }
+
+                    Adw.EntryRow entry_cookie_value {
+                      title: _("Value");
+                      use-underline: true;
+                    }
+                  }
+
+                  Adw.PreferencesGroup group_overrides_cookie {
+                  }
+                }
+
+                ;
+              }
+
+              ;
+            }
+
+            ;
+          }
+
+          Adw.ViewStackPage {
+            name: "headers";
+            title: _("_Headers");
+            icon-name: "user-info-symbolic";
+            use-underline: true;
+            child:
+            ScrolledWindow {
+              child:               Adw.Clamp {
+                margin-top: 24;
+                margin-start: 12;
+                margin-end: 12;
+                tightening-threshold: 300;
+                child:
+                Box {
+                  orientation: vertical;
+                  spacing: 20;
+
+                  Adw.PreferencesGroup {
+                    title: _("New Header");
+                    header-suffix:
+                    Button btn_add_header {
+                      child:
+                      Adw.ButtonContent {
+                        icon-name: "list-add-symbolic";
+                        label: _("Add");
+                      }
+
+                      ;
+
+                      styles [
+                        "flat",
+                      ]
+                    }
+
+                    ;
+
+                    Adw.EntryRow entry_header_key {
+                      title: _("Key");
+                      use-underline: true;
+                    }
+
+                    Adw.EntryRow entry_header_value {
+                      title: _("Value");
+                      use-underline: true;
+                    }
+                  }
+
+                  Adw.PreferencesGroup group_overrides_header {
+                  }
+                }
+
+                ;
+              }
+
+              ;
+            }
+
+            ;
+          }
+
+          Adw.ViewStackPage {
+            name: "auth";
+            title: _("Auth");
+            icon-name: "channel-secure-symbolic";
+            use-underline: true;
+            child:
+            ScrolledWindow {
+              child:
+              Adw.Clamp {
+                margin-top: 24;
+                margin-start: 12;
+                margin-end: 12;
+                tightening-threshold: 300;
+                child:
+                Box {
+                  orientation: vertical;
+                  spacing: 20;
+
+                  Adw.PreferencesGroup {
+                    title: _("New Auth");
+                    header-suffix:
+                    Button btn_add_auth {
+                      child:
+                      Adw.ButtonContent {
+                        icon-name: "list-add-symbolic";
+                        label: _("Add");
+                      }
+
+                      ;
+
+                      styles [
+                        "flat",
+                      ]
+                    }
+
+                    ;
+
+                    Adw.EntryRow entry_auth_key {
+                      title: _("Key");
+                      use-underline: true;
+                    }
+
+                    Adw.EntryRow entry_auth_value {
+                      title: _("Value");
+                      use-underline: true;
+                    }
+                  }
+
+                  Adw.PreferencesGroup group_overrides_auth {
+                  }
+                }
+
+                ;
+              }
+
+              ;
+            }
+
+            ;
+          }
+        }
+
+        Adw.ViewSwitcherBar switcher_bar {
+          stack: stack;
+          reveal: bind switcher_title.title-visible;
+        }
+      }
+
+      Box response_page {
+        Stack response_stack {
+          transition-type: crossfade;
+
+          StackPage {
+            name: "loading";
+            child:
+            WindowHandle {
+              vexpand: true;
+              hexpand: true;
+
+              Box {
+                orientation: vertical;
+                spacing: 12;
+                margin-top: 12;
+                margin-bottom: 12;
+                margin-start: 12;
+                margin-end: 12;
+                halign: center;
+                valign: center;
+
+                Spinner spinner {
+                  width-request: 32;
+                  height-request: 32;
+                }
+
+                Label {
+                  wrap: true;
+                  label: _("Loading…");
+
+                  styles [
+                    "title-1",
+                  ]
+                }
+              }
+            }
+
+            ;
+          }
+
+          StackPage {
+            name: "response";
+            child:
+            WindowHandle {
+              vexpand: true;
+              hexpand: true;
+              child:
+              Box {
+                orientation: vertical;
+
+                Adw.HeaderBar {
+                  title-widget:                   Adw.WindowTitle response_page_header {
+                    title: "Response";
+                  }
+
+                  ;
+
+                  [start]
+                  Button btn_go_back {
+                    valign: center;
+                    tooltip-text: _("Back");
+                    icon-name: "go-previous-symbolic";
+                  }
+                }
+
+                ScrolledWindow {
+                  hexpand: true;
+                  vexpand: true;
+                  child:
+                  .SourceView response_source_view {
+                  }
+
+                  ;
+                }
+              }
+
+              ;
+            }
+
+            ;
+          }
+        }
+      }
+
+      Box raw_page {
+        orientation: vertical;
+
+        Adw.HeaderBar {
+          title-widget:           Adw.WindowTitle {
+            title: "Raw";
+            subtitle: "JSON Format";
+          }
+
+          ;
+
+          [start]
+          Button btn_raw_go_back {
+            valign: center;
+            tooltip-text: _("Back");
+            icon-name: "go-previous-symbolic";
+          }
+        }
+
+        ScrolledWindow {
+          hexpand: true;
+          vexpand: true;
+          child:
+          .SourceView raw_source_view {
+          }
+
+          ;
+        }
+      }
+
+      Box form_data_page {
+        orientation: vertical;
+
+        Adw.HeaderBar {
+          title-widget:           Adw.WindowTitle {
+            title: "Form Data";
+          }
+
+          ;
+
+          [start]
+          Button btn_form_data_go_back {
+            valign: center;
+            tooltip-text: _("Back");
+            icon-name: "go-previous-symbolic";
+          }
+        }
+
+        ScrolledWindow {
+          vexpand: true;
+          child:
+          Adw.ToastOverlay toast_overlaa {
+            Adw.Clamp {
+              margin-top: 24;
+              margin-start: 12;
+              margin-end: 12;
+              tightening-threshold: 300;
+              child:
+              Box {
+                orientation: vertical;
+                spacing: 20;
+
+                Adw.PreferencesGroup {
+                  title: _("New Parameter");
+                  header-suffix:
+                  Button btn_add_parameter {
+                    child:                     Adw.ButtonContent {
+                      icon-name: "list-add-symbolic";
+                      label: _("Add");
+                    }
+
+                    ;
+
+                    styles [
+                      "flat",
+                    ]
+                  }
+
+                  ;
+
+                  Adw.EntryRow entry_parameter_key {
+                    title: _("Key");
+                    use-underline: true;
+                  }
+
+                  Adw.EntryRow entry_parameter_value {
+                    title: _("Value");
+                    use-underline: true;
+                  }
+                }
+
+                Adw.PreferencesGroup group_overrides_parameter {
+                }
+              }
+
+              ;
+            }
+          }
+
+          ;
+        }
+      }
+    }
+  }
+}
+
+menu primary_menu {
+  section {
+    item {
+      label: _("_Preferences");
+      action: "app.preferences";
+    }
+
+    item {
+      label: _("_Keyboard Shortcuts");
+      action: "win.show-help-overlay";
+    }
+
+    item {
+      label: _("_About Get_over_here");
+      action: "app.about";
+    }
+  }
+}
