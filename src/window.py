@@ -136,7 +136,9 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         parameter_type = self.form_data_toggle_button.props.active
 
         if not url:
-            self.toast_overlay.add_toast(Adw.Toast.new(("Enter a URL")))
+            self.toast_overlay.add_toast(
+                Adw.Toast.new(("Enter a URL"))
+            )
         else:
             if re.match(regex, url) is None:
                 self.toast_overlay.add_toast(
@@ -238,14 +240,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     json_cookie = json.dumps(
                         {cookie_key: cookie_value}, indent=2
                     )
-                    _entry = PupulatorEntry(
-                        window=self,
-                        override=[cookie_key, cookie_value],
-                        content=COOKIES,
-                    )
-                    GLib.idle_add(self.group_overrides_cookie.add, _entry)
-
-                    # Save cookies
                     if not os.path.exists(COOKIES):
                         os.makedirs(os.path.dirname(COOKIES), exist_ok=True)
                         with open(COOKIES, "w") as file:
@@ -253,9 +247,27 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     else:
                         with open(COOKIES, "r+") as file:
                             file_content = json.load(file)
-                            file_content.update({cookie_key: cookie_value})
-                            file.seek(0)
-                            json.dump(file_content, file, indent=2)
+                            if not any(
+                                [i == cookie_key for i in file_content.keys()]
+                            ):
+                                # Save Cookies
+                                file_content.update({cookie_key: cookie_value})
+                                file.seek(0)
+                                json.dump(file_content, file, indent=2)
+
+                                # Populate UI
+                                _entry = PupulatorEntry(
+                                    window=self,
+                                    override=[cookie_key, cookie_value],
+                                    content=COOKIES,
+                                )
+                                GLib.idle_add(
+                                    self.group_overrides_cookie.add, _entry
+                                )
+                            else:
+                                return self.toast_overlay.add_toast(
+                                    Adw.Toast.new(("Key already exists"))
+                                )
 
                     self.cookies = file_content
                     self.cookie_page.set_badge_number(len(file_content))
@@ -272,14 +284,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     json_parameter = json.dumps(
                         {parameter_key: parameter_value}, indent=2
                     )
-                    _entry = PupulatorEntry(
-                        window=self,
-                        override=[parameter_key, parameter_value],
-                        content=PARAMETERS,
-                    )
-                    GLib.idle_add(self.group_overrides_parameter.add, _entry)
-
-                    # Save paramters
                     if not os.path.exists(PARAMETERS):
                         os.makedirs(os.path.dirname(PARAMETERS), exist_ok=True)
                         with open(PARAMETERS, "w") as file:
@@ -287,11 +291,32 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     else:
                         with open(PARAMETERS, "r+") as file:
                             file_content = json.load(file)
-                            file_content.update(
-                                {parameter_key: parameter_value}
-                            )
-                            file.seek(0)
-                            json.dump(file_content, file, indent=2)
+                            if not any(
+                                [
+                                    i == parameter_key
+                                    for i in file_content.keys()
+                                ]
+                            ):
+                                # Save Parameters
+                                file_content.update(
+                                    {parameter_key: parameter_value}
+                                )
+                                file.seek(0)
+                                json.dump(file_content, file, indent=2)
+
+                                # Populate UI
+                                _entry = PupulatorEntry(
+                                    window=self,
+                                    override=[parameter_key, parameter_value],
+                                    content=PARAMETERS,
+                                )
+                                GLib.idle_add(
+                                    self.group_overrides_parameter.add, _entry
+                                )
+                            else:
+                                return self.toast_overlay.add_toast(
+                                    Adw.Toast.new(("Key already exists"))
+                                )
 
                     self.parameters = file_content
                     self.parameter_counter(file_content)
