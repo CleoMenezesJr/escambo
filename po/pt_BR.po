@@ -29,7 +29,7 @@ msgstr "Sem descrição"
 
 #: src/window.ui:44
 msgid "_Endpoint"
-msgstr "_Extremidade"
+msgstr "_Endpoint"
 
 #: src/window.ui:60
 msgid "Request"
