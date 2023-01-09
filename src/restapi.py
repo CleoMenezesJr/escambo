@@ -38,7 +38,10 @@ class ResolveRequests:
 
     def resolve_post(self) -> list:
         response = self.session.post(
-            self.url, json=self.parameters, headers=self.headers
+            self.url,
+            json=self.parameters,
+            headers=self.headers,
+            cookies=self.cookies,
         )
 
         return self.formated_response(response)
