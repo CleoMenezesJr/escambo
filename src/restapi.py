@@ -81,8 +81,9 @@ class ResolveRequests:
         msg_status_code = requests.status_codes._codes[status_code][0]
         status = f"{status_code} {msg_status_code}".title().replace("_", " ")
 
-        match response.headers.get("content-type").split(";")[0]:
-            case "application/json":
-                return [json.dumps(response.json(), indent=4), status, "json"]
-            case "text/html":
-                return [response.text, status, "html"]
+        if str(response.headers.get("content-type")).startswith(
+            "application/json"
+        ):
+            return [json.dumps(response.json(), indent=4), status, "json"]
+        else:
+            return [response.text, status, "html"]
