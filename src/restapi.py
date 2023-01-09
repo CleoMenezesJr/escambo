@@ -46,6 +46,36 @@ class ResolveRequests:
 
         return self.formated_response(response)
 
+    def resolve_put(self) -> list:
+        response = self.session.put(
+            self.url,
+            json=self.parameters,
+            headers=self.headers,
+            cookies=self.cookies,
+        )
+
+        return self.formated_response(response)
+
+    def resolve_patch(self) -> list:
+        response = self.session.patch(
+            self.url,
+            json=self.parameters,
+            headers=self.headers,
+            cookies=self.cookies,
+        )
+
+        return self.formated_response(response)
+
+    def resolve_delete(self) -> list:
+        response = self.session.patch(
+            self.url,
+            json=self.parameters,
+            headers=self.headers,
+            cookies=self.cookies,
+        )
+
+        return self.formated_response(response)
+
     def formated_response(self, response: requests.models.Response) -> list:
         status_code = response.status_code
         msg_status_code = requests.status_codes._codes[status_code][0]

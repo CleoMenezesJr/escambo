@@ -136,9 +136,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         parameter_type = self.form_data_toggle_button.props.active
 
         if not url:
-            self.toast_overlay.add_toast(
-                Adw.Toast.new(("Enter a URL"))
-            )
+            self.toast_overlay.add_toast(Adw.Toast.new(("Enter a URL")))
         else:
             if re.match(regex, url) is None:
                 self.toast_overlay.add_toast(
@@ -201,6 +199,27 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         cookies=self.cookies,
                         parameters=parameters,
                     ).resolve_post()
+                case 2:
+                    response, status_code, code_type = ResolveRequests(
+                        url,
+                        self.session,
+                        cookies=self.cookies,
+                        parameters=parameters,
+                    ).resolve_put()
+                case 3:
+                    response, status_code, code_type = ResolveRequests(
+                        url,
+                        self.session,
+                        cookies=self.cookies,
+                        parameters=parameters,
+                    ).resolve_patch()
+                case 4:
+                    response, status_code, code_type = ResolveRequests(
+                        url,
+                        self.session,
+                        cookies=self.cookies,
+                        parameters=parameters,
+                    ).resolve_delete()
         except exceptions.ConnectionError:
             return self.toast_overlay.add_toast(
                 Adw.Toast.new(("Error: Couldn't resolve host name "))
