@@ -9,22 +9,15 @@ class ResolveRequests:
         url: str,
         session: requests.sessions.Session,
         cookies: dict = None,
+        headers: dict = None,
         parameters: dict = None,
     ) -> None:
 
         self.url = url
         self.session = session
         self.cookies = cookies
+        self.headers = cookies
         self.parameters = parameters
-
-        # TODO
-        # If header is None, guess header content_type
-        head = requests.head(self.url)
-        if "Content-Type" in head.headers:
-            content_type = head.headers["Content-Type"]
-            self.headers = {"Content-Type": content_type}
-        else:
-            self.headers = None
 
     def resolve_get(self) -> list:
         response = self.session.get(

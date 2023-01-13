@@ -36,6 +36,9 @@ COOKIES = os.path.join(
 PARAMETERS = os.path.join(
     GLib.get_user_config_dir(), "getoverhere", "parameters.json"
 )
+HEADERS = os.path.join(
+    GLib.get_user_config_dir(), "getoverhere", "parameters.json"
+)
 
 
 @Gtk.Template(resource_path="/io/github/cleomenezesjr/GetOverHere/window.ui")
@@ -80,6 +83,12 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     btn_add_cookie = Gtk.Template.Child()
     group_overrides_cookie = Gtk.Template.Child()
 
+    header_page = Gtk.Template.Child()
+    entry_header_key = Gtk.Template.Child()
+    entry_header_value = Gtk.Template.Child()
+    btn_add_header = Gtk.Template.Child()
+    group_overrides_header = Gtk.Template.Child()
+
     spinner = Gtk.Template.Child()
 
     def __init__(self, **kwargs: dict) -> None:
@@ -97,6 +106,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.btn_add_parameter.connect(
             "clicked", self.__save_override, "parameters"
         )
+        self.btn_add_header.connect("clicked", self.__save_override, "headers")
 
         self.btn_go_back.connect("clicked", self.__go_back)
         self.btn_raw_go_back.connect("clicked", self.__go_back)
@@ -104,6 +114,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
 
         # var
         self.cookies = {}
+        self.headers = {}
         self.parameters = {}
 
         self.__populate_overrides_list()
@@ -189,6 +200,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         url,
                         self.session,
                         cookies=self.cookies,
+                        headers=self.headers,
                         parameters=parameters,
                     ).resolve_get()
 
@@ -197,6 +209,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         url,
                         self.session,
                         cookies=self.cookies,
+                        headers=self.headers,
                         parameters=parameters,
                     ).resolve_post()
                 case 2:
@@ -204,6 +217,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         url,
                         self.session,
                         cookies=self.cookies,
+                        headers=self.headers,
                         parameters=parameters,
                     ).resolve_put()
                 case 3:
@@ -211,6 +225,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         url,
                         self.session,
                         cookies=self.cookies,
+                        headers=self.headers,
                         parameters=parameters,
                     ).resolve_patch()
                 case 4:
@@ -218,6 +233,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         url,
                         self.session,
                         cookies=self.cookies,
+                        headers=self.headers,
                         parameters=parameters,
                     ).resolve_delete()
         except exceptions.ConnectionError:
@@ -344,6 +360,50 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     self.group_overrides_parameter.set_description("")
                     self.entry_parameter_key.set_text("")
                     self.entry_parameter_value.set_text("")
+            case "headers":
+                header_key = self.entry_header_key.get_text()
+                header_value = self.entry_header_value.get_text()
+
+                if header_key != "" and header_value != "":
+                    json_header = json.dumps(
+                        {header_key: header_value}, indent=2
+                    )
+                    if not os.path.exists(HEADERS):
+                        os.makedirs(os.path.dirname(HEADERS), exist_ok=True)
+                        with open(HEADERS, "w") as file:
+                            file_content = file.write(json_header)
+                    else:
+                        with open(HEADERS, "r+") as file:
+                            file_content = json.load(file)
+                            if not any(
+                                [i == header_key for i in file_content.keys()]
+                            ):
+                                # Save Headers
+                                file_content.update({header_key: header_value})
+                                file.seek(0)
+                                json.dump(file_content, file, indent=2)
+
+                                # Populate UI
+                                _entry = PupulatorEntry(
+                                    window=self,
+                                    override=[header_key, header_value],
+                                    content=HEADERS,
+                                )
+                                GLib.idle_add(
+                                    self.group_overrides_header.add, _entry
+                                )
+                            else:
+                                return self.toast_overlay.add_toast(
+                                    Adw.Toast.new(("Key already exists"))
+                                )
+
+                    self.headers = file_content
+                    self.parameter_counter(file_content)
+
+                    # Clean up fields
+                    self.group_overrides_header.set_description("")
+                    self.entry_header_key.set_text("")
+                    self.entry_header_value.set_text("")
 
     def __populate_overrides_list(self) -> None:
         """
@@ -372,7 +432,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
 
                 self.cookie_page.set_badge_number(len(overrides))
 
-        # Populate entries
+        # Populate parameters
         if os.path.exists(PARAMETERS):
             with open(PARAMETERS, "r") as file:
                 overrides = json.load(file)
@@ -396,6 +456,31 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         )
 
                 self.parameter_counter(overrides)
+
+        # Populate headers
+        if os.path.exists(HEADERS):
+            with open(HEADERS, "r") as file:
+                overrides = json.load(file)
+                overrides = dict(reversed(list(overrides.items())))
+                self.headers = overrides
+                if not bool(overrides):
+                    self.group_overrides_header.set_description(
+                        ("No parameter added.")
+                    )
+                else:
+                    self.headers = overrides
+                    self.group_overrides_header.set_description("")
+                    for override in overrides:
+                        _entry = PupulatorEntry(
+                            window=self,
+                            override=[override, overrides[override]],
+                            content=HEADERS,
+                        )
+                        GLib.idle_add(
+                            self.group_overrides_header.add, _entry
+                        )
+
+                self.header_page.set_badge_number(len(overrides))
 
     def parameter_counter(self, overrides):
         """Parameter counter and its visibility"""
