@@ -76,56 +76,61 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                         }
 
                                         Adw.PreferencesGroup {
-                                            title: _("Parameters");
 
-                                            Adw.ActionRow {
-                                                title: _("Type");
+                                              Adw.ExpanderRow enable_expander_row {
+                                                show-enable-switch: true;
+                                                title: _("Parameters");
 
-                                                Box {
-                                                    valign: center;
+                                                Adw.ActionRow {
+                                                    title: _("Type");
 
-                                                    styles [
-                                                        "linked",
-                                                    ]
+                                                    Box {
+                                                        valign: center;
 
-                                                    ToggleButton form_data_toggle_button {
-                                                        child:
-                                                            Box {
-                                                                valign: center;
+                                                        styles [
+                                                            "linked",
+                                                        ]
 
-                                                                Label {
-                                                                    label: "Form Data ";
-                                                                }
-
-                                                                Label counter_label_form_data {
+                                                        ToggleButton form_data_toggle_button {
+                                                            child:
+                                                                Box {
                                                                     valign: center;
-                                                                    margin-top: 1;
 
-                                                                    styles [
-                                                                        "status-badge",
-                                                                        "numeric",
-                                                                    ]
-                                                                }
-                                                            };
-                                                    }
+                                                                    Label {
+                                                                        label: "Form Data ";
+                                                                    }
 
-                                                    ToggleButton raw_toggle_button {
-                                                        active: true;
-                                                        label: _("Raw");
-                                                        group: form_data_toggle_button;
+                                                                    Label counter_label_form_data {
+                                                                        valign: center;
+                                                                        margin-top: 1;
+
+                                                                        styles [
+                                                                            "status-badge",
+                                                                            "numeric",
+                                                                        ]
+                                                                    }
+                                                                };
+                                                        }
+
+                                                        ToggleButton raw_toggle_button {
+                                                            active: true;
+                                                            label: _("Raw");
+                                                            group: form_data_toggle_button;
+                                                        }
                                                     }
                                                 }
-                                            }
 
-                                            Adw.ActionRow btn_edit_param {
-                                                title: _("Go to edit parameters");
-                                                use-underline: true;
-                                                activatable: true;
+                                                Adw.ActionRow btn_edit_param {
+                                                    title: _("Go to edit Parameters");
+                                                    use-underline: true;
+                                                    activatable: true;
 
-                                                Image {
-                                                    icon-name: "go-next-symbolic";
+                                                    Image {
+                                                        icon-name: "go-next-symbolic";
+                                                    }
                                                 }
-                                            }
+                                              }
+
                                         }
 
                                         Button btn_send_request {
