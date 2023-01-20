@@ -2,8 +2,8 @@ using Gtk 4.0;
 using Adw 1;
 
 template GetoverhereWindow : Adw.ApplicationWindow {
-    default-width: 800;
-    default-height: 500;
+    default-width: 850;
+    default-height: 550;
     title: "Get Over Here";
 
     styles [
@@ -42,108 +42,130 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                         icon-name: "network-transmit-receive-symbolic";
                         use-underline: true;
                         child:
-                            Adw.Clamp {
-                                margin-start: 12;
-                                margin-end: 12;
-                                tightening-threshold: 300;
+                            ScrolledWindow {
                                 child:
-                                    Box {
-                                        orientation: vertical;
-                                        spacing: 24;
-                                        valign: center;
+                                    Adw.Clamp {
+                                        margin-start: 12;
+                                        margin-end: 12;
+                                        tightening-threshold: 300;
+                                        child:
+                                            Box {
+                                                orientation: vertical;
+                                                spacing: 24;
+                                                valign: center;
 
-                                        Adw.PreferencesGroup {
-                                            title: _("Request");
+                                                Adw.PreferencesGroup {
+                                                    title: _("Request");
 
-                                            Adw.ComboRow entry_method {
-                                                subtitle: _("Check the method that is being used before sending a request");
-                                                title: _("Method");
-                                                model: StringList {
-                                                    strings [
-                                                        _("GET"),
-                                                        _("POST"),
-                                                        _("PUT"),
-                                                        _("PATCH"),
-                                                        _("DELETE")
+                                                    Adw.ComboRow entry_method {
+                                                        subtitle: _("Check the method that is being used before sending a request");
+                                                        title: _("Method");
+                                                        model: StringList {
+                                                            strings [
+                                                                _("GET"),
+                                                                _("POST"),
+                                                                _("PUT"),
+                                                                _("PATCH"),
+                                                                _("DELETE")
+                                                            ]
+                                                        };
+                                                    }
+
+                                                    Adw.EntryRow entry_url {
+                                                        title: _("URL");
+                                                        use-underline: true;
+                                                    }
+                                                }
+                                                Adw.PreferencesGroup {
+
+                                                      Adw.ExpanderRow enable_expander_row {
+                                                        show-enable-switch: true;
+                                                        title: _("Query Parameters");
+
+                                                        Adw.ActionRow btn_edit_param {
+                                                            title: _("Go to edit Parameters");
+                                                            use-underline: true;
+                                                            activatable: true;
+
+                                                            Image {
+                                                                icon-name: "go-next-symbolic";
+                                                            }
+                                                        }
+                                                      }
+
+                                                }
+
+                                                Adw.PreferencesGroup {
+
+                                                      Adw.ExpanderRow enable_expander_row_body {
+                                                        show-enable-switch: true;
+                                                        title: _("Body");
+
+                                                        Adw.ActionRow {
+                                                            title: _("Edition Type");
+
+                                                            Box {
+                                                                valign: center;
+
+                                                                styles [
+                                                                    "linked",
+                                                                ]
+
+                                                                ToggleButton form_data_toggle_button_body {
+                                                                    child:
+                                                                        Box {
+                                                                            valign: center;
+
+                                                                            Label {
+                                                                                label: "Form Data ";
+                                                                            }
+
+                                                                            Label counter_label_form_data_body {
+                                                                                valign: center;
+                                                                                margin-top: 1;
+
+                                                                                styles [
+                                                                                    "status-badge",
+                                                                                    "numeric",
+                                                                                ]
+                                                                            }
+                                                                        };
+                                                                }
+
+                                                                ToggleButton raw_toggle_button_body {
+                                                                    active: true;
+                                                                    label: _("Raw");
+                                                                    group: form_data_toggle_button_body;
+                                                                }
+                                                            }
+                                                        }
+
+                                                        Adw.ActionRow btn_edit_body {
+                                                            title: _("Go to edit Body");
+                                                            use-underline: true;
+                                                            activatable: true;
+
+                                                            Image {
+                                                                icon-name: "go-next-symbolic";
+                                                            }
+                                                        }
+                                                      }
+
+                                                }
+
+
+                                                Button btn_send_request {
+                                                    halign: center;
+                                                    label: _("Send Resquest");
+                                                    margin-bottom: 12;
+                                                    tooltip-text: "Send REST";
+
+                                                    styles [
+                                                    "pill",
+                                                    "suggested-action",
                                                     ]
-                                                };
-                                            }
-
-                                            Adw.EntryRow entry_url {
-                                                title: _("URL");
-                                                use-underline: true;
-                                            }
-                                        }
-
-                                        Adw.PreferencesGroup {
-
-                                              Adw.ExpanderRow enable_expander_row {
-                                                show-enable-switch: true;
-                                                title: _("Parameters");
-
-                                                Adw.ActionRow {
-                                                    title: _("Type");
-
-                                                    Box {
-                                                        valign: center;
-
-                                                        styles [
-                                                            "linked",
-                                                        ]
-
-                                                        ToggleButton form_data_toggle_button {
-                                                            child:
-                                                                Box {
-                                                                    valign: center;
-
-                                                                    Label {
-                                                                        label: "Form Data ";
-                                                                    }
-
-                                                                    Label counter_label_form_data {
-                                                                        valign: center;
-                                                                        margin-top: 1;
-
-                                                                        styles [
-                                                                            "status-badge",
-                                                                            "numeric",
-                                                                        ]
-                                                                    }
-                                                                };
-                                                        }
-
-                                                        ToggleButton raw_toggle_button {
-                                                            active: true;
-                                                            label: _("Raw");
-                                                            group: form_data_toggle_button;
-                                                        }
-                                                    }
                                                 }
-
-                                                Adw.ActionRow btn_edit_param {
-                                                    title: _("Go to edit Parameters");
-                                                    use-underline: true;
-                                                    activatable: true;
-
-                                                    Image {
-                                                        icon-name: "go-next-symbolic";
-                                                    }
-                                                }
-                                              }
-
-                                        }
-
-                                        Button btn_send_request {
-                                            halign: center;
-                                            label: _("Send Resquest");
-                                            margin-bottom: 12;
-                                            tooltip-text: "Send REST";
-
-                                            styles [
-                                            "pill",
-                                            "suggested-action",
-                                            ]
-                                        }
+                                            };
                                     };
                             };
                     }
@@ -372,7 +394,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                             };
 
                                             [start]
-                                            Button btn_go_back {
+                                            Button btn_response_go_back {
                                                 valign: center;
                                                 tooltip-text: _("Back");
                                                 icon-name: "go-previous-symbolic";
@@ -393,7 +415,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
             //Leaflet Response end
 
             //Leaflet Raw
-            Box raw_page {
+            Box raw_page_body {
                 orientation: vertical;
 
                 Adw.HeaderBar {
@@ -404,7 +426,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                         };
 
                         [start]
-                        Button btn_raw_go_back {
+                        Button btn_raw_go_back_body {
                             valign: center;
                             tooltip-text: _("Back");
                             icon-name: "go-previous-symbolic";
@@ -415,13 +437,13 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                     hexpand: true;
                     vexpand: true;
                     child:
-                        .SourceView raw_source_view {};
+                        .SourceView raw_source_view_body {};
                 }
             }
             //Leaflet Raw end
 
             //Leaflet Form Data
-            Box form_data_page {
+            Box form_data_page_body {
                 orientation: vertical;
 
                 Adw.HeaderBar {
@@ -453,9 +475,9 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                     spacing: 20;
 
                                     Adw.PreferencesGroup {
-                                        title: _("New Parameter");
+                                        title: _("New Body");
                                         header-suffix:
-                                            Button btn_add_parameter {
+                                            Button btn_add_body {
                                                 child:
                                                     Adw.ButtonContent {
                                                         icon-name: "list-add-symbolic";
@@ -467,18 +489,18 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                     ]
                                             };
 
-                                        Adw.EntryRow entry_parameter_key {
+                                        Adw.EntryRow entry_body_key {
                                             title: _("Key");
                                             use-underline: true;
                                         }
 
-                                        Adw.EntryRow entry_parameter_value {
+                                        Adw.EntryRow entry_body_value {
                                             title: _("Value");
                                             use-underline: true;
                                         }
                                     }
 
-                                    Adw.PreferencesGroup group_overrides_parameter {}
+                                    Adw.PreferencesGroup group_overrides_body {}
                                 };
                         }
                     };

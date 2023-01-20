@@ -33,11 +33,9 @@ from requests import Session, exceptions
 COOKIES = os.path.join(
     GLib.get_user_config_dir(), "getoverhere", "cookies.json"
 )
-PARAMETERS = os.path.join(
-    GLib.get_user_config_dir(), "getoverhere", "parameters.json"
-)
+BODY = os.path.join(GLib.get_user_config_dir(), "getoverhere", "body.json")
 HEADERS = os.path.join(
-    GLib.get_user_config_dir(), "getoverhere", "parameters.json"
+    GLib.get_user_config_dir(), "getoverhere", "headers.json"
 )
 
 
@@ -55,27 +53,27 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     response_stack = Gtk.Template.Child()
     response_page = Gtk.Template.Child()
     response_page_header = Gtk.Template.Child()
-    raw_page = Gtk.Template.Child()
-    form_data_page = Gtk.Template.Child()
+    raw_page_body = Gtk.Template.Child()
+    form_data_page_body = Gtk.Template.Child()
 
     response_source_view: SourceView = Gtk.Template.Child()
-    raw_source_view: SourceView = Gtk.Template.Child()
+    raw_source_view_body: SourceView = Gtk.Template.Child()
 
-    btn_go_back = Gtk.Template.Child()
-    btn_raw_go_back = Gtk.Template.Child()
+    btn_response_go_back = Gtk.Template.Child()
+    btn_raw_go_back_body = Gtk.Template.Child()
     btn_form_data_go_back = Gtk.Template.Child()
-    btn_edit_param = Gtk.Template.Child()
 
-    form_data_toggle_button = Gtk.Template.Child()
     home = Gtk.Template.Child()
+    form_data_toggle_button_body = Gtk.Template.Child()
+    btn_edit_body = Gtk.Template.Child()
 
     btn_send_request = Gtk.Template.Child()
 
-    entry_parameter_key = Gtk.Template.Child()
-    entry_parameter_value = Gtk.Template.Child()
-    btn_add_parameter = Gtk.Template.Child()
-    group_overrides_parameter = Gtk.Template.Child()
-    counter_label_form_data = Gtk.Template.Child()
+    entry_body_key = Gtk.Template.Child()
+    entry_body_value = Gtk.Template.Child()
+    btn_add_body = Gtk.Template.Child()
+    group_overrides_body = Gtk.Template.Child()
+    counter_label_form_data_body = Gtk.Template.Child()
 
     cookie_page = Gtk.Template.Child()
     entry_cookie_key = Gtk.Template.Child()
@@ -99,26 +97,25 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         with Session() as session:
             self.session = session
 
+        self.entry_url.connect("changed", print, self.entry_url)
         # Connect signals
         self.btn_send_request.connect("clicked", self.__on_send)
-        self.btn_edit_param.connect("activated", self.__on_edit_param)
+        self.btn_edit_body.connect("activated", self.__on_edit_body)
         self.btn_add_cookie.connect("clicked", self.__save_override, "cookies")
-        self.btn_add_parameter.connect(
-            "clicked", self.__save_override, "parameters"
-        )
+        self.btn_add_body.connect("clicked", self.__save_override, "body")
         self.btn_add_header.connect("clicked", self.__save_override, "headers")
 
-        self.btn_go_back.connect("clicked", self.__go_back)
-        self.btn_raw_go_back.connect("clicked", self.__go_back)
+        self.btn_response_go_back.connect("clicked", self.__go_back)
+        self.btn_raw_go_back_body.connect("clicked", self.__go_back)
         self.btn_form_data_go_back.connect("clicked", self.__go_back)
 
         # var
         self.cookies = {}
         self.headers = {}
-        self.parameters = {}
+        self.body = {}
 
         self.__populate_overrides_list()
-        self.raw_buffer = self.raw_source_view.get_buffer()
+        self.raw_buffer = self.raw_source_view_body.get_buffer()
         self.response_buffer = self.response_source_view.get_buffer()
         self.response_source_view.props.editable = False
 
@@ -144,7 +141,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         )
         url = self.entry_url.get_text()
         method = self.entry_method.get_selected()
-        parameter_type = self.form_data_toggle_button.props.active
+        body_type = self.form_data_toggle_button_body.props.active
 
         if not url:
             self.toast_overlay.add_toast(Adw.Toast.new(("Enter a URL")))
@@ -156,13 +153,13 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     )
                 )
             else:
-                parameters = self.__which_parameters(parameter_type)
+                body = self.__which_body_type(body_type)
                 which_method_thread = threading.Thread(
                     target=self.__which_method,
                     args=(
                         method,
                         url,
-                        parameters,
+                        body,
                     ),
                 )
                 which_method_thread.daemon = True
@@ -172,26 +169,26 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 self.leaflet.set_visible_child(self.response_page)
                 self.response_stack.props.visible_child_name = "loading"
 
-    def __which_parameters(self, parameter_type: bool) -> dict | None:
-        if parameter_type:
-            parameters = self.parameters
+    def __which_body_type(self, body_type: bool) -> dict | None:
+        if body_type:
+            body = self.body
         else:
             start, end = self.raw_buffer.get_bounds()
             raw_code = self.raw_buffer.get_text(start, end, True)
             if not len(raw_code) == 0:
                 try:
-                    parameters = json.loads(raw_code)
+                    body = json.loads(raw_code)
                 except ValueError:
                     return self.toast_overlay.add_toast(
-                        Adw.Toast.new(("Parameters must be in JSON format"))
+                        Adw.Toast.new(("Body must be in JSON format"))
                     )
             else:
-                parameters = None
+                body = None
 
-        return parameters
+        return body
 
     def __which_method(
-        self, method: int, url: str, parameters: dict | None
+        self, method: int, url: str, body: dict | None
     ) -> Callable | None:
         try:
             match method:
@@ -201,7 +198,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         self.session,
                         cookies=self.cookies,
                         headers=self.headers,
-                        parameters=parameters,
+                        body=body,
                     ).resolve_get()
 
                 case 1:
@@ -210,7 +207,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         self.session,
                         cookies=self.cookies,
                         headers=self.headers,
-                        parameters=parameters,
+                        body=body,
                     ).resolve_post()
                 case 2:
                     response, status_code, code_type = ResolveRequests(
@@ -218,7 +215,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         self.session,
                         cookies=self.cookies,
                         headers=self.headers,
-                        parameters=parameters,
+                        body=body,
                     ).resolve_put()
                 case 3:
                     response, status_code, code_type = ResolveRequests(
@@ -226,7 +223,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         self.session,
                         cookies=self.cookies,
                         headers=self.headers,
-                        parameters=parameters,
+                        body=body,
                     ).resolve_patch()
                 case 4:
                     response, status_code, code_type = ResolveRequests(
@@ -234,7 +231,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         self.session,
                         cookies=self.cookies,
                         headers=self.headers,
-                        parameters=parameters,
+                        body=body,
                     ).resolve_delete()
         except exceptions.ConnectionError:
             return self.toast_overlay.add_toast(
@@ -251,11 +248,11 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         GLib.idle_add(self.response_page_header.set_subtitle, str(status_code))
         self.response_stack.props.visible_child_name = "response"
 
-    def __on_edit_param(self, *_args: tuple) -> None:
-        if not self.form_data_toggle_button.props.active:
-            self.leaflet.set_visible_child(self.raw_page)
+    def __on_edit_body(self, *_args: tuple) -> None:
+        if not self.form_data_toggle_button_body.props.active:
+            self.leaflet.set_visible_child(self.raw_page_body)
         else:
-            self.leaflet.set_visible_child(self.form_data_page)
+            self.leaflet.set_visible_child(self.form_data_page_body)
 
     def __go_back(self, *_args: tuple) -> None:
         self.leaflet.set_visible_child(self.home)
@@ -311,55 +308,46 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     self.group_overrides_cookie.set_description("")
                     self.entry_cookie_key.set_text("")
                     self.entry_cookie_value.set_text("")
-            case "parameters":
-                parameter_key = self.entry_parameter_key.get_text()
-                parameter_value = self.entry_parameter_value.get_text()
+            case "body":
+                body_key = self.entry_body_key.get_text()
+                body_value = self.entry_body_value.get_text()
 
-                if parameter_key != "" and parameter_value != "":
-                    json_parameter = json.dumps(
-                        {parameter_key: parameter_value}, indent=2
-                    )
-                    if not os.path.exists(PARAMETERS):
-                        os.makedirs(os.path.dirname(PARAMETERS), exist_ok=True)
-                        with open(PARAMETERS, "w") as file:
-                            file_content = file.write(json_parameter)
-                    else:
-                        with open(PARAMETERS, "r+") as file:
-                            file_content = json.load(file)
-                            if not any(
-                                [
-                                    i == parameter_key
-                                    for i in file_content.keys()
-                                ]
-                            ):
-                                # Save Parameters
-                                file_content.update(
-                                    {parameter_key: parameter_value}
-                                )
-                                file.seek(0)
-                                json.dump(file_content, file, indent=2)
+                if body_key != "" and body_value != "":
+                    if not os.path.exists(BODY):
+                        os.makedirs(os.path.dirname(BODY), exist_ok=True)
+                        with open(BODY, "w") as file:
+                            file.write(json.dumps({}))
+                    with open(BODY, "r+") as file:
+                        file_content = json.load(file)
+                        if not any(
+                            [i == body_key for i in file_content.keys()]
+                        ):
+                            # Save Body
+                            file_content.update({body_key: body_value})
+                            file.seek(0)
+                            json.dump(file_content, file, indent=2)
 
-                                # Populate UI
-                                _entry = PupulatorEntry(
-                                    window=self,
-                                    override=[parameter_key, parameter_value],
-                                    content=PARAMETERS,
-                                )
-                                GLib.idle_add(
-                                    self.group_overrides_parameter.add, _entry
-                                )
-                            else:
-                                return self.toast_overlay.add_toast(
-                                    Adw.Toast.new(("Key already exists"))
-                                )
+                            # Populate UI
+                            _entry = PupulatorEntry(
+                                window=self,
+                                override=[body_key, body_value],
+                                content=BODY,
+                            )
+                            GLib.idle_add(
+                                self.group_overrides_body.add, _entry
+                            )
+                        else:
+                            return self.toast_overlay.add_toast(
+                                Adw.Toast.new(("Key already exists"))
+                            )
 
-                    self.parameters = file_content
-                    self.parameter_counter(file_content)
+                    self.body = file_content
+                    self.body_counter(file_content)
 
                     # Clean up fields
-                    self.group_overrides_parameter.set_description("")
-                    self.entry_parameter_key.set_text("")
-                    self.entry_parameter_value.set_text("")
+                    self.group_overrides_body.set_description("")
+                    self.entry_body_key.set_text("")
+                    self.entry_body_value.set_text("")
             case "headers":
                 header_key = self.entry_header_key.get_text()
                 header_value = self.entry_header_value.get_text()
@@ -398,7 +386,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                                 )
 
                     self.headers = file_content
-                    self.parameter_counter(file_content)
+                    # self.body_counter(file_content)
 
                     # Clean up fields
                     self.group_overrides_header.set_description("")
@@ -432,30 +420,31 @@ class GetoverhereWindow(Adw.ApplicationWindow):
 
                 self.cookie_page.set_badge_number(len(overrides))
 
-        # Populate parameters
-        if os.path.exists(PARAMETERS):
-            with open(PARAMETERS, "r") as file:
+        # Populate body
+        if os.path.exists(BODY):
+            with open(BODY, "r") as file:
                 overrides = json.load(file)
                 overrides = dict(reversed(list(overrides.items())))
-                self.parameters = overrides
+                self.body = overrides
                 if not bool(overrides):
-                    self.group_overrides_parameter.set_description(
-                        ("No parameter added.")
+                    self.group_overrides_body.set_description(
+                        ("No body added.")
                     )
                 else:
-                    self.parameters = overrides
-                    self.group_overrides_parameter.set_description("")
+                    self.body = overrides
+                    self.group_overrides_body.set_description("")
                     for override in overrides:
                         _entry = PupulatorEntry(
                             window=self,
                             override=[override, overrides[override]],
-                            content=PARAMETERS,
+                            content=BODY,
                         )
-                        GLib.idle_add(
-                            self.group_overrides_parameter.add, _entry
-                        )
+                        GLib.idle_add(self.group_overrides_body.add, _entry)
 
-                self.parameter_counter(overrides)
+                self.body_counter(overrides)
+        else:
+            self.group_overrides_body.set_description(("No body added."))
+            self.counter_label_form_data_body.set_visible(False)
 
         # Populate headers
         if os.path.exists(HEADERS):
@@ -465,7 +454,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 self.headers = overrides
                 if not bool(overrides):
                     self.group_overrides_header.set_description(
-                        ("No parameter added.")
+                        ("No header added.")
                     )
                 else:
                     self.headers = overrides
@@ -476,15 +465,13 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                             override=[override, overrides[override]],
                             content=HEADERS,
                         )
-                        GLib.idle_add(
-                            self.group_overrides_header.add, _entry
-                        )
+                        GLib.idle_add(self.group_overrides_header.add, _entry)
 
                 self.header_page.set_badge_number(len(overrides))
 
-    def parameter_counter(self, overrides):
-        """Parameter counter and its visibility"""
-        counter_label = self.counter_label_form_data
+    def body_counter(self, overrides) -> None:
+        """Body counter and its visibility"""
+        counter_label = self.counter_label_form_data_body
         if len(overrides) > 0:
             if counter_label.get_visible() is False:
                 counter_label.set_visible(True)

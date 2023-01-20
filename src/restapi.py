@@ -10,19 +10,19 @@ class ResolveRequests:
         session: requests.sessions.Session,
         cookies: dict = None,
         headers: dict = None,
-        parameters: dict = None,
+        body: dict = None,
     ) -> None:
 
         self.url = url
         self.session = session
         self.cookies = cookies
         self.headers = cookies
-        self.parameters = parameters
+        self.body = body
 
     def resolve_get(self) -> list:
         response = self.session.get(
             self.url,
-            json=self.parameters,
+            json=self.body,
             headers=self.headers,
             cookies=self.cookies,
         )
@@ -32,7 +32,7 @@ class ResolveRequests:
     def resolve_post(self) -> list:
         response = self.session.post(
             self.url,
-            json=self.parameters,
+            json=self.body,
             headers=self.headers,
             cookies=self.cookies,
         )
@@ -42,7 +42,7 @@ class ResolveRequests:
     def resolve_put(self) -> list:
         response = self.session.put(
             self.url,
-            json=self.parameters,
+            json=self.body,
             headers=self.headers,
             cookies=self.cookies,
         )
@@ -52,7 +52,7 @@ class ResolveRequests:
     def resolve_patch(self) -> list:
         response = self.session.patch(
             self.url,
-            json=self.parameters,
+            json=self.body,
             headers=self.headers,
             cookies=self.cookies,
         )
@@ -62,7 +62,7 @@ class ResolveRequests:
     def resolve_delete(self) -> list:
         response = self.session.patch(
             self.url,
-            json=self.parameters,
+            json=self.body,
             headers=self.headers,
             cookies=self.cookies,
         )
