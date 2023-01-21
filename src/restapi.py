@@ -11,6 +11,7 @@ class ResolveRequests:
         cookies: dict = None,
         headers: dict = None,
         body: dict = None,
+        parameters: dict = None
     ) -> None:
 
         self.url = url
@@ -18,6 +19,7 @@ class ResolveRequests:
         self.cookies = cookies
         self.headers = cookies
         self.body = body
+        self.params = parameters
 
     def resolve_get(self) -> list:
         response = self.session.get(
@@ -25,6 +27,7 @@ class ResolveRequests:
             json=self.body,
             headers=self.headers,
             cookies=self.cookies,
+            params=self.params
         )
 
         return self.formated_response(response)
@@ -35,6 +38,7 @@ class ResolveRequests:
             json=self.body,
             headers=self.headers,
             cookies=self.cookies,
+            params=self.params
         )
 
         return self.formated_response(response)
@@ -45,6 +49,7 @@ class ResolveRequests:
             json=self.body,
             headers=self.headers,
             cookies=self.cookies,
+            params=self.params
         )
 
         return self.formated_response(response)
@@ -55,6 +60,7 @@ class ResolveRequests:
             json=self.body,
             headers=self.headers,
             cookies=self.cookies,
+            params=self.params
         )
 
         return self.formated_response(response)
@@ -65,6 +71,7 @@ class ResolveRequests:
             json=self.body,
             headers=self.headers,
             cookies=self.cookies,
+            params=self.params
         )
 
         return self.formated_response(response)

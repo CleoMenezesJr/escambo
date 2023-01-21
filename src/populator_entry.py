@@ -53,6 +53,10 @@ class PupulatorEntry(Adw.ActionRow):
                 self.window.get_template_child(
                     self.window, "group_overrides_body"
                 ).set_description("No body added.")
+            elif "param" in self.content:
+                self.window.get_template_child(
+                    self.window, "group_overrides_param"
+                ).set_description("No parameter added.")
             elif "headers" in self.content:
                 self.window.get_template_child(
                     self.window, "group_overrides_headers"

@@ -78,7 +78,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                 }
                                                 Adw.PreferencesGroup {
 
-                                                      Adw.ExpanderRow enable_expander_row {
+                                                      Adw.ExpanderRow enable_expander_row_parameters {
                                                         show-enable-switch: true;
                                                         title: _("Query Parameters");
 
@@ -453,7 +453,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                         };
 
                         [start]
-                        Button btn_form_data_go_back {
+                        Button btn_form_data_go_back_body {
                             valign: center;
                             tooltip-text: _("Back");
                             icon-name: "go-previous-symbolic";
@@ -507,6 +507,72 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                 }
             }
             //Leaflet Form Data end
+
+            //Leaflet Edit Parameters
+            Box form_data_page_parameters {
+                orientation: vertical;
+
+                Adw.HeaderBar {
+                    title-widget:
+                        Adw.WindowTitle {
+                            title: "Edit Parameters";
+                        };
+
+                        [start]
+                        Button btn_edit_param_go_back {
+                            valign: center;
+                            tooltip-text: _("Back");
+                            icon-name: "go-previous-symbolic";
+                        }
+                }
+
+                ScrolledWindow {
+                    vexpand: true;
+                    child:
+                    Adw.ToastOverlay {
+                        Adw.Clamp {
+                            margin-top: 24;
+                            margin-start: 12;
+                            margin-end: 12;
+                            tightening-threshold: 300;
+                            child:
+                                Box {
+                                    orientation: vertical;
+                                    spacing: 20;
+
+                                    Adw.PreferencesGroup {
+                                        title: _("New Parameter");
+                                        header-suffix:
+                                            Button btn_add_parameter {
+                                                child:
+                                                    Adw.ButtonContent {
+                                                        icon-name: "list-add-symbolic";
+                                                        label: _("Add");
+                                                    };
+
+                                                    styles [
+                                                        "flat",
+                                                    ]
+                                            };
+
+                                        Adw.EntryRow entry_param_key {
+                                            title: _("Key");
+                                            use-underline: true;
+                                        }
+
+                                        Adw.EntryRow entry_param_value {
+                                            title: _("Value");
+                                            use-underline: true;
+                                        }
+                                    }
+
+                                    Adw.PreferencesGroup group_overrides_param {}
+                                };
+                        }
+                    };
+                }
+            }
+            //Leaflet Edit Parameters end
         }
     }
 }
