@@ -19,12 +19,12 @@
 
 import json
 import os
-import re
 import threading
 from typing import Callable
 
 from getoverhere.populator_entry import PupulatorEntry
 from getoverhere.restapi import ResolveRequests
+from getoverhere.check_url import is_valid_url
 from getoverhere.sourceview import SourceView
 from gi.repository import Adw, Gio, GLib, Gtk
 from requests import Session, exceptions
@@ -146,15 +146,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         otherwise it returns a Toast informing that the URL
         is using bad/illegal format or that it is missing.
         """
-        regex = re.compile(
-            r"^(?:http|ftp)s?://"
-            r"(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|"
-            r"localhost|"
-            r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
-            r"(?::\d+)?"
-            r"(?:/?|[/?]\S+)$",
-            re.IGNORECASE,
-        )
         url = self.entry_url.get_text()
         method = self.entry_method.get_selected()
         body_type = self.form_data_toggle_button_body.props.active
@@ -162,7 +153,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         if not url:
             self.toast_overlay.add_toast(Adw.Toast.new(("Enter a URL")))
         else:
-            if re.match(regex, url) is None:
+            if not is_valid_url(url):
                 self.toast_overlay.add_toast(
                     Adw.Toast.new(
                         ("URL using bad/illegal format or missing URL")
