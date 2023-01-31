@@ -256,6 +256,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         parameters=parameters,
                     ).resolve_delete()
         except exceptions.ConnectionError:
+            self.leaflet.set_visible_child(self.home)
             return self.toast_overlay.add_toast(
                 Adw.Toast.new(("Error: Couldn't resolve host name "))
             )
