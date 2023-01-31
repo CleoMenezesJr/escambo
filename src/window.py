@@ -17,14 +17,15 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import html
 import json
 import os
 import threading
 from typing import Callable
 
+from getoverhere.check_url import has_parameter, is_valid_url
 from getoverhere.populator_entry import PupulatorEntry
 from getoverhere.restapi import ResolveRequests
-from getoverhere.check_url import is_valid_url
 from getoverhere.sourceview import SourceView
 from gi.repository import Adw, Gio, GLib, Gtk
 from requests import Session, exceptions
@@ -115,6 +116,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.btn_edit_param.connect("activated", self.__on_edit, "param")
         self.btn_add_cookie.connect("clicked", self.__save_override, "cookies")
         self.btn_add_body.connect("clicked", self.__save_override, "body")
+        self.entry_url.connect("changed", self.update_subtitle_parameters)
         self.btn_add_parameter.connect(
             "clicked", self.__save_override, "param"
         )
@@ -131,6 +133,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.body = {}
 
         self.__populate_overrides_list()
+        self.update_subtitle_parameters()
         self.raw_buffer = self.raw_source_view_body.get_buffer()
         self.response_buffer = self.response_source_view.get_buffer()
         self.response_source_view.props.editable = False
@@ -161,13 +164,10 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 )
             else:
                 body = self.__which_body_type(body_type)
+                parameters = self.__which_parameter_type(url)
                 which_method_thread = threading.Thread(
                     target=self.__which_method,
-                    args=(
-                        method,
-                        url,
-                        body,
-                    ),
+                    args=(method, url, body, parameters),
                 )
                 which_method_thread.daemon = True
                 which_method_thread.start()
@@ -175,6 +175,16 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 self.spinner.props.spinning = True
                 self.leaflet.set_visible_child(self.response_page)
                 self.response_stack.props.visible_child_name = "loading"
+
+    def __which_parameter_type(self, url_entry: str) -> dict | None:
+        if has_parameter(url_entry):
+            separator = url_entry.find("?") + 1
+            url_params = url_entry[separator:]
+            per_param = (i.split("=") for i in url_params.split("&"))
+            return {i[0]: i[1] for i in per_param}
+
+        else:
+            return self.param
 
     def __which_body_type(self, body_type: bool) -> dict | None:
         if body_type:
@@ -195,7 +205,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         return body
 
     def __which_method(
-        self, method: int, url: str, body: dict | None
+        self, method: int, url: str, body: dict | None, parameters: dict
     ) -> Callable | None:
         try:
             match method:
@@ -206,7 +216,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         cookies=self.cookies,
                         headers=self.headers,
                         body=body,
-                        parameters=self.param,
+                        parameters=parameters,
                     ).resolve_get()
 
                 case 1:
@@ -216,7 +226,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         cookies=self.cookies,
                         headers=self.headers,
                         body=body,
-                        parameters=self.param,
+                        parameters=parameters,
                     ).resolve_post()
                 case 2:
                     response, status_code, code_type = ResolveRequests(
@@ -225,7 +235,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         cookies=self.cookies,
                         headers=self.headers,
                         body=body,
-                        parameters=self.param,
+                        parameters=parameters,
                     ).resolve_put()
                 case 3:
                     response, status_code, code_type = ResolveRequests(
@@ -234,7 +244,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         cookies=self.cookies,
                         headers=self.headers,
                         body=body,
-                        parameters=self.param,
+                        parameters=parameters,
                     ).resolve_patch()
                 case 4:
                     response, status_code, code_type = ResolveRequests(
@@ -243,6 +253,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         cookies=self.cookies,
                         headers=self.headers,
                         body=body,
+                        parameters=parameters,
                     ).resolve_delete()
         except exceptions.ConnectionError:
             return self.toast_overlay.add_toast(
@@ -270,6 +281,20 @@ class GetoverhereWindow(Adw.ApplicationWindow):
 
     def __go_back(self, *_args: tuple) -> None:
         self.leaflet.set_visible_child(self.home)
+
+    def update_subtitle_parameters(self, *_args) -> None:
+        url_entry = self.entry_url.get_text()
+        if has_parameter(url_entry):
+            self.enable_expander_row_parameters.set_enable_expansion(False)
+            GLib.idle_add(self.enable_expander_row_parameters.set_subtitle, "")
+        else:
+            self.enable_expander_row_parameters.set_enable_expansion(True)
+            parameters = [f"{i}={self.param[i]}" for i in self.param]
+            GLib.idle_add(
+                self.enable_expander_row_parameters.set_subtitle,
+                f"{'https://' if not url_entry else url_entry}"
+                + f"?{html.escape('&').join(parameters)}",
+            )
 
     def __save_override(self, *_args: tuple) -> None:
         """
@@ -396,6 +421,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                             )
 
                     self.param = file_content
+                    self.update_subtitle_parameters()
 
                     # Clean up fields
                     self.group_overrides_param.set_description("")

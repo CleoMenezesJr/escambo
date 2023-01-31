@@ -57,13 +57,22 @@ class PupulatorEntry(Adw.ActionRow):
                 self.window.get_template_child(
                     self.window, "group_overrides_param"
                 ).set_description("No parameter added.")
+                self.window.enable_expander_row_parameters.set_subtitle(
+                    "https://?"
+                )
+                self.window.param = {}
             elif "headers" in self.content:
                 self.window.get_template_child(
                     self.window, "group_overrides_headers"
                 ).set_description("No body added.")
 
+        # TODO
+        # Remove query parameter on subtitle
+
         self.window.cookie_page.set_badge_number(len(file_content))
         self.window.header_page.set_badge_number(len(file_content))
         self.window.body_counter(file_content)
+
+        # Update subtitle
 
         self.get_parent().remove(self)

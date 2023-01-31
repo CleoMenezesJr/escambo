@@ -12,3 +12,7 @@ def is_valid_url(url: str) -> bool:
         re.IGNORECASE,
     )
     return re.match(regex, url)
+
+
+def has_parameter(url: str) -> bool:
+    return "?" in url
