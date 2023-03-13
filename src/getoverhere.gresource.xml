@@ -3,6 +3,8 @@
   <gresource prefix="/io/github/cleomenezesjr/GetOverHere">
     <file preprocess="xml-stripblanks">window.ui</file>
     <file>populator-entry.ui</file>
+    <file>dialog-cookies.ui</file>
+    <file>date-row.ui</file>
     <file>style.css</file>
   </gresource>
 </gresources>

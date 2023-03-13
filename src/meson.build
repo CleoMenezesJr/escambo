@@ -4,8 +4,10 @@ gnome = import('gnome')
 
 blueprints = custom_target('blueprints',
   input: files(
-    'populator-entry.blp',
     'window.blp',
+    'populator-entry.blp',
+    'dialog-cookies.blp',
+    'date-row.blp',
   ),
   output: '.',
   command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@', '@INPUT@'],
@@ -43,6 +45,9 @@ getoverhere_sources = [
   'populator_entry.py',
   'sourceview.py',
   'check_url.py',
+  'dialog_cookies.py',
+  'date_row.py',
+  'commom_scripts.py',
 ]
 
 install_data(getoverhere_sources, install_dir: moduledir)

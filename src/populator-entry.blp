@@ -6,13 +6,24 @@ Adw.ActionRow {
 	title: "Pupulator Entry";
 	subtitle: _("Pupulator Entry");
 
-	Button btn_remove {
-		valign: center;
-		icon-name: "user-trash-symbolic";
-		tooltip-text: _("Remove");
+        Button btn_edit {
+            valign: center;
+            icon-name: "document-edit-symbolic";
+            tooltip-text: _("Edit");
+            clicked => on_edit();
 
-		styles [
-		  "flat",
-		]
-	}
+            styles [
+                "flat",
+            ]
+        }
+
+        Button btn_remove {
+            valign: center;
+            icon-name: "user-trash-symbolic";
+            tooltip-text: _("Remove");
+
+            styles [
+              "flat",
+            ]
+        }
 }

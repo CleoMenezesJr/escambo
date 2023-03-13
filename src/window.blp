@@ -6,9 +6,9 @@ template GetoverhereWindow : Adw.ApplicationWindow {
     default-height: 550;
     title: "Get Over Here";
 
-    styles [
-        "devel",
-    ]
+    /* styles [ */
+    /*     "devel", */
+    /* ] */
 
     Adw.ToastOverlay toast_overlay {
         Adw.Leaflet leaflet {
@@ -191,29 +191,27 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                 spacing: 20;
 
                                                 Adw.PreferencesGroup {
-                                                    title: _("New Cookie");
-                                                    header-suffix:
-                                                        Button btn_add_cookie {
-                                                            child:
-                                                                Adw.ButtonContent {
-                                                                    icon-name: "list-add-symbolic";
-                                                                    label: _("Add");
-                                                                };
+                                                    Adw.ActionRow row_cookie {
+                                                        activatable-widget: switch_cookie;
+                                                        title: _("Cookies");
 
-                                                                styles [
-                                                                    "flat",
-                                                                ]
-                                                        };
-
-                                                    Adw.EntryRow entry_cookie_key {
-                                                        title: _("Key");
-                                                        use-underline: true;
+                                                        Switch switch_cookie {
+                                                            valign: center;
+                                                            active: true;
+                                                        }
                                                     }
-
-                                                    Adw.EntryRow entry_cookie_value {
-                                                        title: _("Value");
-                                                        use-underline: true;
+                                                    Adw.ActionRow create_new_cookie {
+                                                        /* icon-name: "list-add-symbolic"; */
+                                                        title: _("Create New Cookie...");
+                                                        activatable: true;
+                                                        Image {
+                                                            icon-name: "go-next-symbolic";
+                                                            styles ["dim-label"]
+                                                        }
                                                     }
+                                                }
+                                                Separator {
+                                                    visible: false;
                                                 }
 
                                                 Adw.PreferencesGroup group_overrides_cookie {
