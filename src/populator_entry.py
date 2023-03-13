@@ -84,7 +84,7 @@ class PupulatorEntry(Adw.ActionRow):
         dialog = Adw.MessageDialog.new(
             self.window,
             "Are you sure you want to delete it?",
-            self.get_subtitle()
+            self.get_subtitle(),
         )
         dialog.add_response("cancel", ("Cancel"))
         dialog.add_response("ok", ("Delete"))
