@@ -121,7 +121,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         )
         self.switch_cookie.connect("state-set", self.set_needs_attention)
         self.btn_add_body.connect("clicked", self.__save_override, "body")
-        self.entry_url.connect("changed", self.update_subtitle_parameters)
         self.btn_add_parameter.connect(
             "clicked", self.__save_override, "param"
         )
@@ -139,7 +138,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.body = {}
 
         self.__populate_overrides_list()
-        self.update_subtitle_parameters()
         self.raw_buffer = self.raw_source_view_body.get_buffer()
         self.response_buffer = self.response_source_view.get_buffer()
         self.response_source_view.props.editable = False
@@ -308,6 +306,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     def __go_back(self, *_args: tuple) -> None:
         self.leaflet.set_visible_child(self.home)
 
+    @Gtk.Template.Callback()
     def update_subtitle_parameters(self, *_args) -> None:
         url_entry = self.entry_url.get_text()
         if has_parameter(url_entry):
@@ -458,7 +457,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                             )
 
                     self.param = file_content
-                    self.update_subtitle_parameters()
 
                     # Clean up fields
                     self.group_overrides_param.set_description("")

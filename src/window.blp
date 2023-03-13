@@ -74,6 +74,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                     Adw.EntryRow entry_url {
                                                         title: _("URL");
                                                         use-underline: true;
+                                                        changed => update_subtitle_parameters();
                                                     }
                                                 }
                                                 Adw.PreferencesGroup {
@@ -81,6 +82,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                       Adw.ExpanderRow enable_expander_row_parameters {
                                                         show-enable-switch: true;
                                                         title: _("Query Parameters");
+                                                        subtitle: "https://?";
 
                                                         Adw.ActionRow btn_edit_param {
                                                             title: _("Go to edit Parameters");
