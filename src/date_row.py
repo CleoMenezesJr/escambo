@@ -6,7 +6,9 @@ from datetime import datetime as dt
 from gi.repository import Adw, GObject, Gtk
 
 
-@Gtk.Template(resource_path="/io/github/cleomenezesjr/GetOverHere/date-row.ui")
+@Gtk.Template(
+    resource_path="/io/github/cleomenezesjr/GetOverHere/gtk/date-row.ui"
+)
 class DateRow(Adw.ActionRow):
     __gtype_name__ = "DateRow"
     __gsignals__ = {"changed": (GObject.SIGNAL_RUN_FIRST, None, ())}

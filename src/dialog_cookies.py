@@ -5,7 +5,7 @@ from gi.repository import Adw, Gtk
 
 
 @Gtk.Template(
-    resource_path="/io/github/cleomenezesjr/GetOverHere/dialog-cookies.ui"
+    resource_path="/io/github/cleomenezesjr/GetOverHere/gtk/dialog-cookies.ui"
 )
 class CookieDialog(Adw.Window):
     __gtype_name__ = "CookieDialog"

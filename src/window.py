@@ -46,7 +46,9 @@ HEADERS = os.path.join(
 )
 
 
-@Gtk.Template(resource_path="/io/github/cleomenezesjr/GetOverHere/window.ui")
+@Gtk.Template(
+    resource_path="/io/github/cleomenezesjr/GetOverHere/gtk/window.ui"
+)
 class GetoverhereWindow(Adw.ApplicationWindow):
     __gtype_name__ = "GetoverhereWindow"
 

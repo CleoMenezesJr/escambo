@@ -4,10 +4,10 @@ gnome = import('gnome')
 
 blueprints = custom_target('blueprints',
   input: files(
-    'window.blp',
-    'populator-entry.blp',
-    'dialog-cookies.blp',
-    'date-row.blp',
+    'gtk/window.blp',
+    'gtk/populator-entry.blp',
+    'gtk/dialog-cookies.blp',
+    'gtk/date-row.blp',
   ),
   output: '.',
   command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@', '@INPUT@'],

@@ -5,7 +5,7 @@ from gi.repository import Adw, Gtk
 
 
 @Gtk.Template(
-    resource_path="/io/github/cleomenezesjr/GetOverHere/populator-entry.ui"
+    resource_path="/io/github/cleomenezesjr/GetOverHere/gtk/populator-entry.ui"
 )
 class PupulatorEntry(Adw.ActionRow):
     __gtype_name__ = "PupulatorEntry"
