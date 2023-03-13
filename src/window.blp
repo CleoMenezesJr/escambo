@@ -45,6 +45,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                             ScrolledWindow {
                                 child:
                                     Adw.Clamp {
+                                        margin-top: 24;
                                         margin-start: 12;
                                         margin-end: 12;
                                         tightening-threshold: 300;
@@ -55,7 +56,6 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                 valign: center;
 
                                                 Adw.PreferencesGroup {
-                                                    title: _("Request");
 
                                                     Adw.ComboRow entry_method {
                                                         subtitle: _("Check the method that is being used before sending a request");
