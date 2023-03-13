@@ -228,53 +228,25 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         cookies: dict | None,
     ) -> Callable | None:
         try:
-            match method:
-                case 0:
-                    response, status_code, code_type = ResolveRequests(
-                        url,
-                        self.session,
-                        cookies=cookies,
-                        headers=self.headers,
-                        body=body,
-                        parameters=parameters,
-                    ).resolve_get()
-
-                case 1:
-                    response, status_code, code_type = ResolveRequests(
-                        url,
-                        self.session,
-                        cookies=cookies,
-                        headers=self.headers,
-                        body=body,
-                        parameters=parameters,
-                    ).resolve_post()
-                case 2:
-                    response, status_code, code_type = ResolveRequests(
-                        url,
-                        self.session,
-                        cookies=cookies,
-                        headers=self.headers,
-                        body=body,
-                        parameters=parameters,
-                    ).resolve_put()
-                case 3:
-                    response, status_code, code_type = ResolveRequests(
-                        url,
-                        self.session,
-                        cookies=cookies,
-                        headers=self.headers,
-                        body=body,
-                        parameters=parameters,
-                    ).resolve_patch()
-                case 4:
-                    response, status_code, code_type = ResolveRequests(
-                        url,
-                        self.session,
-                        cookies=cookies,
-                        headers=self.headers,
-                        body=body,
-                        parameters=parameters,
-                    ).resolve_delete()
+            method_list = {
+                0: "get",
+                1: "post",
+                2: "put",
+                3: "patch",
+                4: "delete",
+            }
+            resolve_requests = ResolveRequests(
+                url,
+                self.session,
+                cookies=cookies,
+                headers=self.headers,
+                body=body,
+                parameters=parameters,
+            )
+            get_resolve_requets_attr = getattr(
+                resolve_requests, f"resolve_{method_list[method]}"
+            )
+            response, status_code, code_type = get_resolve_requets_attr()
         except exceptions.ConnectionError:
             self.leaflet.set_visible_child(self.home)
             return self.toast_overlay.add_toast(
