@@ -97,7 +97,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     switch_cookie = Gtk.Template.Child()
     cookie_page = Gtk.Template.Child()
     create_new_cookie = Gtk.Template.Child()
-    group_overrides_cookie = Gtk.Template.Child()
+    group_overrides_cookies = Gtk.Template.Child()
 
     switch_headers = Gtk.Template.Child()
     headers_page = Gtk.Template.Child()
@@ -359,8 +359,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                             [i == insertion_date for i in self.cookies.keys()]
                         ):
                             GLib.idle_add(
-                                # TODO rename to group_overrides_cookies
-                                self.group_overrides_cookie.add,
+                                self.group_overrides_cookies.add,
                                 _entry,
                             )
                             self.toast_overlay.add_toast(
@@ -375,7 +374,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     self.cookie_page.set_badge_number(len(file_content))
 
                     # Clean up field
-                    self.group_overrides_cookie.set_description("")
+                    self.group_overrides_cookies.set_description("")
             case "headers":
                 title: str = _args[2]
                 subtitle: str = _args[3]
@@ -517,19 +516,19 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 overrides = json.load(file)
                 self.cookies = overrides
                 if not bool(overrides):
-                    self.group_overrides_cookie.set_description(
+                    self.group_overrides_cookies.set_description(
                         ("No cookie added.")
                     )
                 else:
                     self.cookies = overrides
-                    self.group_overrides_cookie.set_description("")
+                    self.group_overrides_cookies.set_description("")
                     for override in overrides:
                         _entry = PupulatorEntry(
                             window=self,
                             override=[override, overrides[override]],
                             content=COOKIES,
                         )
-                        GLib.idle_add(self.group_overrides_cookie.add, _entry)
+                        GLib.idle_add(self.group_overrides_cookies.add, _entry)
 
                 self.cookie_page.set_badge_number(len(overrides))
 

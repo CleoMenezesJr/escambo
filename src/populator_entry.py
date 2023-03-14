@@ -52,7 +52,7 @@ class PupulatorEntry(Adw.ActionRow):
 
                     if len(file_content) == 0:
                         self.window.get_template_child(
-                            self.window, "group_overrides_cookie"
+                            self.window, "group_overrides_cookies"
                         ).set_description("No cookie added.")
 
                 elif "headers" in self.content:
