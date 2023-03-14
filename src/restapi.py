@@ -26,12 +26,13 @@ class ResolveRequests:
 
         if self.cookies:
             self.set_cookie_session()
+        if self.headers:
+            self.session.headers.update(self.headers)
 
     def resolve_get(self) -> list:
         response = self.session.get(
             self.url,
             json=self.body,
-            headers=self.headers,
             params=self.params,
         )
         return self.formated_response(response)
@@ -40,7 +41,6 @@ class ResolveRequests:
         response = self.session.post(
             self.url,
             json=self.body,
-            headers=self.headers,
             params=self.params,
         )
 
@@ -50,7 +50,6 @@ class ResolveRequests:
         response = self.session.put(
             self.url,
             json=self.body,
-            headers=self.headers,
             params=self.params,
         )
 
@@ -60,7 +59,6 @@ class ResolveRequests:
         response = self.session.patch(
             self.url,
             json=self.body,
-            headers=self.headers,
             params=self.params,
         )
 
@@ -70,7 +68,6 @@ class ResolveRequests:
         response = self.session.patch(
             self.url,
             json=self.body,
-            headers=self.headers,
             params=self.params,
         )
 

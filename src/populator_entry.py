@@ -1,6 +1,7 @@
 import json
 
 from getoverhere.dialog_cookies import CookieDialog
+from getoverhere.dialog_headers import HeaderDialog
 from gi.repository import Adw, Gtk
 
 
@@ -25,7 +26,7 @@ class PupulatorEntry(Adw.ActionRow):
         Set the DLL name as ActionRow title and set the
         combo_type to the type of override
         """
-        if "cookies" in self.content:
+        if "cookies" in self.content or "headers" in self.content:
             self.set_title(self.override[1][0] or "—")
             self.set_subtitle(self.override[1][1] or "—")
         else:
@@ -37,44 +38,51 @@ class PupulatorEntry(Adw.ActionRow):
 
     def __remove_override(self, *_args) -> None:
         """
-        Remove Cookie and destroy the widget
+        Remove element and destroy the widget
         """
 
         def resolve_dialog_response(widget, response):
             if response == "ok":
-                file_content = self.window.cookies
-                del file_content[self.override[0]]
-                with open(self.content, "w") as file:
-                    json.dump(file_content, file, indent=2)
+                # if not bool(file_content):
+                if "cookies" in self.content:
+                    file_content = self.window.cookies
+                    del file_content[self.override[0]]
+                    with open(self.content, "w") as file:
+                        json.dump(file_content, file, indent=2)
 
-                if not bool(file_content):
-                    if "cookies" in self.content:
+                    if len(file_content) == 0:
                         self.window.get_template_child(
                             self.window, "group_overrides_cookie"
                         ).set_description("No cookie added.")
 
-                    elif "body" in self.content:
-                        self.window.get_template_child(
-                            self.window, "group_overrides_body"
-                        ).set_description("No body added.")
-                    elif "param" in self.content:
-                        self.window.get_template_child(
-                            self.window, "group_overrides_param"
-                        ).set_description("No parameter added.")
-                        self.window.enable_expander_row_parameters.set_subtitle(
-                            "https://?"
-                        )
-                        self.window.param = {}
-                    elif "headers" in self.content:
+                elif "headers" in self.content:
+                    file_content = self.window.headers
+                    del file_content[self.override[0]]
+                    with open(self.content, "w") as file:
+                        json.dump(file_content, file, indent=2)
+
+                    if len(file_content) == 0:
                         self.window.get_template_child(
                             self.window, "group_overrides_headers"
-                        ).set_description("No body added.")
+                        ).set_description("No header added.")
+                elif "body" in self.content:
+                    self.window.get_template_child(
+                        self.window, "group_overrides_body"
+                    ).set_description("No body added.")
+                elif "param" in self.content:
+                    self.window.get_template_child(
+                        self.window, "group_overrides_param"
+                    ).set_description("No parameter added.")
+                    self.window.enable_expander_row_parameters.set_subtitle(
+                        "https://?"
+                    )
+                    self.window.param = {}
 
                 # TODO
                 # Remove query parameter on subtitle
                 # TODO set badge per file_content
                 self.window.cookie_page.set_badge_number(len(file_content))
-                self.window.header_page.set_badge_number(len(file_content))
+                self.window.headers_page.set_badge_number(len(file_content))
                 self.window.body_counter(file_content)
 
                 # Update subtitle
@@ -96,9 +104,17 @@ class PupulatorEntry(Adw.ActionRow):
 
     @Gtk.Template.Callback()
     def on_edit(self, arg) -> None:
-        new_window = CookieDialog(
-            parent_window=self.window,
-            title="Edit Cookie",
-            content=self,
-        )
-        new_window.present()
+        if "cookies" in self.content:
+            new_window = CookieDialog(
+                parent_window=self.window,
+                title="Edit Cookie",
+                content=self,
+            )
+            new_window.present()
+        elif "headers" in self.content:
+            new_window = HeaderDialog(
+                parent_window=self.window,
+                title="Edit Header",
+                content=self,
+            )
+            new_window.present()

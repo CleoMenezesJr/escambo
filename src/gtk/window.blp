@@ -225,7 +225,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                     //Cookies end
 
                     //Headers start
-                    Adw.ViewStackPage header_page {
+                    Adw.ViewStackPage headers_page {
                         name: "headers";
                         title: _("_Headers");
                         icon-name: "user-info-symbolic";
@@ -244,32 +244,29 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                 spacing: 20;
 
                                                 Adw.PreferencesGroup {
-                                                    title: _("New Header");
-                                                    header-suffix:
-                                                        Button btn_add_header {
-                                                        child:
-                                                            Adw.ButtonContent {
-                                                                icon-name: "list-add-symbolic";
-                                                                label: _("Add");
-                                                            };
+                                                    Adw.ActionRow row_headers {
+                                                        activatable-widget: switch_headers;
+                                                        title: _("Headers");
 
-                                                            styles [
-                                                                "flat",
-                                                            ]
-                                                        };
-
-                                                    Adw.EntryRow entry_header_key {
-                                                        title: _("Key");
-                                                        use-underline: true;
+                                                        Switch switch_headers {
+                                                            valign: center;
+                                                            active: true;
+                                                        }
                                                     }
-
-                                                    Adw.EntryRow entry_header_value {
-                                                        title: _("Value");
-                                                        use-underline: true;
+                                                    Adw.ActionRow create_new_header {
+                                                        title: _("Create New Header...");
+                                                        activatable: true;
+                                                        Image {
+                                                            icon-name: "go-next-symbolic";
+                                                            styles ["dim-label"]
+                                                        }
                                                     }
                                                 }
+                                                Separator {
+                                                    visible: false;
+                                                }
 
-                                                Adw.PreferencesGroup group_overrides_header {
+                                                Adw.PreferencesGroup group_overrides_headers {
                                                 }
                                             };
                                     };
