@@ -45,12 +45,7 @@ class HeaderDialog(Adw.Window):
         header = self.window.headers[self.content.override[0]]
 
         self.entry_header_key.set_text(header[0])
-
-        if not "\n" in header[1]:
-            self.entry_header_value.set_text(header[1])
-        else:
-            subtitle = header[1].split("\n")
-            self.entry_header_value.set_text(subtitle[0])
+        self.entry_header_value.set_text(header[1])
 
     @Gtk.Template.Callback()
     def on_entry_changed(self, *args) -> None:
