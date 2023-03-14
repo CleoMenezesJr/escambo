@@ -185,10 +185,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     self.cookies if self.switch_cookie.get_state() else None
                 )
                 headers = (
-                    {
-                        value[0]: value[1][:value[1].find("\n")]
-                        for key, value in self.headers.items()
-                    }
+                    {value[0]: value[1] for key, value in self.headers.items()}
                     if self.switch_headers.get_state()
                     else None
                 )

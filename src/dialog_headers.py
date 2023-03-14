@@ -11,7 +11,6 @@ class HeaderDialog(Adw.Window):
     btn_add = Gtk.Template.Child()
     entry_header_key = Gtk.Template.Child()
     entry_header_value = Gtk.Template.Child()
-    entry_header_description = Gtk.Template.Child()
 
     def __init__(self, parent_window, title, content, **kwargs):
         super().__init__(**kwargs)
@@ -31,9 +30,6 @@ class HeaderDialog(Adw.Window):
         # Convert date format to GMT format
         title = self.entry_header_key.get_text()
         subtitle = self.entry_header_value.get_text()
-        description = self.entry_header_description.get_text()
-        if description:
-            subtitle = f"{subtitle}\n({description})"
         id = self.content.override[0] if self.content else None
 
         # Insert Header
@@ -55,7 +51,6 @@ class HeaderDialog(Adw.Window):
         else:
             subtitle = header[1].split("\n")
             self.entry_header_value.set_text(subtitle[0])
-            self.entry_header_description.set_text(subtitle[1])
 
     @Gtk.Template.Callback()
     def on_entry_changed(self, *args) -> None:
