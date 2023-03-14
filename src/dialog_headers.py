@@ -55,10 +55,7 @@ class HeaderDialog(Adw.Window):
     @Gtk.Template.Callback()
     def on_entry_changed(self, *args) -> None:
         # Enable/Disable add button
-        if (
-            not self.entry_header_key.get_text()
-            or not self.entry_header_value.get_text()
-        ):
-            self.btn_add.props.sensitive = False
-        else:
-            self.btn_add.props.sensitive = True
+        self.btn_add.props.sensitive = (
+            self.entry_header_key.get_text()
+            and self.entry_header_value.get_text()
+        )
