@@ -330,8 +330,9 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 insertion_date = id or dt.today().isoformat()
 
                 # Insert Cookie
-                # TODO Create json with insertion_date
-                json_cookie = json.dumps({title: subtitle}, indent=2)
+                json_cookie = json.dumps(
+                    {insertion_date: [title, subtitle]}, indent=2
+                )
                 if not os.path.exists(COOKIES):
                     os.makedirs(os.path.dirname(COOKIES), exist_ok=True)
                     with open(COOKIES, "w") as file:
