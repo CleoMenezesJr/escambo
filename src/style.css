@@ -1,6 +1,9 @@
 .status-badge {
-  font-size: 0.6em;
-  border-radius: 50%;
+  font-weight: bold;
+  font-size: 0.8em;
+  border-radius: 10px;
+  min-width: 0.7em;
   padding: 2px 5px;
-  background-color: alpha(currentColor, 0.2);
+  color: currentColor;
+  background-color: alpha(currentColor, 0.15);
 }
