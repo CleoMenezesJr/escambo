@@ -103,49 +103,51 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                         show-enable-switch: true;
                                                         title: _("Body");
 
-                                                        Adw.ActionRow {
-                                                            title: _("Type");
-
+                                                        Adw.ActionRow btn_edit_body {
+                                                            title: _("Go to edit Body");
+                                                            use-underline: true;
+                                                            activatable: true;
                                                             Box {
                                                                 valign: center;
-
+                                                                homogeneous: true;
+                                                            
                                                                 styles [
                                                                     "linked",
                                                                 ]
-
+                                                            
                                                                 ToggleButton form_data_toggle_button_body {
                                                                     child:
                                                                         Box {
                                                                             valign: center;
-
-                                                                            Label {
-                                                                                label: "Form Data ";
-                                                                            }
-
+                                                            
                                                                             Label counter_label_form_data_body {
                                                                                 valign: center;
-                                                                                margin-top: 1;
-
+                                                                                margin-top: 2;
+                                                                                margin-end: 4;
+                                                            
                                                                                 styles [
                                                                                     "status-badge",
                                                                                     "numeric",
                                                                                 ]
                                                                             }
+                                                            
+                                                                            Label {
+                                                                                label: "Form Data";
+                                                                            }
                                                                         };
                                                                 }
-
+                                                            
+                                                            
                                                                 ToggleButton raw_toggle_button_body {
                                                                     active: true;
                                                                     label: _("Raw");
                                                                     group: form_data_toggle_button_body;
                                                                 }
                                                             }
-                                                        }
-
-                                                        Adw.ActionRow btn_edit_body {
-                                                            title: _("Go to edit Body");
-                                                            use-underline: true;
-                                                            activatable: true;
+                                                            Separator {
+                                                               margin-top: 12;
+                                                               margin-bottom: 12;
+                                                            }
 
                                                             Image {
                                                                 icon-name: "go-next-symbolic";
