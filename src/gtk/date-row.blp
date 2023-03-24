@@ -6,74 +6,74 @@ template DateRow : Adw.ActionRow {
     activated => _on_activated();
 
     Box {
-        spacing: 6;
+      spacing: 6;
 
-        Label label {
-            xalign: 0;
+      Label label {
+          xalign: 0;
+      }
+
+      Box {
+        valign: center;
+
+        Image {
+            icon-name: "x-office-calendar-symbolic";
         }
 
-        Box {
-            valign: center;
+        Popover popover {
+            Box {
+                spacing: 12;
 
-            Image {
-                icon-name: "x-office-calendar-symbolic";
-            }
+                Calendar calendar {
+                    day-selected => _on_data_changed();
+                }
 
-            Popover popover {
                 Box {
-                    spacing: 12;
+                    orientation: vertical;
+                    spacing: 6;
 
-                    Calendar calendar {
-                        day-selected => _on_data_changed();
+                    Label {
+                        label: "Time";
+                        xalign: 0;
+
+                        styles ["heading"]
                     }
 
                     Box {
-                        orientation: vertical;
-                        spacing: 6;
+                        spacing: 3;
+
+                        SpinButton hours {
+                            orientation: vertical;
+                            numeric: true;
+                            adjustment: Adjustment {
+                                lower: 0;
+                                upper: 23;
+                                step-increment: 1;
+                            };
+
+                            value-changed => _on_data_changed();
+                            output => _add_leading_zero();
+                        }
 
                         Label {
-                            label: "Time";
-                            xalign: 0;
-
-                            styles ["heading"]
+                            label: ":";
                         }
 
-                        Box {
-                            spacing: 3;
+                        SpinButton minutes {
+                            orientation: vertical;
+                            numeric: true;
+                            adjustment: Adjustment {
+                                lower: 0;
+                                upper: 59;
+                                step-increment: 1;
+                            };
 
-                            SpinButton hours {
-                                orientation: vertical;
-                                numeric: true;
-                                adjustment: Adjustment {
-                                    lower: 0;
-                                    upper: 23;
-                                    step-increment: 1;
-                                };
-
-                                value-changed => _on_data_changed();
-                                output => _add_leading_zero();
-                            }
-
-                            Label {
-                                label: ":";
-                            }
-
-                            SpinButton minutes {
-                                orientation: vertical;
-                                numeric: true;
-                                adjustment: Adjustment {
-                                    lower: 0;
-                                    upper: 59;
-                                    step-increment: 1;
-                                };
-
-                                value-changed => _on_data_changed();
-                                output => _add_leading_zero();
-                            }
-                        }
-                    }
-                }
-            }
+                              value-changed => _on_data_changed();
+                              output => _add_leading_zero();
+                          }
+                      }
+                  }
+              }
+          }
         }
     }
 }
