@@ -1,7 +1,7 @@
 {
   "app-id": "io.github.cleomenezesjr.GetOverHere",
   "runtime": "org.gnome.Platform",
-  "runtime-version": "master",
+  "runtime-version": "44",
   "sdk": "org.gnome.Sdk",
   "command": "getoverhere",
   "finish-args": [
