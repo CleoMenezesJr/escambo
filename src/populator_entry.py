@@ -2,6 +2,7 @@ import json
 
 from getoverhere.dialog_cookies import CookieDialog
 from getoverhere.dialog_headers import HeaderDialog
+from getoverhere.dialog_auths import AuthDialog
 from gi.repository import Adw, Gtk
 
 
@@ -13,6 +14,7 @@ class PupulatorEntry(Adw.ActionRow):
 
     # region Widgets
     btn_remove = Gtk.Template.Child()
+    custom_pill_label = Gtk.Template.Child()
 
     def __init__(self, window, override, content, **kwargs):
         super().__init__(**kwargs)
@@ -29,6 +31,11 @@ class PupulatorEntry(Adw.ActionRow):
         if "cookies" in self.content or "headers" in self.content:
             self.set_title(self.override[1][0] or "—")
             self.set_subtitle(self.override[1][1] or "—")
+        elif "auths" in self.content:
+            self.set_title(self.override[1][0])
+            self.set_subtitle(self.override[1][1] or "")
+            self.custom_pill_label.set_text(self.override[1][2])
+            self.custom_pill_label.set_visible(True)
         else:
             self.set_title(self.override[0])
             self.set_subtitle(self.override[1])
@@ -65,13 +72,33 @@ class PupulatorEntry(Adw.ActionRow):
                         self.window.get_template_child(
                             self.window, "group_overrides_headers"
                         ).set_description("No header added.")
+                elif "auths" in self.content:
+                    file_content = self.window.auths
+                    del file_content[self.override[0]]
+                    with open(self.content, "w") as file:
+                        json.dump(file_content, file, indent=2)
+
+                    if len(file_content) == 0:
+                        self.window.get_template_child(
+                            self.window, "group_overrides_auths"
+                        ).set_description("No authentication added.")
+                elif "auths" in self.content:
+                    file_content = self.window.auths
+                    del file_content[self.override[0]]
+                    with open(self.content, "w") as file:
+                        json.dump(file_content, file, indent=2)
+
+                    if len(file_content) == 0:
+                        self.window.get_template_child(
+                            self.window, "group_overrides_auths"
+                        ).set_description("No authentication added.")
                 elif "body" in self.content:
                     self.window.get_template_child(
                         self.window, "group_overrides_body"
                     ).set_description("No body added.")
                 elif "param" in self.content:
                     self.window.get_template_child(
-                        self.window, "group_overrides_param"
+                        self.window, "group_overrides_params"
                     ).set_description("No parameter added.")
                     self.window.enable_expander_row_parameters.set_subtitle(
                         "https://?"
@@ -83,16 +110,18 @@ class PupulatorEntry(Adw.ActionRow):
                 # TODO set badge per file_content
                 self.window.cookie_page.set_badge_number(len(file_content))
                 self.window.headers_page.set_badge_number(len(file_content))
+                self.window.auths_page.set_badge_number(len(file_content))
                 self.window.body_counter(file_content)
 
                 # Update subtitle
 
                 self.get_parent().remove(self)
 
+        subtitle = f"\n{self.get_subtitle()}" if self.get_subtitle() else ""
         dialog = Adw.MessageDialog.new(
             self.window,
             "Are you sure you want to delete it?",
-            self.get_subtitle(),
+            (f"{self.get_title()}{subtitle}"),
         )
         dialog.add_response("cancel", ("Cancel"))
         dialog.add_response("ok", ("Delete"))
@@ -115,6 +144,13 @@ class PupulatorEntry(Adw.ActionRow):
             new_window = HeaderDialog(
                 parent_window=self.window,
                 title="Edit Header",
+                content=self,
+            )
+            new_window.present()
+        elif "auths" in self.content:
+            new_window = AuthDialog(
+                parent_window=self.window,
+                title="Edit Auth",
                 content=self,
             )
             new_window.present()

@@ -7,3 +7,14 @@
   color: currentColor;
   background-color: alpha(currentColor, 0.15);
 }
+
+.auth-type {
+  font-weight: bold;
+  font-size: 0.8em;
+  border-radius: 10px;
+  min-width: 0.7em;
+  padding: 4.5px 5px;
+  color: currentColor;
+  background-color: alpha(currentColor, 0.15);
+}
+

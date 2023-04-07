@@ -2,7 +2,7 @@ using Gtk 4.0;
 using Adw 1;
 
 template GetoverhereWindow : Adw.ApplicationWindow {
-    default-width: 755;
+    default-width: 769;
     default-height: 472;
     title: "Get Over Here";
 
@@ -277,54 +277,51 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                     //Headers end
 
                     //Auth start
-                    Adw.ViewStackPage {
+                    Adw.ViewStackPage auths_page{
                         name: "auth";
-                        title: _("Auth");
+                        title: _("Authorization");
                         icon-name: "channel-secure-symbolic";
                         use-underline: true;
                         child:
                             ScrolledWindow {
-                                child:
-                                    Adw.Clamp {
-                                        margin-top: 24;
-                                        margin-start: 12;
-                                        margin-end: 12;
-                                        tightening-threshold: 300;
-                                        child:
-                                            Box {
-                                                orientation: vertical;
-                                                spacing: 20;
+                              child:
+                                  Adw.Clamp {
+                                      margin-top: 24;
+                                      margin-start: 12;
+                                      margin-end: 12;
+                                      tightening-threshold: 300;
+                                      child:
+                                          Box {
+                                              orientation: vertical;
+                                              spacing: 20;
 
-                                                Adw.PreferencesGroup {
-                                                    title: _("New Auth");
-                                                    header-suffix:
-                                                    Button btn_add_auth {
-                                                        child:
-                                                            Adw.ButtonContent {
-                                                                icon-name: "list-add-symbolic";
-                                                                label: _("Add");
-                                                            };
+                                              Adw.PreferencesGroup {
+                                                  Adw.ActionRow row_auth {
+                                                      activatable-widget: switch_auth;
+                                                      title: _("Authorization");
 
-                                                            styles [
-                                                                "flat",
-                                                            ]
-                                                    };
+                                                      Switch switch_auth {
+                                                          valign: center;
+                                                          active: true;
+                                                      }
+                                                  }
+                                                  Adw.ActionRow create_new_auth {
+                                                      title: _("Create New Authorization...");
+                                                      activatable: true;
+                                                      Image {
+                                                          icon-name: "go-next-symbolic";
+                                                          styles ["dim-label"]
+                                                      }
+                                                  }
+                                              }
+                                              Separator {
+                                                  visible: false;
+                                              }
 
-                                                    Adw.EntryRow entry_auth_key {
-                                                        title: _("Key");
-                                                        use-underline: true;
-                                                    }
-
-                                                    Adw.EntryRow entry_auth_value {
-                                                        title: _("Value");
-                                                        use-underline: true;
-                                                    }
-                                                }
-
-                                                Adw.PreferencesGroup group_overrides_auth {
-                                                }
-                                            };
-                                    };
+                                              Adw.PreferencesGroup group_overrides_auths {
+                                              }
+                                          };
+                                  };
                             };
                     }
                     //Auth end
@@ -565,6 +562,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                         }
                                     }
 
+                                    // TODO change to plural
                                     Adw.PreferencesGroup group_overrides_param {}
                                 };
                         }
