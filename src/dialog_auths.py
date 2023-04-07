@@ -62,8 +62,12 @@ class AuthDialog(Adw.Window):
         select_options = {"Api Key": 0, "Bearer Token": 1}
         auth = self.window.auths[self.content.override[0]]
 
-        self.entry_auth_key.set_text(auth[0])
-        self.entry_auth_value.set_text(auth[1] or "")
+        if "Api Key" in auth[2]:
+            self.entry_auth_key.set_text(auth[0])
+            self.entry_auth_value.set_text(auth[1] or "")
+        else:
+            self.token.set_text(auth[0])
+
         self.auth_type.set_selected(select_options[auth[2]])
         self.auth_type.props.sensitive = False
 
