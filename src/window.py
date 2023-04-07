@@ -146,7 +146,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.btn_edit_param_go_back.connect("clicked", self.__go_back)
 
         # General
-        self.cookies = self.headers = self.auths = self.body = {}
+        self.cookies = self.headers = self.auths = self.body = self.param = {}
 
         self.create_files_if_not_exists()
         self.__populate_overrides_list()
@@ -552,110 +552,50 @@ class GetoverhereWindow(Adw.ApplicationWindow):
 
     def __populate_overrides_list(self) -> None:
         """
-        This function populate the list of cookies
+        This function populate rows from json files
         """
-        # Populate cookies
-        with open(COOKIES, "r") as file:
-            overrides = json.load(file)
-            self.cookies = overrides
-            if not bool(overrides):
-                self.group_overrides_cookies.set_description(
-                    ("No cookie added.")
+        files = {
+            "cookie": [COOKIES, "cookies"],
+            "body": [BODY, "body"],
+            "parameter": [PARAM, "param"],
+            "header": [HEADERS, "headers"],
+            "authentication": [AUTHS, "auths"],
+        }
+
+        for file in files:
+            with open(files[file][0], "r") as json_file:
+                overrides = json.load(json_file)
+                self.cookies = overrides if "cookie" in file else self.cookies
+                self.body = overrides if "body" in file else self.body
+                self.param = overrides if "parameter" in file else self.param
+                self.headers = overrides if "header" in file else self.headers
+                self.auths = (
+                    overrides if "authentication" in file else self.auths
                 )
-            else:
-                self.cookies = overrides
-                self.group_overrides_cookies.set_description("")
-                for override in overrides:
-                    _entry = PupulatorEntry(
-                        window=self,
-                        override=[override, overrides[override]],
-                        content=COOKIES,
-                    )
-                    GLib.idle_add(self.group_overrides_cookies.add, _entry)
-        self.cookie_page.set_badge_number(len(overrides))
+                if not bool(overrides):
+                    getattr(
+                        self, f"group_overrides_{files[file][1]}"
+                    ).set_description((f"No {file} added."))
+                else:
+                    self.group_overrides_cookies.set_description("")
+                    for override in overrides:
+                        _entry = PupulatorEntry(
+                            window=self,
+                            override=[override, overrides[override]],
+                            content=files[file][0],
+                        )
 
-        # Populate body
-        with open(BODY, "r") as file:
-            overrides = json.load(file)
-            overrides = dict(reversed(list(overrides.items())))
-            self.body = overrides
-            if not bool(overrides):
-                self.group_overrides_body.set_description(("No body added."))
-                self.counter_label_form_data_body.set_visible(False)
-            else:
-                self.body = overrides
-                self.group_overrides_body.set_description("")
-                for override in overrides:
-                    _entry = PupulatorEntry(
-                        window=self,
-                        override=[override, overrides[override]],
-                        content=BODY,
-                    )
-                    GLib.idle_add(self.group_overrides_body.add, _entry)
+                        GLib.idle_add(
+                            getattr(
+                                self, f"group_overrides_{files[file][1]}"
+                            ).add,
+                            _entry,
+                        )
 
-            self.body_counter(overrides)
-
-        # Populate parameters
-        with open(PARAM, "r") as file:
-            overrides = json.load(file)
-            overrides = dict(reversed(list(overrides.items())))
-            self.param = overrides
-            if not bool(overrides):
-                self.group_overrides_param.set_description(
-                    ("No parameter added.")
-                )
-            else:
-                self.param = overrides
-                self.group_overrides_param.set_description("")
-                for override in overrides:
-                    _entry = PupulatorEntry(
-                        window=self,
-                        override=[override, overrides[override]],
-                        content=PARAM,
-                    )
-                    GLib.idle_add(self.group_overrides_param.add, _entry)
-
-        # Populate headers
-        with open(HEADERS, "r") as file:
-            overrides = json.load(file)
-            self.headers = overrides
-            if not bool(overrides):
-                self.group_overrides_headers.set_description(
-                    ("No header added.")
-                )
-            else:
-                self.headers = overrides
-                self.group_overrides_headers.set_description("")
-                for override in overrides:
-                    _entry = PupulatorEntry(
-                        window=self,
-                        override=[override, overrides[override]],
-                        content=HEADERS,
-                    )
-                    GLib.idle_add(self.group_overrides_headers.add, _entry)
-
-            self.headers_page.set_badge_number(len(overrides))
-
-        # Populate auths
-        with open(AUTHS, "r") as file:
-            overrides = json.load(file)
-            self.auths = overrides
-            if not bool(overrides):
-                self.group_overrides_auths.set_description(
-                    ("No authentication added.")
-                )
-            else:
-                self.auths = overrides
-                self.group_overrides_auths.set_description("")
-                for override in overrides:
-                    _entry = PupulatorEntry(
-                        window=self,
-                        override=[override, overrides[override]],
-                        content=AUTHS,
-                    )
-                    GLib.idle_add(self.group_overrides_auths.add, _entry)
-
-            self.auths_page.set_badge_number(len(overrides))
+        self.cookie_page.set_badge_number(len(self.cookies))
+        self.headers_page.set_badge_number(len(self.headers))
+        self.auths_page.set_badge_number(len(self.auths))
+        self.body_counter(self.body)
 
     def body_counter(self, overrides) -> None:
         """Body counter and its visibility"""
