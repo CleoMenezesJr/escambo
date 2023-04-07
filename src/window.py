@@ -145,13 +145,10 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.btn_form_data_go_back_body.connect("clicked", self.__go_back)
         self.btn_edit_param_go_back.connect("clicked", self.__go_back)
 
-        # var
-        # TODO create json files with empty values
-        self.cookies = {}
-        self.headers = {}
-        self.auths = {}
-        self.body = {}
+        # General
+        self.cookies = self.headers = self.auths = self.body = {}
 
+        self.create_files_if_not_exists()
         self.__populate_overrides_list()
         self.raw_buffer = self.raw_source_view_body.get_buffer()
         self.response_buffer = self.response_source_view.get_buffer()
@@ -333,6 +330,14 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         )
         new_window.present()
 
+    def create_files_if_not_exists(self):
+        files = [COOKIES, BODY, PARAM, HEADERS, AUTHS]
+        for file in files:
+            if not os.path.exists(file):
+                os.makedirs(os.path.dirname(file), exist_ok=True)
+                with open(file, "w") as json_file:
+                    json_file.write(json.dumps({}))
+
     def __save_override(self, *_args: tuple) -> None:
         """
         This function check if the override name is not empty, then
@@ -347,51 +352,43 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 insertion_date = id or dt.today().isoformat()
 
                 # Insert Cookie
-                json_cookie = json.dumps(
-                    {insertion_date: [title, subtitle]}, indent=2
-                )
-                if not os.path.exists(COOKIES):
-                    os.makedirs(os.path.dirname(COOKIES), exist_ok=True)
-                    with open(COOKIES, "w") as file:
-                        file_content = file.write(json_cookie)
-                else:
-                    with open(COOKIES, "r+") as file:
-                        file_content = json.load(file)
-                        # Save Cookies
-                        file_content[insertion_date] = [title, subtitle]
-                        file.truncate(0)
-                        file.seek(0)
-                        json.dump(file_content, file, indent=2)
+                with open(COOKIES, "r+") as file:
+                    file_content = json.load(file)
+                    # Save Cookies
+                    file_content[insertion_date] = [title, subtitle]
+                    file.truncate(0)
+                    file.seek(0)
+                    json.dump(file_content, file, indent=2)
 
-                        # Populate UI
-                        _entry = PupulatorEntry(
-                            window=self,
-                            override=[
-                                insertion_date,
-                                [title, subtitle],
-                            ],
-                            content=COOKIES,
+                    # Populate UI
+                    _entry = PupulatorEntry(
+                        window=self,
+                        override=[
+                            insertion_date,
+                            [title, subtitle],
+                        ],
+                        content=COOKIES,
+                    )
+                    if not any(
+                        [i == insertion_date for i in self.cookies.keys()]
+                    ):
+                        GLib.idle_add(
+                            self.group_overrides_cookies.add,
+                            _entry,
                         )
-                        if not any(
-                            [i == insertion_date for i in self.cookies.keys()]
-                        ):
-                            GLib.idle_add(
-                                self.group_overrides_cookies.add,
-                                _entry,
-                            )
-                            self.toast_overlay.add_toast(
-                                Adw.Toast.new("Cookie created")
-                            )
-                        else:
-                            self.toast_overlay.add_toast(
-                                Adw.Toast.new("Cookie edited")
-                            )
+                        self.toast_overlay.add_toast(
+                            Adw.Toast.new("Cookie created")
+                        )
+                    else:
+                        self.toast_overlay.add_toast(
+                            Adw.Toast.new("Cookie edited")
+                        )
 
-                    self.cookies = file_content
-                    self.cookie_page.set_badge_number(len(file_content))
+                self.cookies = file_content
+                self.cookie_page.set_badge_number(len(file_content))
 
-                    # Clean up field
-                    self.group_overrides_cookies.set_description("")
+                # Clean up field
+                self.group_overrides_cookies.set_description("")
             case "headers":
                 title: str = _args[2]
                 subtitle: str = _args[3]
@@ -399,50 +396,40 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 insertion_date = id or dt.today().isoformat()
 
                 # Insert Header
-                json_header = json.dumps(
-                    {insertion_date: [title, subtitle]}, indent=2
-                )
-                if not os.path.exists(HEADERS):
-                    os.makedirs(os.path.dirname(HEADERS), exist_ok=True)
-                    with open(HEADERS, "w") as file:
-                        file_content = file.write(json_header)
-                else:
-                    with open(HEADERS, "r+") as file:
-                        file_content = json.load(file)
-                        # Save Header
-                        file_content[insertion_date] = [title, subtitle]
-                        file.truncate(0)
-                        file.seek(0)
-                        json.dump(file_content, file, indent=2)
+                with open(HEADERS, "r+") as file:
+                    file_content = json.load(file)
+                    # Save Header
+                    file_content[insertion_date] = [title, subtitle]
+                    file.truncate(0)
+                    file.seek(0)
+                    json.dump(file_content, file, indent=2)
 
-                        # Populate UI
-                        _entry = PupulatorEntry(
-                            window=self,
-                            override=[
-                                insertion_date,
-                                [title, subtitle],
-                            ],
-                            content=HEADERS,
+                    # Populate UI
+                    _entry = PupulatorEntry(
+                        window=self,
+                        override=[
+                            insertion_date,
+                            [title, subtitle],
+                        ],
+                        content=HEADERS,
+                    )
+                    if not any(
+                        [i == insertion_date for i in self.headers.keys()]
+                    ):
+                        GLib.idle_add(self.group_overrides_headers.add, _entry)
+                        self.toast_overlay.add_toast(
+                            Adw.Toast.new("Header created")
                         )
-                        if not any(
-                            [i == insertion_date for i in self.headers.keys()]
-                        ):
-                            GLib.idle_add(
-                                self.group_overrides_headers.add, _entry
-                            )
-                            self.toast_overlay.add_toast(
-                                Adw.Toast.new("Header created")
-                            )
-                        else:
-                            self.toast_overlay.add_toast(
-                                Adw.Toast.new("Header edited")
-                            )
+                    else:
+                        self.toast_overlay.add_toast(
+                            Adw.Toast.new("Header edited")
+                        )
 
-                    self.headers = file_content
-                    self.headers_page.set_badge_number(len(file_content))
+                self.headers = file_content
+                self.headers_page.set_badge_number(len(file_content))
 
-                    # Clean up field
-                    self.group_overrides_headers.set_description("")
+                # Clean up field
+                self.group_overrides_headers.set_description("")
             case "auths":
                 title: str = _args[2]
                 subtitle: str = _args[3]
@@ -452,65 +439,50 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 insertion_date = id or dt.today().isoformat()
 
                 # Insert Header
-                json_header = json.dumps(
-                    {insertion_date: [title, subtitle, pill_str, add_to]},
-                    indent=2,
-                )
-                if not os.path.exists(AUTHS):
-                    os.makedirs(os.path.dirname(AUTHS), exist_ok=True)
-                    with open(AUTHS, "w") as file:
-                        file_content = file.write(json_header)
-                else:
-                    with open(AUTHS, "r+") as file:
-                        file_content = json.load(file)
-                        # Save Auth
-                        file_content[insertion_date] = [
-                            title,
-                            subtitle,
-                            pill_str,
-                            add_to,
-                        ]
-                        file.truncate(0)
-                        file.seek(0)
-                        json.dump(file_content, file, indent=2)
+                with open(AUTHS, "r+") as file:
+                    file_content = json.load(file)
+                    # Save Auth
+                    file_content[insertion_date] = [
+                        title,
+                        subtitle,
+                        pill_str,
+                        add_to,
+                    ]
+                    file.truncate(0)
+                    file.seek(0)
+                    json.dump(file_content, file, indent=2)
 
-                        # Populate UI
-                        _entry = PupulatorEntry(
-                            window=self,
-                            override=[
-                                insertion_date,
-                                [title, subtitle, pill_str],
-                            ],
-                            content=AUTHS,
+                    # Populate UI
+                    _entry = PupulatorEntry(
+                        window=self,
+                        override=[
+                            insertion_date,
+                            [title, subtitle, pill_str],
+                        ],
+                        content=AUTHS,
+                    )
+                    if not any(
+                        [i == insertion_date for i in self.auths.keys()]
+                    ):
+                        GLib.idle_add(self.group_overrides_auths.add, _entry)
+                        self.toast_overlay.add_toast(
+                            Adw.Toast.new("Auth created")
                         )
-                        if not any(
-                            [i == insertion_date for i in self.auths.keys()]
-                        ):
-                            GLib.idle_add(
-                                self.group_overrides_auths.add, _entry
-                            )
-                            self.toast_overlay.add_toast(
-                                Adw.Toast.new("Auth created")
-                            )
-                        else:
-                            self.toast_overlay.add_toast(
-                                Adw.Toast.new("Auth edited")
-                            )
+                    else:
+                        self.toast_overlay.add_toast(
+                            Adw.Toast.new("Auth edited")
+                        )
 
-                    self.auths = file_content
-                    self.auths_page.set_badge_number(len(file_content))
+                self.auths = file_content
+                self.auths_page.set_badge_number(len(file_content))
 
-                    # Clean up field
-                    self.group_overrides_auths.set_description("")
+                # Clean up field
+                self.group_overrides_auths.set_description("")
             case "body":
                 body_key = self.entry_body_key.get_text()
                 body_value = self.entry_body_value.get_text()
 
                 if body_key != "" and body_value != "":
-                    if not os.path.exists(BODY):
-                        os.makedirs(os.path.dirname(BODY), exist_ok=True)
-                        with open(BODY, "w") as file:
-                            file.write(json.dumps({}))
                     with open(BODY, "r+") as file:
                         file_content = json.load(file)
                         if not any(
@@ -547,10 +519,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 param_value = self.entry_param_value.get_text()
 
                 if param_key != "" and param_value != "":
-                    if not os.path.exists(PARAM):
-                        os.makedirs(os.path.dirname(PARAM), exist_ok=True)
-                        with open(PARAM, "w") as file:
-                            file.write(json.dumps({}))
                     with open(PARAM, "r+") as file:
                         file_content = json.load(file)
                         if not any(
@@ -587,120 +555,107 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         This function populate the list of cookies
         """
         # Populate cookies
-        if os.path.exists(COOKIES):
-            with open(COOKIES, "r") as file:
-                overrides = json.load(file)
+        with open(COOKIES, "r") as file:
+            overrides = json.load(file)
+            self.cookies = overrides
+            if not bool(overrides):
+                self.group_overrides_cookies.set_description(
+                    ("No cookie added.")
+                )
+            else:
                 self.cookies = overrides
-                if not bool(overrides):
-                    self.group_overrides_cookies.set_description(
-                        ("No cookie added.")
+                self.group_overrides_cookies.set_description("")
+                for override in overrides:
+                    _entry = PupulatorEntry(
+                        window=self,
+                        override=[override, overrides[override]],
+                        content=COOKIES,
                     )
-                else:
-                    self.cookies = overrides
-                    self.group_overrides_cookies.set_description("")
-                    for override in overrides:
-                        _entry = PupulatorEntry(
-                            window=self,
-                            override=[override, overrides[override]],
-                            content=COOKIES,
-                        )
-                        GLib.idle_add(self.group_overrides_cookies.add, _entry)
-
-                self.cookie_page.set_badge_number(len(overrides))
+                    GLib.idle_add(self.group_overrides_cookies.add, _entry)
+        self.cookie_page.set_badge_number(len(overrides))
 
         # Populate body
-        if os.path.exists(BODY):
-            with open(BODY, "r") as file:
-                overrides = json.load(file)
-                overrides = dict(reversed(list(overrides.items())))
+        with open(BODY, "r") as file:
+            overrides = json.load(file)
+            overrides = dict(reversed(list(overrides.items())))
+            self.body = overrides
+            if not bool(overrides):
+                self.group_overrides_body.set_description(("No body added."))
+                self.counter_label_form_data_body.set_visible(False)
+            else:
                 self.body = overrides
-                if not bool(overrides):
-                    self.group_overrides_body.set_description(
-                        ("No body added.")
+                self.group_overrides_body.set_description("")
+                for override in overrides:
+                    _entry = PupulatorEntry(
+                        window=self,
+                        override=[override, overrides[override]],
+                        content=BODY,
                     )
-                else:
-                    self.body = overrides
-                    self.group_overrides_body.set_description("")
-                    for override in overrides:
-                        _entry = PupulatorEntry(
-                            window=self,
-                            override=[override, overrides[override]],
-                            content=BODY,
-                        )
-                        GLib.idle_add(self.group_overrides_body.add, _entry)
+                    GLib.idle_add(self.group_overrides_body.add, _entry)
 
-                self.body_counter(overrides)
-        else:
-            self.group_overrides_body.set_description(("No body added."))
-            self.counter_label_form_data_body.set_visible(False)
+            self.body_counter(overrides)
 
         # Populate parameters
-        if os.path.exists(PARAM):
-            with open(PARAM, "r") as file:
-                overrides = json.load(file)
-                overrides = dict(reversed(list(overrides.items())))
+        with open(PARAM, "r") as file:
+            overrides = json.load(file)
+            overrides = dict(reversed(list(overrides.items())))
+            self.param = overrides
+            if not bool(overrides):
+                self.group_overrides_param.set_description(
+                    ("No parameter added.")
+                )
+            else:
                 self.param = overrides
-                if not bool(overrides):
-                    self.group_overrides_param.set_description(
-                        ("No parameter added.")
+                self.group_overrides_param.set_description("")
+                for override in overrides:
+                    _entry = PupulatorEntry(
+                        window=self,
+                        override=[override, overrides[override]],
+                        content=PARAM,
                     )
-                else:
-                    self.param = overrides
-                    self.group_overrides_param.set_description("")
-                    for override in overrides:
-                        _entry = PupulatorEntry(
-                            window=self,
-                            override=[override, overrides[override]],
-                            content=PARAM,
-                        )
-                        GLib.idle_add(self.group_overrides_param.add, _entry)
-
-        else:
-            self.group_overrides_param.set_description(("No body added."))
+                    GLib.idle_add(self.group_overrides_param.add, _entry)
 
         # Populate headers
-        if os.path.exists(HEADERS):
-            with open(HEADERS, "r") as file:
-                overrides = json.load(file)
+        with open(HEADERS, "r") as file:
+            overrides = json.load(file)
+            self.headers = overrides
+            if not bool(overrides):
+                self.group_overrides_headers.set_description(
+                    ("No header added.")
+                )
+            else:
                 self.headers = overrides
-                if not bool(overrides):
-                    self.group_overrides_headers.set_description(
-                        ("No header added.")
+                self.group_overrides_headers.set_description("")
+                for override in overrides:
+                    _entry = PupulatorEntry(
+                        window=self,
+                        override=[override, overrides[override]],
+                        content=HEADERS,
                     )
-                else:
-                    self.headers = overrides
-                    self.group_overrides_headers.set_description("")
-                    for override in overrides:
-                        _entry = PupulatorEntry(
-                            window=self,
-                            override=[override, overrides[override]],
-                            content=HEADERS,
-                        )
-                        GLib.idle_add(self.group_overrides_headers.add, _entry)
+                    GLib.idle_add(self.group_overrides_headers.add, _entry)
 
-                self.headers_page.set_badge_number(len(overrides))
+            self.headers_page.set_badge_number(len(overrides))
 
         # Populate auths
-        if os.path.exists(AUTHS):
-            with open(AUTHS, "r") as file:
-                overrides = json.load(file)
+        with open(AUTHS, "r") as file:
+            overrides = json.load(file)
+            self.auths = overrides
+            if not bool(overrides):
+                self.group_overrides_auths.set_description(
+                    ("No authentication added.")
+                )
+            else:
                 self.auths = overrides
-                if not bool(overrides):
-                    self.group_overrides_auths.set_description(
-                        ("No authentication added.")
+                self.group_overrides_auths.set_description("")
+                for override in overrides:
+                    _entry = PupulatorEntry(
+                        window=self,
+                        override=[override, overrides[override]],
+                        content=AUTHS,
                     )
-                else:
-                    self.auths = overrides
-                    self.group_overrides_auths.set_description("")
-                    for override in overrides:
-                        _entry = PupulatorEntry(
-                            window=self,
-                            override=[override, overrides[override]],
-                            content=AUTHS,
-                        )
-                        GLib.idle_add(self.group_overrides_auths.add, _entry)
+                    GLib.idle_add(self.group_overrides_auths.add, _entry)
 
-                self.auths_page.set_badge_number(len(overrides))
+            self.auths_page.set_badge_number(len(overrides))
 
     def body_counter(self, overrides) -> None:
         """Body counter and its visibility"""
