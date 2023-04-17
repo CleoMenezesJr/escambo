@@ -15,19 +15,22 @@ class ResolveRequests:
         headers: dict = None,
         body: dict = None,
         parameters: dict = None,
+        authentication: dict = None,
     ) -> None:
         # common variables and references
         self.url = url
         self.session = session
-        self.headers = headers
         self.body = body
         self.params = parameters
         self.cookies = cookies
+        self.auths = authentication
 
         if self.cookies:
             self.set_cookie_session()
-        if self.headers:
-            self.session.headers.update(self.headers)
+        if headers:
+            self.session.headers.update(headers)
+        if self.auths:
+            self.set_auth()
 
     def resolve_get(self) -> list:
         response = self.session.get(
@@ -105,3 +108,21 @@ class ResolveRequests:
                 cookie_dict["expires"] = expires_unix
 
             self.session.cookies.set(**cookie_dict)
+
+    def set_auth(self) -> None:
+        auth_type = self.auths[0].props.selected_item.get_string()
+        auth_values = self.auths[1]
+        match auth_type:
+            case "Api Key":
+                if auth_values[auth_type][2] == "Query Parameters":
+                    self.params |= {
+                        auth_values[auth_type][0]: auth_values[auth_type][1]
+                    }
+                elif auth_values[auth_type][2] == "Header":
+                    self.session.headers.update(
+                        {auth_values[auth_type][0]: auth_values[auth_type][1]}
+                    )
+            case "Bearer Token":
+                self.session.headers.update(
+                    {"Authorization": f"Bearer {auth_values[auth_type][0]}"}
+                )

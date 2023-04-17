@@ -26,7 +26,6 @@ from typing import Callable
 
 from getoverhere.check_url import has_parameter, is_valid_url
 from getoverhere.date_row import DateRow
-from getoverhere.dialog_auths import AuthDialog
 from getoverhere.dialog_cookies import CookieDialog
 from getoverhere.dialog_headers import HeaderDialog
 from getoverhere.populator_entry import PupulatorEntry
@@ -107,8 +106,13 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     group_overrides_headers = Gtk.Template.Child()
 
     auths_page = Gtk.Template.Child()
-    create_new_auth = Gtk.Template.Child()
-    group_overrides_auths = Gtk.Template.Child()
+    auth_type = Gtk.Template.Child()
+    api_key_auth_key = Gtk.Template.Child()
+    api_key_auth_value = Gtk.Template.Child()
+    api_key_auth_add_to = Gtk.Template.Child()
+    api_key_prefs = Gtk.Template.Child()
+    bearer_token_prefs = Gtk.Template.Child()
+    bearer_token = Gtk.Template.Child()
 
     spinner = Gtk.Template.Child()
 
@@ -131,8 +135,14 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.create_new_header.connect(
             "activated", self._show_header_dialog, "New Header"
         )
-        self.create_new_auth.connect(
-            "activated", self._show_auth_dialog, "New Auth"
+        self.api_key_auth_key.connect(
+            "apply", self.on_auth_entry_active, "api_key_auth_key"
+        )
+        self.api_key_auth_value.connect(
+            "apply", self.on_auth_entry_active, "api_key_auth_value"
+        )
+        self.bearer_token.connect(
+            "apply", self.on_auth_entry_active, "bearer_token"
         )
         self.switch_cookie.connect("state-set", self.set_needs_attention)
         self.btn_add_body.connect("clicked", self.__save_override, "body")
@@ -199,7 +209,8 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 )
                 which_method_thread = threading.Thread(
                     target=self.__which_method,
-                    args=(method, url, body, parameters, cookies, headers),
+                    # TODO Remove parameters and use self variables
+                    args=(method, url, body, cookies, headers),
                 )
                 which_method_thread.daemon = True
                 which_method_thread.start()
@@ -241,7 +252,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         method: int,
         url: str,
         body: dict | None,
-        parameters: dict,
         cookies: dict | None,
         headers: dict | None,
     ) -> Callable | None:
@@ -259,7 +269,8 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 cookies=cookies,
                 headers=headers,
                 body=body,
-                parameters=parameters,
+                parameters=self.param,
+                authentication=[self.auth_type, self.auths],
             )
             get_resolve_requets_attr = getattr(
                 resolve_requests, f"resolve_{method_list[method]}"
@@ -299,6 +310,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def update_subtitle_parameters(self, *_args) -> None:
+        # TODO url parameters on new row parameter
         url_entry = self.entry_url.get_text()
         if has_parameter(url_entry):
             self.enable_expander_row_parameters.set_enable_expansion(False)
@@ -330,13 +342,56 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         )
         new_window.present()
 
-    def create_files_if_not_exists(self):
+    def create_files_if_not_exists(self) -> None:
         files = [COOKIES, BODY, PARAM, HEADERS, AUTHS]
+        auths = {"Api Key": ["", "", "Header"], "Bearer Token": [""]}
         for file in files:
             if not os.path.exists(file):
                 os.makedirs(os.path.dirname(file), exist_ok=True)
                 with open(file, "w") as json_file:
-                    json_file.write(json.dumps({}))
+                    json_file.write(
+                        json.dumps(auths if "auths" in file else {})
+                    )
+
+    @Gtk.Template.Callback()
+    def on_auth_entry_active(self, widget, args) -> None:
+        auth_type = self.auth_type.props.selected_item.get_string()
+        try:
+            entry_content = getattr(self, args).get_text()
+        except TypeError:
+            if auth_type == "Api Key":
+                entry_content = widget.props.selected_item.get_string()
+                args = "api_key_auth_add_to"
+
+        entries_position = {
+            "Api Key": {
+                "api_key_auth_key": 0,
+                "api_key_auth_value": 1,
+                "api_key_auth_add_to": 2,
+            },
+            "Bearer Token": {"bearer_token": 0},
+        }
+
+        # Insert Auth
+        with open(AUTHS, "r+") as file:
+            file_content = json.load(file)
+            file_content[auth_type][
+                entries_position[auth_type][args]
+            ] = entry_content
+            file.truncate(0)
+            file.seek(0)
+            json.dump(file_content, file, indent=2)
+
+        self.auths[auth_type][
+            entries_position[auth_type][args]
+        ] = entry_content
+
+    @Gtk.Template.Callback()
+    def on_auth_type_changed(self, arg, kwargs):
+        # TODO use this method on Method type
+        type = self.auth_type.props.selected_item.get_string()
+        self.bearer_token_prefs.props.visible = type == "Bearer Token"
+        self.api_key_prefs.props.visible = type == "Api Key"
 
     def __save_override(self, *_args: tuple) -> None:
         """
@@ -430,54 +485,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
 
                 # Clean up field
                 self.group_overrides_headers.set_description("")
-            case "auths":
-                title: str = _args[2]
-                subtitle: str = _args[3]
-                id: str = _args[4]
-                pill_str: str = _args[5]
-                add_to: str = _args[6]
-                insertion_date = id or dt.today().isoformat()
-
-                # Insert Header
-                with open(AUTHS, "r+") as file:
-                    file_content = json.load(file)
-                    # Save Auth
-                    file_content[insertion_date] = [
-                        title,
-                        subtitle,
-                        pill_str,
-                        add_to,
-                    ]
-                    file.truncate(0)
-                    file.seek(0)
-                    json.dump(file_content, file, indent=2)
-
-                    # Populate UI
-                    _entry = PupulatorEntry(
-                        window=self,
-                        override=[
-                            insertion_date,
-                            [title, subtitle, pill_str],
-                        ],
-                        content=AUTHS,
-                    )
-                    if not any(
-                        [i == insertion_date for i in self.auths.keys()]
-                    ):
-                        GLib.idle_add(self.group_overrides_auths.add, _entry)
-                        self.toast_overlay.add_toast(
-                            Adw.Toast.new("Auth created")
-                        )
-                    else:
-                        self.toast_overlay.add_toast(
-                            Adw.Toast.new("Auth edited")
-                        )
-
-                self.auths = file_content
-                self.auths_page.set_badge_number(len(file_content))
-
-                # Clean up field
-                self.group_overrides_auths.set_description("")
             case "body":
                 body_key = self.entry_body_key.get_text()
                 body_value = self.entry_body_value.get_text()
@@ -572,29 +579,36 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 self.auths = (
                     overrides if "authentication" in file else self.auths
                 )
-                if not bool(overrides):
-                    getattr(
-                        self, f"group_overrides_{files[file][1]}"
-                    ).set_description((f"No {file} added."))
-                else:
-                    self.group_overrides_cookies.set_description("")
-                    for override in overrides:
-                        _entry = PupulatorEntry(
-                            window=self,
-                            override=[override, overrides[override]],
-                            content=files[file][0],
-                        )
+                if file != "authentication":
+                    if not bool(overrides):
+                        getattr(
+                            self, f"group_overrides_{files[file][1]}"
+                        ).set_description((f"No {file} added."))
+                    else:
+                        # TODO set getattr to make it dinamic
+                        self.group_overrides_cookies.set_description("")
+                        for override in overrides:
+                            _entry = PupulatorEntry(
+                                window=self,
+                                override=[override, overrides[override]],
+                                content=files[file][0],
+                            )
 
-                        GLib.idle_add(
-                            getattr(
-                                self, f"group_overrides_{files[file][1]}"
-                            ).add,
-                            _entry,
-                        )
+                            GLib.idle_add(
+                                getattr(
+                                    self, f"group_overrides_{files[file][1]}"
+                                ).add,
+                                _entry,
+                            )
+                else:
+                    PupulatorEntry(
+                        window=self,
+                        override=overrides,
+                        content=files[file][0],
+                    )
 
         self.cookie_page.set_badge_number(len(self.cookies))
         self.headers_page.set_badge_number(len(self.headers))
-        self.auths_page.set_badge_number(len(self.auths))
         self.body_counter(self.body)
 
     def body_counter(self, overrides) -> None:

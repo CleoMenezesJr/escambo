@@ -305,20 +305,45 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                           active: true;
                                                       }
                                                   }
-                                                  Adw.ActionRow create_new_auth {
-                                                      title: _("Create New Authorization...");
-                                                      activatable: true;
-                                                      Image {
-                                                          icon-name: "go-next-symbolic";
-                                                          styles ["dim-label"]
-                                                      }
+                                                  Adw.ComboRow auth_type {
+                                                      title: _("Type");
+                                                      model: StringList {
+                                                          strings [
+                                                              "Api Key",
+                                                              "Bearer Token",
+                                                          ]
+                                                      };
+                                                      notify::selected-item => on_auth_type_changed();
                                                   }
                                               }
-                                              Separator {
-                                                  visible: false;
-                                              }
+                                              Adw.PreferencesGroup api_key_prefs {
+                                                  Adw.EntryRow api_key_auth_key {
+                                                      title: _("Key");
+                                                      show-apply-button: true;
+                                                  }
 
-                                              Adw.PreferencesGroup group_overrides_auths {
+                                                  Adw.EntryRow api_key_auth_value {
+                                                      title: _("Value");
+                                                      show-apply-button: true;
+                                                  }
+
+                                                  Adw.ComboRow api_key_auth_add_to {
+                                                      title: _("Add to");
+                                                      model: StringList {
+                                                          strings [
+                                                              _("Header"),
+                                                              _("Query Parameters"),
+                                                          ]
+                                                      };
+                                                      notify::selected-item => on_auth_entry_active();
+                                                  }
+                                              }
+                                              Adw.PreferencesGroup bearer_token_prefs {
+                                                  visible: false;
+                                                  Adw.EntryRow bearer_token {
+                                                      title: "Token";
+                                                      show-apply-button: true;
+                                                  }
                                               }
                                           };
                                   };
