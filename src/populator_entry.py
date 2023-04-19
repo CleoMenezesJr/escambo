@@ -55,48 +55,58 @@ class PupulatorEntry(Adw.ActionRow):
         def resolve_dialog_response(widget, response):
             if response == "ok":
                 # if not bool(file_content):
-                if "cookies" in self.content:
-                    file_content = self.window.cookies
-                    del file_content[self.override[0]]
-                    with open(self.content, "w") as file:
-                        json.dump(file_content, file, indent=2)
+                files = {
+                    "cookie": "cookies",
+                    "header": "headers",
+                    "body": "body",
+                    "parameter": "param",
+                }
+                for file in files:
+                    if files[file] in self.content:
+                        file_content = getattr(self.window, files[file])
+                        del file_content[self.override[0]]
+                        with open(self.content, "w") as json_content:
+                            json.dump(file_content, json_content, indent=2)
 
-                    if len(file_content) == 0:
-                        self.window.get_template_child(
-                            self.window, "group_overrides_cookies"
-                        ).set_description("No cookie added.")
-
-                elif "headers" in self.content:
-                    file_content = self.window.headers
-                    del file_content[self.override[0]]
-                    with open(self.content, "w") as file:
-                        json.dump(file_content, file, indent=2)
-
-                    if len(file_content) == 0:
-                        self.window.get_template_child(
-                            self.window, "group_overrides_headers"
-                        ).set_description("No header added.")
-                elif "body" in self.content:
-                    self.window.get_template_child(
-                        self.window, "group_overrides_body"
-                    ).set_description("No body added.")
-                elif "param" in self.content:
-                    self.window.get_template_child(
-                        self.window, "group_overrides_params"
-                    ).set_description("No parameter added.")
-                    self.window.enable_expander_row_parameters.set_subtitle(
-                        "https://?"
-                    )
-                    self.window.param = {}
-
+                        self.window.cookies = (
+                            file_content
+                            if "cookie" in file
+                            else self.window.cookies
+                        )
+                        self.window.body = (
+                            file_content
+                            if "body" in file
+                            else self.window.body
+                        )
+                        self.window.param = (
+                            file_content
+                            if "parameter" in file
+                            else self.window.param
+                        )
+                        self.window.headers = (
+                            file_content
+                            if "header" in file
+                            else self.window.headers
+                        )
+                        if len(file_content) == 0:
+                            getattr(
+                                self.window, f"group_overrides_{files[file]}"
+                            ).set_description((f"No {file} added."))
+                            # review if is necessary set subtitle to blank
+                            if "param" in self.content:
+                                row_parameters = (
+                                    self.window.enable_expander_row_parameters
+                                )
+                                row_parameters.set_subtitle("https://?")
+                self.window.cookies_page.set_badge_number(
+                    len(self.window.cookies)
+                )
+                self.window.headers_page.set_badge_number(
+                    len(self.window.headers)
+                )
+                self.window.body_counter(self.window.body)
                 # TODO
                 # Remove query parameter on subtitle
-                # TODO set badge per file_content
-                self.window.cookie_page.set_badge_number(len(file_content))
-                self.window.headers_page.set_badge_number(len(file_content))
-                self.window.body_counter(file_content)
-
-                # Update subtitle
 
                 self.get_parent().remove(self)
 
