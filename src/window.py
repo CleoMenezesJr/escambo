@@ -96,7 +96,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     group_overrides_param = Gtk.Template.Child()
 
     switch_cookie = Gtk.Template.Child()
-    cookie_page = Gtk.Template.Child()
+    cookies_page = Gtk.Template.Child()
     create_new_cookie = Gtk.Template.Child()
     group_overrides_cookies = Gtk.Template.Child()
 
@@ -171,9 +171,9 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         # TODO make this function agnostic. get the swtich by self parent
         # TODO call this function when window open
         if not self.switch_cookie.get_state():
-            self.cookie_page.set_needs_attention(True)
+            self.cookies_page.set_needs_attention(True)
         else:
-            self.cookie_page.set_needs_attention(False)
+            self.cookies_page.set_needs_attention(False)
 
     def __on_send(self, *_args: tuple) -> None:
         """
@@ -440,7 +440,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         )
 
                 self.cookies = file_content
-                self.cookie_page.set_badge_number(len(file_content))
+                self.cookies_page.set_badge_number(len(file_content))
 
                 # Clean up field
                 self.group_overrides_cookies.set_description("")
@@ -558,6 +558,8 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     self.entry_param_value.set_text("")
 
     def __populate_overrides_list(self) -> None:
+        # TODO populate url preview with parameters
+
         """
         This function populate rows from json files
         """
@@ -585,8 +587,9 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                             self, f"group_overrides_{files[file][1]}"
                         ).set_description((f"No {file} added."))
                     else:
-                        # TODO set getattr to make it dinamic
-                        self.group_overrides_cookies.set_description("")
+                        getattr(
+                            self, f"group_overrides_{files[file][1]}"
+                        ).set_description("")
                         for override in overrides:
                             _entry = PupulatorEntry(
                                 window=self,
@@ -607,7 +610,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         content=files[file][0],
                     )
 
-        self.cookie_page.set_badge_number(len(self.cookies))
+        self.cookies_page.set_badge_number(len(self.cookies))
         self.headers_page.set_badge_number(len(self.headers))
         self.body_counter(self.body)
 
