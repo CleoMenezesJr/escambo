@@ -23,6 +23,7 @@ import os
 import threading
 from datetime import datetime as dt
 from typing import Callable
+from urllib.parse import urlparse
 
 from getoverhere.check_url import has_parameter, is_valid_url
 from getoverhere.date_row import DateRow
@@ -312,17 +313,25 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback()
     def update_subtitle_parameters(self, *_args) -> None:
         url_entry = self.entry_url.get_text()
-        if has_parameter(url_entry):
-            self.expander_row_parameters.set_enable_expansion(False)
-            GLib.idle_add(self.expander_row_parameters.set_subtitle, "")
-        else:
-            self.expander_row_parameters.set_enable_expansion(True)
-            parameters = [f"{i}={self.param[i]}" for i in self.param]
-            GLib.idle_add(
-                self.expander_row_parameters.set_subtitle,
-                f"{'https://' if not url_entry else url_entry}"
-                + f"?{html.escape('&').join(parameters)}",
-            )
+        parameters = [f"{i}={self.param[i]}" for i in self.param]
+        parsed_url = urlparse(url_entry)
+        url_query_params = parsed_url.query.split("&")
+
+        if parsed_url.query:
+            parameters += url_query_params
+
+        param_position = url_entry.find("?")
+        url = (
+            url_entry[:param_position]
+            if has_parameter(url_entry)
+            else url_entry
+        )
+
+        GLib.idle_add(
+            self.expander_row_parameters.set_subtitle,
+            f"{'https://' if not url_entry else url}"
+            + f"?{html.escape('&').join(parameters)}",
+        )
 
     def _show_cookie_dialog(self, widget, title, content=None):
         new_window = CookieDialog(
