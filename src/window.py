@@ -89,7 +89,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     entry_param_key = Gtk.Template.Child()
     entry_param_value = Gtk.Template.Child()
     btn_add_parameter = Gtk.Template.Child()
-    enable_expander_row_parameters = Gtk.Template.Child()
+    expander_row_parameters = Gtk.Template.Child()
     btn_edit_param = Gtk.Template.Child()
     btn_edit_param_go_back = Gtk.Template.Child()
     form_data_page_parameters = Gtk.Template.Child()
@@ -306,20 +306,20 @@ class GetoverhereWindow(Adw.ApplicationWindow):
             self.leaflet.set_visible_child(self.form_data_page_parameters)
 
     def __go_back(self, *_args: tuple) -> None:
+        # TODO use actions instead
         self.leaflet.set_visible_child(self.home)
 
     @Gtk.Template.Callback()
     def update_subtitle_parameters(self, *_args) -> None:
-        # TODO url parameters on new row parameter
         url_entry = self.entry_url.get_text()
         if has_parameter(url_entry):
-            self.enable_expander_row_parameters.set_enable_expansion(False)
-            GLib.idle_add(self.enable_expander_row_parameters.set_subtitle, "")
+            self.expander_row_parameters.set_enable_expansion(False)
+            GLib.idle_add(self.expander_row_parameters.set_subtitle, "")
         else:
-            self.enable_expander_row_parameters.set_enable_expansion(True)
+            self.expander_row_parameters.set_enable_expansion(True)
             parameters = [f"{i}={self.param[i]}" for i in self.param]
             GLib.idle_add(
-                self.enable_expander_row_parameters.set_subtitle,
+                self.expander_row_parameters.set_subtitle,
                 f"{'https://' if not url_entry else url_entry}"
                 + f"?{html.escape('&').join(parameters)}",
             )
@@ -610,6 +610,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         content=files[file][0],
                     )
 
+        # TODO set and change badge number when it has a change
         self.cookies_page.set_badge_number(len(self.cookies))
         self.headers_page.set_badge_number(len(self.headers))
         self.body_counter(self.body)

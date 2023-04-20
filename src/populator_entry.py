@@ -44,6 +44,8 @@ class PupulatorEntry(Adw.ActionRow):
             self.set_title(self.override[0])
             self.set_subtitle(self.override[1])
 
+        # update status
+        self.window.update_subtitle_parameters()
         # connect signals
         self.btn_remove.connect("clicked", self.__remove_override)
 
@@ -92,12 +94,10 @@ class PupulatorEntry(Adw.ActionRow):
                             getattr(
                                 self.window, f"group_overrides_{files[file]}"
                             ).set_description((f"No {file} added."))
-                            # review if is necessary set subtitle to blank
-                            if "param" in self.content:
-                                row_parameters = (
-                                    self.window.enable_expander_row_parameters
-                                )
-                                row_parameters.set_subtitle("https://?")
+
+                # update status
+                self.window.update_subtitle_parameters()
+
                 self.window.cookies_page.set_badge_number(
                     len(self.window.cookies)
                 )
