@@ -167,7 +167,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
 
         # GSettings object
         self.settings = Gio.Settings.new("io.github.cleomenezesjr.GetOverHere")
-
     def set_needs_attention(self, *_args: tuple):
         # TODO make this function agnostic. get the swtich by self parent
         # TODO call this function when window open
@@ -199,7 +198,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 )
             else:
                 body = self.__which_body_type(body_type)
-                parameters = self.__which_parameter_type(url)
                 cookies = (
                     self.cookies if self.switch_cookie.get_state() else None
                 )
@@ -219,16 +217,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 self.spinner.props.spinning = True
                 self.leaflet.set_visible_child(self.response_page)
                 self.response_stack.props.visible_child_name = "loading"
-
-    def __which_parameter_type(self, url_entry: str) -> dict | None:
-        if has_parameter(url_entry):
-            separator = url_entry.find("?") + 1
-            url_params = url_entry[separator:]
-            per_param = (i.split("=") for i in url_params.split("&"))
-            return {i[0]: i[1] for i in per_param}
-
-        else:
-            return self.param
 
     def __which_body_type(self, body_type: bool) -> dict | None:
         if body_type:
