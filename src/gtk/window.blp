@@ -3,7 +3,7 @@ using Adw 1;
 
 template GetoverhereWindow : Adw.ApplicationWindow {
     default-width: 769;
-    default-height: 472;
+    default-height: 490;
     title: "Get Over Here";
 
     styles [
@@ -53,7 +53,6 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                             Box {
                                                 orientation: vertical;
                                                 spacing: 24;
-                                                valign: center;
 
                                                 Adw.PreferencesGroup {
 
@@ -72,13 +71,25 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                         notify::selected-item => on_entry_method_changed();
                                                     }
 
-                                                    // TODO: change all entry url to url entry
                                                     Adw.EntryRow entry_url {
                                                         title: _("URL");
                                                         use-underline: true;
                                                         changed => on_entry_url_changed();
                                                     }
                                                 }
+
+                                                Button btn_send_request {
+                                                    halign: center;
+                                                    label: _("Send Resquest");
+                                                    //margin-bottom: 12;
+                                                    tooltip-text: "Send REST";
+
+                                                    styles [
+                                                    "pill",
+                                                    "suggested-action",
+                                                    ]
+                                                }
+
                                                 Adw.PreferencesGroup {
 
                                                       Adw.ExpanderRow expander_row_parameters {
@@ -161,18 +172,6 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                         }
                                                       }
 
-                                                }
-
-                                                Button btn_send_request {
-                                                    halign: center;
-                                                    label: _("Send Resquest");
-                                                    margin-bottom: 12;
-                                                    tooltip-text: "Send REST";
-
-                                                    styles [
-                                                    "pill",
-                                                    "suggested-action",
-                                                    ]
                                                 }
                                             };
                                     };
