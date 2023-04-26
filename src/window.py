@@ -71,16 +71,13 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     response_source_view: SourceView = Gtk.Template.Child()
     raw_source_view_body: SourceView = Gtk.Template.Child()
 
-    btn_response_go_back = Gtk.Template.Child()
-    btn_raw_go_back_body = Gtk.Template.Child()
-    btn_form_data_go_back_body = Gtk.Template.Child()
-
     home = Gtk.Template.Child()
     form_data_toggle_button_body = Gtk.Template.Child()
-    btn_edit_body = Gtk.Template.Child()
+    raw_toggle_button_body = Gtk.Template.Child()
 
     btn_send_request = Gtk.Template.Child()
 
+    expander_row_body = Gtk.Template.Child()
     entry_body_key = Gtk.Template.Child()
     entry_body_value = Gtk.Template.Child()
     btn_add_body = Gtk.Template.Child()
@@ -91,12 +88,10 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     entry_param_value = Gtk.Template.Child()
     btn_add_parameter = Gtk.Template.Child()
     expander_row_parameters = Gtk.Template.Child()
-    btn_edit_param = Gtk.Template.Child()
-    btn_edit_param_go_back = Gtk.Template.Child()
     form_data_page_parameters = Gtk.Template.Child()
     group_overrides_param = Gtk.Template.Child()
 
-    switch_cookie = Gtk.Template.Child()
+    switch_cookies = Gtk.Template.Child()
     cookies_page = Gtk.Template.Child()
     create_new_cookie = Gtk.Template.Child()
     group_overrides_cookies = Gtk.Template.Child()
@@ -106,6 +101,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     create_new_header = Gtk.Template.Child()
     group_overrides_headers = Gtk.Template.Child()
 
+    switch_auths = Gtk.Template.Child()
     auths_page = Gtk.Template.Child()
     auth_type = Gtk.Template.Child()
     api_key_auth_key = Gtk.Template.Child()
@@ -127,9 +123,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
 
         # Connect signals
         self.btn_send_request.connect("clicked", self.__on_send)
-        self.btn_edit_body.connect("activated", self.__on_edit, "body")
-        self.btn_edit_param.connect("activated", self.__on_edit, "param")
-        # TODO call from template
         self.create_new_cookie.connect(
             "activated", self._show_cookie_dialog, "New Cookie"
         )
@@ -145,28 +138,22 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.bearer_token.connect(
             "apply", self.on_auth_entry_active, "bearer_token"
         )
-        self.switch_cookie.connect("state-set", self.set_needs_attention)
         self.btn_add_body.connect("clicked", self.__save_override, "body")
         self.btn_add_parameter.connect(
             "clicked", self.__save_override, "param"
         )
 
-        self.btn_response_go_back.connect("clicked", self.__go_back)
-        self.btn_raw_go_back_body.connect("clicked", self.__go_back)
-        self.btn_form_data_go_back_body.connect("clicked", self.__go_back)
-        self.btn_edit_param_go_back.connect("clicked", self.__go_back)
-
         # General
         self.cookies = self.headers = self.auths = self.body = self.param = {}
 
+        self.settings = Gio.Settings.new("io.github.cleomenezesjr.GetOverHere")
+        self.update_states()
+
         self.create_files_if_not_exists()
-        self.__populate_overrides_list()
         self.raw_buffer = self.raw_source_view_body.get_buffer()
         self.response_buffer = self.response_source_view.get_buffer()
         self.response_source_view.props.editable = False
 
-        # GSettings object
-        self.settings = Gio.Settings.new("io.github.cleomenezesjr.GetOverHere")
     def set_needs_attention(self, *_args: tuple):
         # TODO make this function agnostic. get the swtich by self parent
         # TODO call this function when window open
@@ -185,7 +172,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         """
         url = self.entry_url.get_text()
         method = self.entry_method.get_selected()
-        body_type = self.form_data_toggle_button_body.props.active
 
         if not url:
             self.toast_overlay.add_toast(Adw.Toast.new(("Enter a URL")))
@@ -197,19 +183,13 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     )
                 )
             else:
-                body = self.__which_body_type(body_type)
-                cookies = (
-                    self.cookies if self.switch_cookie.get_state() else None
-                )
-                headers = (
-                    {value[0]: value[1] for key, value in self.headers.items()}
-                    if self.switch_headers.get_state()
-                    else None
-                )
+                body = self.__which_body_type(self.is_raw)
+                headers = {
+                    value[0]: value[1] for key, value in self.headers.items()
+                }
                 which_method_thread = threading.Thread(
                     target=self.__which_method,
-                    # TODO Remove parameters and use self variables
-                    args=(method, url, body, cookies, headers),
+                    args=(method, url, headers),
                 )
                 which_method_thread.daemon = True
                 which_method_thread.start()
@@ -240,8 +220,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self,
         method: int,
         url: str,
-        body: dict | None,
-        cookies: dict | None,
         headers: dict | None,
     ) -> Callable | None:
         try:
@@ -255,10 +233,11 @@ class GetoverhereWindow(Adw.ApplicationWindow):
             resolve_requests = ResolveRequests(
                 url,
                 self.session,
-                cookies=cookies,
-                headers=headers,
-                body=body,
-                parameters=self.param,
+                cookies=self.switch_cookies.get_state() and self.cookies,
+                headers=self.get_boolean("headers") and headers,
+                body=self.settings.get_boolean("body") and self.body,
+                parameters=self.settings.get_boolean("parameters")
+                and self.param,
                 authentication=[self.auth_type, self.auths],
             )
             get_resolve_requets_attr = getattr(
@@ -284,42 +263,48 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         # Clenup session
         self.session.cookies.clear()
         self.session.headers.clear()
-
-    def __on_edit(self, *_args: tuple) -> None:
-        if "body" in _args[1]:
-            if not self.form_data_toggle_button_body.props.active:
-                self.leaflet.set_visible_child(self.raw_page_body)
-            else:
-                self.leaflet.set_visible_child(self.form_data_page_body)
-        if "param" in _args[1]:
-            self.leaflet.set_visible_child(self.form_data_page_parameters)
-
-    def __go_back(self, *_args: tuple) -> None:
-        # TODO use actions instead
-        self.leaflet.set_visible_child(self.home)
+        # TODO cleanup auth
 
     @Gtk.Template.Callback()
+    def on_edit_body_btn(self, widget) -> None:
+        if self.is_raw:
+            self.leaflet.set_visible_child(self.raw_page_body)
+        else:
+            self.leaflet.set_visible_child(self.form_data_page_body)
+
+    @Gtk.Template.Callback()
+    def on_edit_param_btn(self, widget) -> None:
+        self.leaflet.set_visible_child(self.form_data_page_parameters)
+
+    @Gtk.Template.Callback()
+    def go_home(self, widget) -> None:
+        self.leaflet.set_visible_child(self.home)
+
     def update_subtitle_parameters(self, *_args) -> None:
-        url_entry = self.entry_url.get_text()
-        parameters = [f"{i}={self.param[i]}" for i in self.param]
-        parsed_url = urlparse(url_entry)
-        url_query_params = parsed_url.query.split("&")
+        if self.settings.get_boolean("parameters"):
+            url_entry = self.entry_url.get_text()
+            parameters = [f"{i}={self.param[i]}" for i in self.param]
+            parsed_url = urlparse(url_entry)
+            url_query_params = parsed_url.query.split("&")
 
-        if parsed_url.query:
-            parameters += url_query_params
+            if parsed_url.query:
+                parameters += url_query_params
 
-        param_position = url_entry.find("?")
-        url = (
-            url_entry[:param_position]
-            if has_parameter(url_entry)
-            else url_entry
-        )
+            param_position = url_entry.find("?")
+            url = (
+                url_entry[:param_position]
+                if has_parameter(url_entry)
+                else url_entry
+            )
 
-        GLib.idle_add(
-            self.expander_row_parameters.set_subtitle,
-            f"{'https://' if not url_entry else url}"
-            + f"?{html.escape('&').join(parameters)}",
-        )
+            subtitle = (
+                f"{'https://' if not url_entry else url}"
+                + f"?{html.escape('&').join(parameters)}"
+            )
+        else:
+            subtitle = ""
+
+        GLib.idle_add(self.expander_row_parameters.set_subtitle, subtitle)
 
     def _show_cookie_dialog(self, widget, title, content=None):
         new_window = CookieDialog(
@@ -382,13 +367,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.auths[auth_type][
             entries_position[auth_type][args]
         ] = entry_content
-
-    @Gtk.Template.Callback()
-    def on_auth_type_changed(self, arg, kwargs):
-        # TODO use this method on Method type
-        type = self.auth_type.props.selected_item.get_string()
-        self.bearer_token_prefs.props.visible = type == "Bearer Token"
-        self.api_key_prefs.props.visible = type == "Api Key"
 
     def __save_override(self, *_args: tuple) -> None:
         """
@@ -554,7 +532,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                     self.entry_param_key.set_text("")
                     self.entry_param_value.set_text("")
 
-    def __populate_overrides_list(self) -> None:
+    def populate_overrides_list(self) -> None:
         # TODO populate url preview with parameters
 
         """
@@ -621,3 +599,94 @@ class GetoverhereWindow(Adw.ApplicationWindow):
             counter_label.set_label(str(len(overrides)))
         else:
             counter_label.set_visible(False)
+
+    def update_states(self) -> None:
+        # method
+        method = self.settings.get_int("method-type")
+        self.entry_method.set_selected(method)
+
+        # url entry
+        url_entry = self.settings.get_string("entry-url")
+        self.entry_url.set_text(url_entry)
+
+        # parameters
+        self.expander_row_parameters.set_enable_expansion(
+            self.settings.get_boolean("parameters")
+        )
+        self.update_subtitle_parameters()
+
+        # body
+        self.expander_row_body.set_enable_expansion(
+            self.settings.get_boolean("body")
+        )
+
+        self.is_raw = self.settings.get_boolean("body-type")
+        self.form_data_toggle_button_body.props.active = not self.is_raw
+
+        # cookies
+        self.switch_cookies.set_active(self.settings.get_boolean("cookies"))
+
+        # headers
+        self.switch_headers.set_active(self.settings.get_boolean("headers"))
+
+        # auths
+        self.switch_auths.set_active(self.settings.get_boolean("auths"))
+
+        auth_type = self.settings.get_int("auth-type")
+        self.auth_type.set_selected(auth_type)
+
+        # populate lists
+        self.populate_overrides_list()
+
+    @Gtk.Template.Callback()
+    def on_entry_method_changed(self, widget, args) -> None:
+        # save method type state
+        self.settings.set_int("method-type", widget.get_selected())
+
+    @Gtk.Template.Callback()
+    def on_entry_url_changed(self, widget) -> None:
+        # save url entry
+        self.settings.set_string("entry-url", widget.get_text())
+        self.update_subtitle_parameters()
+
+    @Gtk.Template.Callback()
+    def on_param_switch_changed(self, widget, args) -> None:
+        # save param switch state
+        self.settings.set_boolean("parameters", widget.get_enable_expansion())
+        self.update_subtitle_parameters()
+
+    @Gtk.Template.Callback()
+    def on_body_switch_changed(self, widget, args) -> None:
+        # save body switch state
+        self.settings.set_boolean("body", widget.get_enable_expansion())
+
+    @Gtk.Template.Callback()
+    def on_body_type_changed(self, widget) -> None:
+        # save body type state
+        self.is_raw = widget.props.active
+        self.settings.set_boolean("body-type", self.is_raw)
+
+    @Gtk.Template.Callback()
+    def on_cookies_switch_state_change(self, widget, state) -> None:
+        # save cookies state
+        self.settings.set_boolean("cookies", state)
+        # self.set_needs_attention()
+
+    @Gtk.Template.Callback()
+    def on_headers_switch_state_change(self, widget, state) -> None:
+        # save headers state
+        self.settings.set_boolean("headers", state)
+
+    @Gtk.Template.Callback()
+    def on_auths_switch_state_change(self, widget, state) -> None:
+        # save auths state
+        self.settings.set_boolean("auths", state)
+
+    @Gtk.Template.Callback()
+    def on_auth_type_changed(self, widget, args):
+        # save auths state
+        self.settings.set_int("auth-type", widget.get_selected())
+
+        type = widget.props.selected_item.get_string()
+        self.bearer_token_prefs.props.visible = type == "Bearer Token"
+        self.api_key_prefs.props.visible = type == "Api Key"

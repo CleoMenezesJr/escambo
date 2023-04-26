@@ -31,6 +31,8 @@ class ResolveRequests:
             self.session.headers.update(headers)
         if self.auths:
             self.set_auth()
+        if not self.body:
+            self.body = {}
 
     def resolve_get(self) -> list:
         response = self.session.get(

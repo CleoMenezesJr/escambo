@@ -69,12 +69,14 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                                 _("DELETE")
                                                             ]
                                                         };
+                                                        notify::selected-item => on_entry_method_changed();
                                                     }
 
+                                                    // TODO: change all entry url to url entry
                                                     Adw.EntryRow entry_url {
                                                         title: _("URL");
                                                         use-underline: true;
-                                                        changed => update_subtitle_parameters();
+                                                        changed => on_entry_url_changed();
                                                     }
                                                 }
                                                 Adw.PreferencesGroup {
@@ -83,11 +85,13 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                         show-enable-switch: true;
                                                         title: _("Query Parameters");
                                                         subtitle: "https://?";
+                                                        notify::enable-expansion => on_param_switch_changed();
 
                                                         Adw.ActionRow btn_edit_param {
                                                             title: _("Go to edit Parameters");
                                                             use-underline: true;
                                                             activatable: true;
+                                                            activated => on_edit_param_btn();
 
                                                             Image {
                                                                 icon-name: "go-next-symbolic";
@@ -102,11 +106,13 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                       Adw.ExpanderRow expander_row_body {
                                                         show-enable-switch: true;
                                                         title: _("Body");
+                                                        notify::enable-expansion => on_body_switch_changed();
 
                                                         Adw.ActionRow btn_edit_body {
                                                             title: _("Go to edit Body");
                                                             use-underline: true;
                                                             activatable: true;
+                                                            activated => on_edit_body_btn();
                                                             Box {
                                                                 valign: center;
                                                                 homogeneous: true;
@@ -114,7 +120,6 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                                 styles [
                                                                     "linked",
                                                                 ]
-                                                            
                                                                 ToggleButton form_data_toggle_button_body {
                                                                     child:
                                                                         Box {
@@ -142,6 +147,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                                     active: true;
                                                                     label: _("Raw");
                                                                     group: form_data_toggle_button_body;
+                                                                    toggled => on_body_type_changed();
                                                                 }
                                                             }
                                                             Separator {
@@ -156,7 +162,6 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                       }
 
                                                 }
-
 
                                                 Button btn_send_request {
                                                     halign: center;
@@ -196,12 +201,13 @@ template GetoverhereWindow : Adw.ApplicationWindow {
 
                                                 Adw.PreferencesGroup {
                                                     Adw.ActionRow row_cookie {
-                                                        activatable-widget: switch_cookie;
+                                                        activatable-widget: switch_cookies;
                                                         title: _("Cookies");
 
-                                                        Switch switch_cookie {
+                                                        Switch switch_cookies {
                                                             valign: center;
                                                             active: true;
+                                                            state-set => on_cookies_switch_state_change();
                                                         }
                                                     }
                                                     Adw.ActionRow create_new_cookie {
@@ -253,6 +259,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                                         Switch switch_headers {
                                                             valign: center;
                                                             active: true;
+                                                            state-set => on_headers_switch_state_change();
                                                         }
                                                     }
                                                     Adw.ActionRow create_new_header {
@@ -297,12 +304,13 @@ template GetoverhereWindow : Adw.ApplicationWindow {
 
                                               Adw.PreferencesGroup {
                                                   Adw.ActionRow row_auth {
-                                                      activatable-widget: switch_auth;
+                                                      activatable-widget: switch_auths;
                                                       title: _("Authorization");
 
-                                                      Switch switch_auth {
+                                                      Switch switch_auths {
                                                           valign: center;
                                                           active: true;
+                                                          state-set => on_auths_switch_state_change();
                                                       }
                                                   }
                                                   Adw.ComboRow auth_type {
@@ -415,10 +423,11 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                                             };
 
                                             [start]
-                                            Button btn_response_go_back {
+                                            Button {
                                                 valign: center;
                                                 tooltip-text: _("Back");
                                                 icon-name: "go-previous-symbolic";
+                                                clicked => go_home();
                                             }
                                     }
 
@@ -447,10 +456,11 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                         };
 
                         [start]
-                        Button btn_raw_go_back_body {
+                        Button {
                             valign: center;
                             tooltip-text: _("Back");
                             icon-name: "go-previous-symbolic";
+                            clicked => go_home();
                         }
                 }
 
@@ -474,10 +484,11 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                         };
 
                         [start]
-                        Button btn_form_data_go_back_body {
+                        Button {
                             valign: center;
                             tooltip-text: _("Back");
                             icon-name: "go-previous-symbolic";
+                            clicked => go_home();
                         }
                 }
 
@@ -540,10 +551,11 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                         };
 
                         [start]
-                        Button btn_edit_param_go_back {
+                        Button {
                             valign: center;
                             tooltip-text: _("Back");
                             icon-name: "go-previous-symbolic";
+                            clicked => go_home();
                         }
                 }
 
@@ -606,14 +618,14 @@ menu primary_menu {
 			action: "app.preferences";
 		}
 
-		item {
-		label: _("_Keyboard Shortcuts");
-		action: "win.show-help-overlay";
-		}
+		//item {
+    //  label: _("_Keyboard Shortcuts");
+    //  action: "win.show-help-overlay";
+		//}
 
 		item {
-		label: _("_About Get_over_here");
-		action: "app.about";
+      label: _("_About Get_over_here");
+      action: "app.about";
 		}
 	}
 }
