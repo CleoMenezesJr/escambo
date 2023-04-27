@@ -226,7 +226,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                 url,
                 self.session,
                 cookies=self.switch_cookies.get_active() and self.cookies,
-                headers=self.get_boolean("headers") and headers,
+                headers=self.settings.get_boolean("headers") and headers,
                 body=self.settings.get_boolean("body") and self.body,
                 parameters=self.settings.get_boolean("parameters")
                 and self.param,
