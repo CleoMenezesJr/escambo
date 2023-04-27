@@ -61,8 +61,13 @@ class GetoverhereApplication(Adw.Application):
             application_icon="io.github.cleomenezesjr.GetOverHere",
             developer_name="Cleo Menezes Jr.",
             version="0.1.0",
-            developers=["Cleo Menezes Jr."],
+            developers=["Cleo Menezes Jr. https://github.com/CleoMenezesJr"],
             copyright="© 2022 Cleo Menezes Jr.",
+            comments="An HTTP-based APIs test application for GNOME.",
+            license_type=Gtk.License.GPL_3_0,
+            issue_url="https://github.com/CleoMenezesJr/getoverhere/issues/new",
+            support_url="https://ko-fi.com/cleomenezesjr",
+            icon_name="Get Over Here",
         )
         about.present()
 
