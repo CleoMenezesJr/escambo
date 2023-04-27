@@ -585,11 +585,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                         content=files[file][0],
                     )
 
-        # TODO set and change badge number when it has a change
-        self.cookies_page.set_badge_number(len(self.cookies))
-        self.headers_page.set_badge_number(len(self.headers))
-        self.body_counter(self.body)
-
     def body_counter(self, overrides) -> None:
         """Body counter and its visibility"""
         counter_label = self.counter_label_form_data_body
@@ -601,6 +596,9 @@ class GetoverhereWindow(Adw.ApplicationWindow):
             counter_label.set_visible(False)
 
     def update_states(self) -> None:
+        # populate lists
+        self.populate_overrides_list()
+
         # method
         method = self.settings.get_int("method-type")
         self.entry_method.set_selected(method)
@@ -619,15 +617,18 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.expander_row_body.set_enable_expansion(
             self.settings.get_boolean("body")
         )
+        self.body_counter(self.body)
 
         self.is_raw = self.settings.get_boolean("body-type")
         self.form_data_toggle_button_body.props.active = not self.is_raw
 
         # cookies
         self.switch_cookies.set_active(self.settings.get_boolean("cookies"))
+        self.cookies_page.set_badge_number(len(self.cookies))
 
         # headers
         self.switch_headers.set_active(self.settings.get_boolean("headers"))
+        self.headers_page.set_badge_number(len(self.headers))
 
         # auths
         self.switch_auths.set_active(self.settings.get_boolean("auths"))
@@ -635,56 +636,46 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         auth_type = self.settings.get_int("auth-type")
         self.auth_type.set_selected(auth_type)
 
-        # populate lists
-        self.populate_overrides_list()
-
     @Gtk.Template.Callback()
     def on_entry_method_changed(self, widget, args) -> None:
-        # save method type state
         self.settings.set_int("method-type", widget.get_selected())
 
     @Gtk.Template.Callback()
     def on_entry_url_changed(self, widget) -> None:
-        # save url entry
         self.settings.set_string("entry-url", widget.get_text())
         self.update_subtitle_parameters()
 
     @Gtk.Template.Callback()
     def on_param_switch_changed(self, widget, args) -> None:
-        # save param switch state
         self.settings.set_boolean("parameters", widget.get_enable_expansion())
         self.update_subtitle_parameters()
 
     @Gtk.Template.Callback()
     def on_body_switch_changed(self, widget, args) -> None:
-        # save body switch state
         self.settings.set_boolean("body", widget.get_enable_expansion())
+        self.body_counter(self.body)
 
     @Gtk.Template.Callback()
     def on_body_type_changed(self, widget) -> None:
-        # save body type state
         self.is_raw = widget.props.active
         self.settings.set_boolean("body-type", self.is_raw)
 
     @Gtk.Template.Callback()
     def on_cookies_switch_state_change(self, widget, state) -> None:
-        # save cookies state
         self.settings.set_boolean("cookies", state)
-        # self.set_needs_attention()
+        self.cookies_page.set_badge_number(len(self.cookies))
 
     @Gtk.Template.Callback()
     def on_headers_switch_state_change(self, widget, state) -> None:
-        # save headers state
         self.settings.set_boolean("headers", state)
+        self.headers_page.set_badge_number(len(self.headers))
 
     @Gtk.Template.Callback()
     def on_auths_switch_state_change(self, widget, state) -> None:
-        # save auths state
         self.settings.set_boolean("auths", state)
 
     @Gtk.Template.Callback()
     def on_auth_type_changed(self, widget, args):
-        # save auths state
         self.settings.set_int("auth-type", widget.get_selected())
 
         type = widget.props.selected_item.get_string()
