@@ -116,6 +116,9 @@ class ResolveRequests:
         auth_values = self.auths[1]
         match auth_type:
             case "Api Key":
+                if not auth_values[auth_type][0] and not auth_values[auth_type][1]:
+                    return
+
                 if auth_values[auth_type][2] == "Query Parameters":
                     self.params |= {
                         auth_values[auth_type][0]: auth_values[auth_type][1]
@@ -125,6 +128,8 @@ class ResolveRequests:
                         {auth_values[auth_type][0]: auth_values[auth_type][1]}
                     )
             case "Bearer Token":
+                if not auth_values[auth_type][0]:
+                    return
                 self.session.headers.update(
                     {"Authorization": f"Bearer {auth_values[auth_type][0]}"}
                 )
