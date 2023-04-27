@@ -147,9 +147,9 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.cookies = self.headers = self.auths = self.body = self.param = {}
 
         self.settings = Gio.Settings.new("io.github.cleomenezesjr.GetOverHere")
+        self.create_files_if_not_exists()
         self.update_states()
 
-        self.create_files_if_not_exists()
         self.raw_buffer = self.raw_source_view_body.get_buffer()
         self.response_buffer = self.response_source_view.get_buffer()
         self.response_source_view.props.editable = False
