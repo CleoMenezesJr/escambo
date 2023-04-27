@@ -588,7 +588,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         else:
             counter_label.set_visible(False)
 
-    def set_needs_attention(self, switches=["cookies", "headers"]):
+    def set_needs_attention(self, switches=["cookies", "headers", "auths"]):
         for switch in switches:
             switch_state = getattr(self, f"switch_{switch}").get_active()
             getattr(self, f"{switch}_page").set_needs_attention(switch_state)
@@ -673,6 +673,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback()
     def on_auths_switch_state_change(self, widget, state) -> None:
         self.settings.set_boolean("auths", state)
+        self.set_needs_attention(switches=["auths"])
 
     @Gtk.Template.Callback()
     def on_auth_type_changed(self, widget, args):
