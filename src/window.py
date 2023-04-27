@@ -154,14 +154,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         self.response_buffer = self.response_source_view.get_buffer()
         self.response_source_view.props.editable = False
 
-    def set_needs_attention(self, *_args: tuple):
-        # TODO make this function agnostic. get the swtich by self parent
-        # TODO call this function when window open
-        if not self.switch_cookie.get_state():
-            self.cookies_page.set_needs_attention(True)
-        else:
-            self.cookies_page.set_needs_attention(False)
-
     def __on_send(self, *_args: tuple) -> None:
         """
         This function checks if the submitted URL is validself.
@@ -233,7 +225,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
             resolve_requests = ResolveRequests(
                 url,
                 self.session,
-                cookies=self.switch_cookies.get_state() and self.cookies,
+                cookies=self.switch_cookies.get_active() and self.cookies,
                 headers=self.get_boolean("headers") and headers,
                 body=self.settings.get_boolean("body") and self.body,
                 parameters=self.settings.get_boolean("parameters")
@@ -595,6 +587,11 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         else:
             counter_label.set_visible(False)
 
+    def set_needs_attention(self, switches=["cookies", "headers"]):
+        for switch in switches:
+            switch_state = getattr(self, f"switch_{switch}").get_active()
+            getattr(self, f"{switch}_page").set_needs_attention(switch_state)
+
     def update_states(self) -> None:
         # populate lists
         self.populate_overrides_list()
@@ -618,7 +615,6 @@ class GetoverhereWindow(Adw.ApplicationWindow):
             self.settings.get_boolean("body")
         )
         self.body_counter(self.body)
-
         self.is_raw = self.settings.get_boolean("body-type")
         self.form_data_toggle_button_body.props.active = not self.is_raw
 
@@ -632,9 +628,10 @@ class GetoverhereWindow(Adw.ApplicationWindow):
 
         # auths
         self.switch_auths.set_active(self.settings.get_boolean("auths"))
-
         auth_type = self.settings.get_int("auth-type")
         self.auth_type.set_selected(auth_type)
+
+        self.set_needs_attention()
 
     @Gtk.Template.Callback()
     def on_entry_method_changed(self, widget, args) -> None:
@@ -664,11 +661,13 @@ class GetoverhereWindow(Adw.ApplicationWindow):
     def on_cookies_switch_state_change(self, widget, state) -> None:
         self.settings.set_boolean("cookies", state)
         self.cookies_page.set_badge_number(len(self.cookies))
+        self.set_needs_attention(switches=["cookies"])
 
     @Gtk.Template.Callback()
     def on_headers_switch_state_change(self, widget, state) -> None:
         self.settings.set_boolean("headers", state)
         self.headers_page.set_badge_number(len(self.headers))
+        self.set_needs_attention(switches=["headers"])
 
     @Gtk.Template.Callback()
     def on_auths_switch_state_change(self, widget, state) -> None:
