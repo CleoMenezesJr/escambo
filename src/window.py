@@ -518,6 +518,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
                             )
 
                     self.param = file_content
+                    self.update_subtitle_parameters()
 
                     # Clean up fields
                     self.group_overrides_param.set_description("")
