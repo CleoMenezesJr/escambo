@@ -3,30 +3,48 @@
   <schema id="io.github.cleomenezesjr.GetOverHere" path="/io/github/cleomenezesjr/GetOverHere/">
     <key type="i" name="method-type">
       <default>0</default>
+      <summary>Method type</summary>
+      <description>Select method type dropdown.</description>
     </key>
     <key type="s" name="entry-url">
       <default>""</default>
+      <summary>URL</summary>
+      <description>Popular URL entry.</description>
     </key>
     <key type="b" name="parameters">
       <default>true</default>
+      <summary>Parameters</summary>
+      <description>Toggle parameters switch.</description>
     </key>
     <key type="b" name="body">
-      <default>true</default>
+      <default>false</default>
+      <summary>Body</summary>
+      <description>Toggle body switch.</description>
     </key>
     <key type="b" name="body-type">
-      <default>true</default>
+      <default>false</default>
+      <summary>Body type</summary>
+      <description>Toggle body type button.</description>
     </key>
     <key type="b" name="cookies">
-      <default>true</default>
+      <default>false</default>
+      <summary>Cookies</summary>
+      <description>Toggle cookies switch.</description>
     </key>
     <key type="b" name="headers">
-      <default>true</default>
+      <default>false</default>
+      <summary>Headers</summary>
+      <description>Toggle headers switch.</description>
     </key>
     <key type="b" name="auths">
-      <default>true</default>
+      <default>false</default>
+      <summary>Authentication</summary>
+      <description>Toggle auths switch.</description>
     </key>
     <key type="i" name="auth-type">
       <default>0</default>
+      <summary>Auth type</summary>
+      <description>Select auth type dropdown.</description>
     </key>
   </schema>
 </schemalist>
