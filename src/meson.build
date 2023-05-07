@@ -9,6 +9,7 @@ blueprints = custom_target('blueprints',
     'gtk/dialog-cookies.blp',
     'gtk/dialog-headers.blp',
     'gtk/date-row.blp',
+    'gtk/environments.blp',
   ),
   output: '.',
   command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@', '@INPUT@'],
@@ -50,6 +51,7 @@ getoverhere_sources = [
   'dialog_headers.py',
   'date_row.py',
   'commom_scripts.py',
+  'environments.py',
 ]
 
 install_data(getoverhere_sources, install_dir: moduledir)

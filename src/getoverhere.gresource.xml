@@ -6,6 +6,7 @@
     <file>gtk/dialog-cookies.ui</file>
     <file>gtk/dialog-headers.ui</file>
     <file>gtk/date-row.ui</file>
+    <file>gtk/environments.ui</file>
     <file>style.css</file>
   </gresource>
 </gresources>

@@ -1,6 +1,8 @@
 # Copyright 2023 Cleo Menezes Jr.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import re
+
 
 def stringfy_cookie(*args) -> str:
     """Return a formated string from cookie dictionary"""
@@ -45,3 +47,7 @@ def str_to_dict_cookie(cookies: str, id: str = None) -> dict:
                     case "path":
                         dict_cookie[formated_key] = formated_value
     return dict_cookie
+
+
+# def has_interpolations(arg) -> return_type:
+#     pass

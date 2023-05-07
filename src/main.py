@@ -28,6 +28,7 @@ gi.require_version("GtkSource", "5")
 from gi.repository import Adw, Gio, Gtk
 
 from .window import GetoverhereWindow
+from getoverhere.environments import EnvironmentsWindow
 
 
 class GetoverhereApplication(Adw.Application):
@@ -41,6 +42,7 @@ class GetoverhereApplication(Adw.Application):
         self.create_action("quit", self.quit, ["<primary>q"])
         self.create_action("about", self.on_about_action)
         self.create_action("preferences", self.on_preferences_action)
+        self.create_action("environments", self.on_environments_action)
 
     def do_activate(self):
         """Called when the application is activated.
@@ -74,6 +76,13 @@ class GetoverhereApplication(Adw.Application):
     def on_preferences_action(self, widget, _):
         """Callback for the app.preferences action."""
         print("app.preferences action activated")
+
+    def on_environments_action(self, widget, _):
+        """Callback for the app.environments action."""
+        win = self.props.active_window
+        window = EnvironmentsWindow(win)
+        window.props.transient_for = win
+        window.present()
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.
