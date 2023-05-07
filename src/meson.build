@@ -49,7 +49,7 @@ getoverhere_sources = [
   'dialog_cookies.py',
   'dialog_headers.py',
   'date_row.py',
-  'commom_scripts.py',
+  'common_scripts.py',
 ]
 
 install_data(getoverhere_sources, install_dir: moduledir)

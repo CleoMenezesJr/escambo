@@ -64,7 +64,7 @@ msgid "Go to edit parameters"
 msgstr "Ir para editar parâmetros"
 
 #: src/window.ui:151
-msgid "Send Resquest"
+msgid "Send Request"
 msgstr "Enviar requisição"
 
 #: src/window.ui:172

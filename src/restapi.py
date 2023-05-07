@@ -3,7 +3,7 @@ import json
 import time
 
 import requests
-from getoverhere.commom_scripts import str_to_dict_cookie
+from getoverhere.common_scripts import str_to_dict_cookie
 
 
 class ResolveRequests:
@@ -40,7 +40,7 @@ class ResolveRequests:
             json=self.body,
             params=self.params,
         )
-        return self.formated_response(response)
+        return self.formatted_response(response)
 
     def resolve_post(self) -> list:
         response = self.session.post(
@@ -49,7 +49,7 @@ class ResolveRequests:
             params=self.params,
         )
 
-        return self.formated_response(response)
+        return self.formatted_response(response)
 
     def resolve_put(self) -> list:
         response = self.session.put(
@@ -58,7 +58,7 @@ class ResolveRequests:
             params=self.params,
         )
 
-        return self.formated_response(response)
+        return self.formatted_response(response)
 
     def resolve_patch(self) -> list:
         response = self.session.patch(
@@ -67,7 +67,7 @@ class ResolveRequests:
             params=self.params,
         )
 
-        return self.formated_response(response)
+        return self.formatted_response(response)
 
     def resolve_delete(self) -> list:
         response = self.session.patch(
@@ -76,9 +76,9 @@ class ResolveRequests:
             params=self.params,
         )
 
-        return self.formated_response(response)
+        return self.formatted_response(response)
 
-    def formated_response(self, response: requests.models.Response) -> list:
+    def formatted_response(self, response: requests.models.Response) -> list:
         status_code = response.status_code
         msg_status_code = requests.status_codes._codes[status_code][0]
         status = f"{status_code} {msg_status_code}".title().replace("_", " ")

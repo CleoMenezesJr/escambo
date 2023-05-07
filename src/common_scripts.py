@@ -3,7 +3,7 @@
 
 
 def stringfy_cookie(*args) -> str:
-    """Return a formated string from cookie dictionary"""
+    """Return a formatted string from cookie dictionary"""
     cookie_key = args[0]
     cookie_value = args[1]
 
@@ -35,13 +35,13 @@ def str_to_dict_cookie(cookies: str, id: str = None) -> dict:
             dict_cookie["value"] = splited_values[1]
         else:
             if i.strip() != "":
-                formated_key = splited_values[0].strip().lower()
-                formated_value = splited_values[1].strip().lower()
-                match formated_key:
+                formatted_key = splited_values[0].strip().lower()
+                formatted_value = splited_values[1].strip().lower()
+                match formatted_key:
                     case "expires":
-                        dict_cookie[formated_key] = formated_value
+                        dict_cookie[formatted_key] = formatted_value
                     case "domain":
-                        dict_cookie[formated_key] = formated_value
+                        dict_cookie[formatted_key] = formatted_value
                     case "path":
-                        dict_cookie[formated_key] = formated_value
+                        dict_cookie[formatted_key] = formatted_value
     return dict_cookie
