@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/io/github/cleomenezesjr/GetOverHere">
+  <gresource prefix="/io/github/cleomenezesjr/Escambo">
     <file preprocess="xml-stripblanks">gtk/window.ui</file>
     <file>gtk/populator-entry.ui</file>
     <file>gtk/dialog-cookies.ui</file>

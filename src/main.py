@@ -27,15 +27,15 @@ gi.require_version("GtkSource", "5")
 
 from gi.repository import Adw, Gio, Gtk
 
-from .window import GetoverhereWindow
+from .window import EscamboWindow
 
 
-class GetoverhereApplication(Adw.Application):
+class EscamboApplication(Adw.Application):
     """The main application singleton class."""
 
     def __init__(self):
         super().__init__(
-            application_id="io.github.cleomenezesjr.GetOverHere",
+            application_id="io.github.cleomenezesjr.Escambo",
             flags=Gio.ApplicationFlags.FLAGS_NONE,
         )
         self.create_action("quit", self.quit, ["<primary>q"])
@@ -50,24 +50,24 @@ class GetoverhereApplication(Adw.Application):
         """
         win = self.props.active_window
         if not win:
-            win = GetoverhereWindow(application=self)
+            win = EscamboWindow(application=self)
         win.present()
 
     def on_about_action(self, widget, _):
         """Callback for the app.about action."""
         about = Adw.AboutWindow(
             transient_for=self.props.active_window,
-            application_name="Get Over Here",
-            application_icon="io.github.cleomenezesjr.GetOverHere",
+            application_name="Escambo",
+            application_icon="io.github.cleomenezesjr.Escambo",
             developer_name="Cleo Menezes Jr.",
             version="0.1.0",
             developers=["Cleo Menezes Jr. https://github.com/CleoMenezesJr"],
             copyright="© 2022 Cleo Menezes Jr.",
             comments="An HTTP-based APIs test application for GNOME.",
             license_type=Gtk.License.GPL_3_0,
-            issue_url="https://github.com/CleoMenezesJr/getoverhere/issues/new",
+            issue_url="https://github.com/CleoMenezesJr/escambo/issues/new",
             support_url="https://ko-fi.com/cleomenezesjr",
-            icon_name="Get Over Here",
+            icon_name="Escambo",
         )
         about.present()
 
@@ -93,5 +93,5 @@ class GetoverhereApplication(Adw.Application):
 
 def main(version):
     """The application's entry point."""
-    app = GetoverhereApplication()
+    app = EscamboApplication()
     return app.run(sys.argv)

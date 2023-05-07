@@ -1,9 +1,9 @@
 {
-  "app-id": "io.github.cleomenezesjr.GetOverHere",
+  "app-id": "io.github.cleomenezesjr.Escambo",
   "runtime": "org.gnome.Platform",
   "runtime-version": "44",
   "sdk": "org.gnome.Sdk",
-  "command": "getoverhere",
+  "command": "escambo",
   "finish-args": [
     "--share=network",
     "--share=ipc",
@@ -69,7 +69,7 @@
         	}]
     },
     {
-      "name": "getoverhere",
+      "name": "escambo",
       "builddir": true,
       "buildsystem": "meson",
       "sources": [

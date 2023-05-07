@@ -7,7 +7,7 @@ from gi.repository import Adw, GObject, Gtk
 
 
 @Gtk.Template(
-    resource_path="/io/github/cleomenezesjr/GetOverHere/gtk/date-row.ui"
+    resource_path="/io/github/cleomenezesjr/Escambo/gtk/date-row.ui"
 )
 class DateRow(Adw.ActionRow):
     __gtype_name__ = "DateRow"

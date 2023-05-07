@@ -1,11 +1,11 @@
 from datetime import datetime as dt
 
-from getoverhere.common_scripts import str_to_dict_cookie, stringfy_cookie
+from escambo.commom_scripts import str_to_dict_cookie, stringfy_cookie
 from gi.repository import Adw, Gtk
 
 
 @Gtk.Template(
-    resource_path="/io/github/cleomenezesjr/GetOverHere/gtk/dialog-cookies.ui"
+    resource_path="/io/github/cleomenezesjr/Escambo/gtk/dialog-cookies.ui"
 )
 class CookieDialog(Adw.Window):
     __gtype_name__ = "CookieDialog"
@@ -55,7 +55,7 @@ class CookieDialog(Adw.Window):
         id = self.content.override[0] if self.content else None
 
         # Insert Cookie
-        self.window._GetoverhereWindow__save_override(
+        self.window._EscamboWindow__save_override(
             self, "cookies", title, subtitle, id
         )
         self.close()

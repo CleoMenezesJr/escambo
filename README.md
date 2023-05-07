@@ -1,6 +1,6 @@
 <!-- Based on Burn My Window README -->
-<h1 align="center">🔄 Get Over Here!</h1>
-<p align="center">Get Over Here is an HTTP-based APIs test application made in GTK4/Libadwaita.</p>
+<h1 align="center">🔄 Escambo</h1>
+<p align="center">Escambo is an HTTP-based APIs test application made in GTK4/Libadwaita.</p>
 
 <p align="center">
   <img src ="screenshot.png" /></a>
@@ -15,24 +15,24 @@
 
 #### Clone, build and run:
 
-Clone the latest Get Over Here source from GitHub
+Clone the latest Escambo source from GitHub
 
 ```bash
-git clone https://github.com/CleoMenezesJr/getoverhere.git
+git clone https://github.com/CleoMenezesJr/escambo.git
 ```
 
 Enter the directory and build
 
 ```bash
-cd getoverhere
-flatpak-builder build io.github.cleomenezesjr.GetOverHere.json --user --install --force-clean
+cd escambo
+flatpak-builder build io.github.cleomenezesjr.Escambo.json --user --install --force-clean
 ```
 
 Run
 
 ```bash
-cd getoverhere
-flatpak run io.github.cleomenezesjr.GetOverHere
+cd escambo
+flatpak run io.github.cleomenezesjr.Escambo
 ```
 
 That's it!
