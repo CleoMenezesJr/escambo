@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=Get Over Here
-Exec=getoverhere
-Icon=io.github.cleomenezesjr.GetOverHere
+Name=Escambo
+Exec=escambo
+Icon=io.github.cleomenezesjr.Escambo
 Terminal=false
 Type=Application
 Categories=GTK;

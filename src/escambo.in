@@ -1,6 +1,6 @@
 #!@PYTHON@
 
-# getoverhere.in
+# escambo.in
 #
 # Copyright 2022 Cleo Menezes Jr.
 #
@@ -31,16 +31,16 @@ localedir = '@localedir@'
 
 sys.path.insert(1, pkgdatadir)
 signal.signal(signal.SIGINT, signal.SIG_DFL)
-locale.bindtextdomain('getoverhere', localedir)
-locale.textdomain('getoverhere')
-gettext.install('getoverhere', localedir)
+locale.bindtextdomain('escambo', localedir)
+locale.textdomain('escambo')
+gettext.install('escambo', localedir)
 
 if __name__ == '__main__':
     import gi
 
     from gi.repository import Gio
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'getoverhere.gresource'))
+    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'escambo.gresource'))
     resource._register()
 
-    from getoverhere import main
+    from escambo import main
     sys.exit(main.main(VERSION))

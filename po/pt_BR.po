@@ -1,12 +1,12 @@
-# Portuguese translations for getoverhere package
-# Traduções em português brasileiro para o pacote getoverhere.
-# Copyright (C) 2023 THE getoverhere'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the getoverhere package.
+# Portuguese translations for escambo package
+# Traduções em português brasileiro para o pacote escambo.
+# Copyright (C) 2023 THE escambo'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the escambo package.
 # Rafael Fontenelle <rafaelff@gnome.org>, 2023.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: getoverhere\n"
+"Project-Id-Version: escambo\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-03 12:32-0300\n"
 "PO-Revision-Date: 2023-01-03 14:27-0300\n"
@@ -19,11 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 "X-Generator: Gtranslator 42.0\n"
 
-#: data/io.github.cleomenezesjr.GetOverHere.desktop.in:3
-msgid "Get Over Here"
-msgstr "Get Over Here"
+#: data/io.github.cleomenezesjr.Escambo.desktop.in:3
+msgid "Escambo"
+msgstr "Escambo"
 
-#: data/io.github.cleomenezesjr.GetOverHere.appdata.xml.in:7
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:7
 msgid "No description"
 msgstr "Sem descrição"
 
@@ -124,5 +124,5 @@ msgid "_Keyboard Shortcuts"
 msgstr "Atalhos de _teclado"
 
 #: src/window.ui:594
-msgid "_About Get_over_here"
-msgstr "_Sobre o Get Over Here"
+msgid "_About Escambo"
+msgstr "_Sobre o Escambo"
