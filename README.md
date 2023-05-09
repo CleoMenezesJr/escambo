@@ -1,5 +1,5 @@
 <!-- Based on Burn My Window README -->
-# <center><img src="data/icons/hicolor/scalable/apps/io.github.cleomenezesjr.Escambo.svg" height=50px> Escambo</center>
+# <div align="center"><img src="data/icons/hicolor/scalable/apps/io.github.cleomenezesjr.Escambo.svg" height=50px> Escambo</div>
 
 <p align="center">Escambo is an HTTP-based APIs test application made in GTK4/Libadwaita.</p>
 
