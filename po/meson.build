@@ -1,1 +1,1 @@
-i18n.gettext('getoverhere', preset: 'glib')
+i18n.gettext('escambo', preset: 'glib')

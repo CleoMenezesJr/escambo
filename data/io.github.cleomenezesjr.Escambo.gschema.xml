@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist gettext-domain="getoverhere">
-  <schema id="io.github.cleomenezesjr.GetOverHere" path="/io/github/cleomenezesjr/GetOverHere/">
+<schemalist gettext-domain="escambo">
+  <schema id="io.github.cleomenezesjr.Escambo" path="/io/github/cleomenezesjr/Escambo/">
     <key type="i" name="method-type">
       <default>0</default>
       <summary>Method type</summary>

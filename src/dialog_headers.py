@@ -2,7 +2,7 @@ from gi.repository import Adw, Gtk
 
 
 @Gtk.Template(
-    resource_path="/io/github/cleomenezesjr/GetOverHere/gtk/dialog-headers.ui"
+    resource_path="/io/github/cleomenezesjr/Escambo/gtk/dialog-headers.ui"
 )
 class HeaderDialog(Adw.Window):
     __gtype_name__ = "HeaderDialog"
@@ -33,7 +33,7 @@ class HeaderDialog(Adw.Window):
         id = self.content.override[0] if self.content else None
 
         # Insert Header
-        self.window._GetoverhereWindow__save_override(
+        self.window._EscamboWindow__save_override(
             self, "headers", title, subtitle, id
         )
         self.close()

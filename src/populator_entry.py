@@ -1,12 +1,12 @@
 import json
 
-from getoverhere.dialog_cookies import CookieDialog
-from getoverhere.dialog_headers import HeaderDialog
+from escambo.dialog_cookies import CookieDialog
+from escambo.dialog_headers import HeaderDialog
 from gi.repository import Adw, Gtk
 
 
 @Gtk.Template(
-    resource_path="/io/github/cleomenezesjr/GetOverHere/gtk/populator-entry.ui"
+    resource_path="/io/github/cleomenezesjr/Escambo/gtk/populator-entry.ui"
 )
 class PupulatorEntry(Adw.ActionRow):
     __gtype_name__ = "PupulatorEntry"

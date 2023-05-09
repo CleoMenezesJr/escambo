@@ -1,10 +1,10 @@
 using Gtk 4.0;
 using Adw 1;
 
-template GetoverhereWindow : Adw.ApplicationWindow {
+template EscamboWindow : Adw.ApplicationWindow {
     default-width: 769;
     default-height: 490;
-    title: "Get Over Here";
+    title: "Escambo";
 
     styles [
         "devel",
@@ -23,7 +23,7 @@ template GetoverhereWindow : Adw.ApplicationWindow {
                     title-widget:
                         Adw.ViewSwitcherTitle switcher_title {
                             stack: stack;
-                            title: bind GetoverhereWindow.title;
+                            title: bind EscamboWindow.title;
                         };
                     [end]
                     MenuButton {
@@ -623,7 +623,7 @@ menu primary_menu {
 		//}
 
 		item {
-      label: _("_About Get_over_here");
+      label: _("_About Escambo");
       action: "app.about";
 		}
 	}

@@ -1,4 +1,4 @@
-application_id = 'io.github.cleomenezesjr.GetOverHere'
+application_id = 'io.github.cleomenezesjr.Escambo'
 
 scalable_dir = join_paths('hicolor', 'scalable', 'apps')
 install_data(

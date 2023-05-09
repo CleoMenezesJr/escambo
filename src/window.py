@@ -25,35 +25,35 @@ from datetime import datetime as dt
 from typing import Callable
 from urllib.parse import urlparse
 
-from getoverhere.check_url import has_parameter, is_valid_url
-from getoverhere.date_row import DateRow
-from getoverhere.dialog_cookies import CookieDialog
-from getoverhere.dialog_headers import HeaderDialog
-from getoverhere.populator_entry import PupulatorEntry
-from getoverhere.restapi import ResolveRequests
-from getoverhere.sourceview import SourceView
+from escambo.check_url import has_parameter, is_valid_url
+from escambo.date_row import DateRow
+from escambo.dialog_cookies import CookieDialog
+from escambo.dialog_headers import HeaderDialog
+from escambo.populator_entry import PupulatorEntry
+from escambo.restapi import ResolveRequests
+from escambo.sourceview import SourceView
 from gi.repository import Adw, Gio, GLib, Gtk
 from requests import Session, exceptions
 
 # constants
 COOKIES = os.path.join(
-    GLib.get_user_config_dir(), "getoverhere", "cookies.json"
+    GLib.get_user_config_dir(), "escambo", "cookies.json"
 )
-BODY = os.path.join(GLib.get_user_config_dir(), "getoverhere", "body.json")
+BODY = os.path.join(GLib.get_user_config_dir(), "escambo", "body.json")
 PARAM = os.path.join(
-    GLib.get_user_config_dir(), "getoverhere", "parameters.json"
+    GLib.get_user_config_dir(), "escambo", "parameters.json"
 )
 HEADERS = os.path.join(
-    GLib.get_user_config_dir(), "getoverhere", "headers.json"
+    GLib.get_user_config_dir(), "escambo", "headers.json"
 )
-AUTHS = os.path.join(GLib.get_user_config_dir(), "getoverhere", "auths.json")
+AUTHS = os.path.join(GLib.get_user_config_dir(), "escambo", "auths.json")
 
 
 @Gtk.Template(
-    resource_path="/io/github/cleomenezesjr/GetOverHere/gtk/window.ui"
+    resource_path="/io/github/cleomenezesjr/Escambo/gtk/window.ui"
 )
-class GetoverhereWindow(Adw.ApplicationWindow):
-    __gtype_name__ = "GetoverhereWindow"
+class EscamboWindow(Adw.ApplicationWindow):
+    __gtype_name__ = "EscamboWindow"
 
     # Template objects
     toast_overlay = Gtk.Template.Child()
@@ -146,7 +146,7 @@ class GetoverhereWindow(Adw.ApplicationWindow):
         # General
         self.cookies = self.headers = self.auths = self.body = self.param = {}
 
-        self.settings = Gio.Settings.new("io.github.cleomenezesjr.GetOverHere")
+        self.settings = Gio.Settings.new("io.github.cleomenezesjr.Escambo")
         self.create_files_if_not_exists()
         self.update_states()
 

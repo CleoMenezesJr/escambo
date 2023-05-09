@@ -1,5 +1,5 @@
 pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
-moduledir = join_paths(pkgdatadir, 'getoverhere')
+moduledir = join_paths(pkgdatadir, 'escambo')
 gnome = import('gnome')
 
 blueprints = custom_target('blueprints',
@@ -14,8 +14,8 @@ blueprints = custom_target('blueprints',
   command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@', '@INPUT@'],
 )
 
-gnome.compile_resources('getoverhere',
-  'getoverhere.gresource.xml',
+gnome.compile_resources('escambo',
+  'escambo.gresource.xml',
   gresource_bundle: true,
   install: true,
   install_dir: pkgdatadir,
@@ -31,14 +31,14 @@ conf.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
 conf.set('pkgdatadir', pkgdatadir)
 
 configure_file(
-  input: 'getoverhere.in',
-  output: 'getoverhere',
+  input: 'escambo.in',
+  output: 'escambo',
   configuration: conf,
   install: true,
   install_dir: get_option('bindir')
 )
 
-getoverhere_sources = [
+escambo_sources = [
   '__init__.py',
   'main.py',
   'window.py',
@@ -52,4 +52,4 @@ getoverhere_sources = [
   'commom_scripts.py',
 ]
 
-install_data(getoverhere_sources, install_dir: moduledir)
+install_data(escambo_sources, install_dir: moduledir)
