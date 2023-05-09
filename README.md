@@ -1,4 +1,3 @@
-<!-- Based on Burn My Window README -->
 # <div align="center"><img src="data/icons/hicolor/scalable/apps/io.github.cleomenezesjr.Escambo.svg" height=50px> Escambo</div>
 
 <p align="center">Escambo is an HTTP-based APIs test application made in GTK4/Libadwaita.</p>
@@ -64,3 +63,13 @@ This does not only look great but also makes you rethink what to add to a commit
 | :twisted_rightwards_arrows: `:twisted_rightwards_arrows:` | When you merged a branch.                                                 |
 | :fire: `:fire:`                                           | When you removed something.                                               |
 | :truck: `:truck:`                                         | When you moved / renamed something.                                       |
+
+## 🔄 Why "Escambo"
+
+> Escambo, in general, means exchange or barter.
+In the history of colonial Brazil, however, the term appears frequently associated with the type of relations established between the Portuguese and the indigenous people in the first decades of the 16th century.
+
+[Wikipedia](https://pt.wikipedia.org/wiki/Escambo)
+
+The name is an allusion to the exchange mechanism that allows communication between the application and other external systems.
+With affection, I want to start giving more meaning to the culture and history of Brazil through my apps.
