@@ -14,6 +14,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
         with:
-          bundle: GetOverHere.flatpak
-          manifest-path: io.github.cleomenezesjr.GetOverHere.json
+          bundle: Escambo.flatpak
+          manifest-path: io.github.cleomenezesjr.Escambo.json
           cache-key: flatpak-builder-${{ github.sha }}
