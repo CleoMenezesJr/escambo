@@ -3,7 +3,7 @@ import json
 import time
 
 import requests
-from escambo.commom_scripts import str_to_dict_cookie
+from escambo.common_scripts import str_to_dict_cookie
 
 
 class ResolveRequests:

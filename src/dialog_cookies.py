@@ -1,6 +1,6 @@
 from datetime import datetime as dt
 
-from escambo.commom_scripts import str_to_dict_cookie, stringfy_cookie
+from escambo.common_scripts import str_to_dict_cookie, stringfy_cookie
 from gi.repository import Adw, Gtk
 
 
