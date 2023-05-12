@@ -36,22 +36,14 @@ from gi.repository import Adw, Gio, GLib, Gtk
 from requests import Session, exceptions
 
 # constants
-COOKIES = os.path.join(
-    GLib.get_user_config_dir(), "escambo", "cookies.json"
-)
+COOKIES = os.path.join(GLib.get_user_config_dir(), "escambo", "cookies.json")
 BODY = os.path.join(GLib.get_user_config_dir(), "escambo", "body.json")
-PARAM = os.path.join(
-    GLib.get_user_config_dir(), "escambo", "parameters.json"
-)
-HEADERS = os.path.join(
-    GLib.get_user_config_dir(), "escambo", "headers.json"
-)
+PARAM = os.path.join(GLib.get_user_config_dir(), "escambo", "parameters.json")
+HEADERS = os.path.join(GLib.get_user_config_dir(), "escambo", "headers.json")
 AUTHS = os.path.join(GLib.get_user_config_dir(), "escambo", "auths.json")
 
 
-@Gtk.Template(
-    resource_path="/io/github/cleomenezesjr/Escambo/gtk/window.ui"
-)
+@Gtk.Template(resource_path="/io/github/cleomenezesjr/Escambo/gtk/window.ui")
 class EscamboWindow(Adw.ApplicationWindow):
     __gtype_name__ = "EscamboWindow"
 
@@ -260,7 +252,6 @@ class EscamboWindow(Adw.ApplicationWindow):
     def __set_response_visibility(self, args, kwargs):
         self.leaflet.set_visible_child(self.response_page)
         self.response_stack.props.visible_child_name = "response"
-
 
     @Gtk.Template.Callback()
     def on_edit_body_btn(self, widget) -> None:
