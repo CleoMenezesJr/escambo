@@ -57,7 +57,7 @@ class EscamboApplication(Adw.Application):
 
     def setup_escambo_actions(self, win):
         self.create_action(
-            "win.on_send", win._EscamboWindow__on_send, ["<primary>Return"]
+            "on_send", win._EscamboWindow__on_send, ["<primary>Return"]
         )
         self.create_action(
             "show_response",
