@@ -224,10 +224,10 @@ class EscamboWindow(Adw.ApplicationWindow):
                 and self.param,
                 authentication=[self.auth_type, self.auths],
             )
-            get_resolve_requets_attr = getattr(
+            get_resolve_requests_attr = getattr(
                 resolve_requests, f"resolve_{method_list[method]}"
             )
-            response, status_code, code_type = get_resolve_requets_attr()
+            response, status_code, code_type = get_resolve_requests_attr()
         except exceptions.ConnectionError:
             self.leaflet.set_visible_child(self.home)
             return self.toast_overlay.add_toast(
