@@ -257,6 +257,11 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.session.headers.clear()
         # TODO cleanup auth
 
+    def __set_response_visibility(self, args, kwargs):
+        self.leaflet.set_visible_child(self.response_page)
+        self.response_stack.props.visible_child_name = "response"
+
+
     @Gtk.Template.Callback()
     def on_edit_body_btn(self, widget) -> None:
         if self.is_raw:
