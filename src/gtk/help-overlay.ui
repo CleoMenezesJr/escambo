@@ -18,7 +18,7 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Show Response Page</property>
-                <property name="action-name">app.show_response</property>
+                <property name="action-name">app.show-response</property>
               </object>
             </child>
             <child>

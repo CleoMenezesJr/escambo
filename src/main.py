@@ -60,7 +60,7 @@ class EscamboApplication(Adw.Application):
             "on_send", win._EscamboWindow__on_send, ["<primary>Return"]
         )
         self.create_action(
-            "show_response",
+            "show-response",
             win._EscamboWindow__set_response_visibility,
             ["<primary>r"],
         )
