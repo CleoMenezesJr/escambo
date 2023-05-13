@@ -45,7 +45,6 @@ escambo_sources = [
   'restapi.py',
   'populator_entry.py',
   'sourceview.py',
-  'check_url.py',
   'dialog_cookies.py',
   'dialog_headers.py',
   'date_row.py',

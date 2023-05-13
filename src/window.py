@@ -25,7 +25,7 @@ from datetime import datetime as dt
 from typing import Callable
 from urllib.parse import urlparse
 
-from escambo.check_url import has_parameter, is_valid_url
+from escambo.common_scripts import has_parameter, is_valid_url
 from escambo.date_row import DateRow
 from escambo.dialog_cookies import CookieDialog
 from escambo.dialog_headers import HeaderDialog
