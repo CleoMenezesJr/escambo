@@ -1,4 +1,8 @@
-# <div align="center"><img src="data/icons/hicolor/scalable/apps/io.github.cleomenezesjr.Escambo.svg" height=50px> Escambo</div>
+<h1 align="center">
+  <img src="data/icons/hicolor/scalable/apps/io.github.cleomenezesjr.Escambo.svg" alt="Bavarder" height="170"/>
+  <br>
+  Escambo
+</h1>
 
 <p align="center">Escambo is an HTTP-based APIs test application made in GTK4/Libadwaita.</p>
 
@@ -37,7 +41,7 @@ flatpak run io.github.cleomenezesjr.Escambo
 
 That's it!
 
-## :octocat: I want to contribute!
+## ⌨️ I want to contribute!
 
 That's great!
 
@@ -67,7 +71,7 @@ This does not only look great but also makes you rethink what to add to a commit
 ## 🔄 Why "Escambo"
 
 > Escambo, in general, means exchange or barter.
-In the history of colonial Brazil, however, the term appears frequently associated with the type of relations established between the Portuguese and the indigenous people in the first decades of the 16th century.
+> In the history of colonial Brazil, however, the term appears frequently associated with the type of relations established between the Portuguese and the indigenous people in the first decades of the 16th century.
 
 [Wikipedia](https://pt.wikipedia.org/wiki/Escambo)
 
