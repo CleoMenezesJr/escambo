@@ -30,7 +30,7 @@ Enter the directory and build
 ```bash
 cd escambo
 flatpak-builder build io.github.cleomenezesjr.Escambo.json --user --install --force-clean
-```https://raw.githubusercontent.com/CleoMenezesJr/escambo/main/data/screenshots/escambo-light.png
+```
 
 Run
 
