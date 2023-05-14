@@ -1,8 +1,9 @@
 [Desktop Entry]
 Name=Escambo
+Comment=An HTTP-based APIs test application for GNOME
 Exec=escambo
 Icon=io.github.cleomenezesjr.Escambo
 Terminal=false
 Type=Application
-Categories=GTK;
+Categories=GTK;Development;WebDevelopment;
 StartupNotify=true
