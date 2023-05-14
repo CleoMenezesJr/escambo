@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="data/icons/hicolor/scalable/apps/io.github.cleomenezesjr.Escambo.svg" alt="Bavarder" height="170"/>
+  <img src="data/icons/hicolor/scalable/apps/io.github.cleomenezesjr.Escambo.svg" alt="Escambo" height="170"/>
   <br>
   Escambo
 </h1>
