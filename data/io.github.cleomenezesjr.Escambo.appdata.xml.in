@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-	<id>io.github.cleomenezesjr.Escambo.desktop</id>
-	<metadata_license>CC0-1.0</metadata_license>
-	<project_license>GPL-3.0-or-later</project_license>
-	<description>
-	  <p>No description</p>
-	</description>
+  <id>io.github.cleomenezesjr.Escambo</id>
+  <launchable type="desktop-id">io.github.cleomenezesjr.Escambo.desktop</launchable>
+  <name translatable="no">Escambo</name>
+  <developer_name translatable="no">Cleo Menezes Jr.</developer_name>
+  <update_contact>cleomenezesjr@gmail.com</update_contact>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <url type="homepage">https://github.com/CleoMenezesJr/escambo</url>
+  <url type="bugtracker">https://github.com/CleoMenezesJr/escambo/issues</url>
+  <url type="help">https://github.com/CleoMenezesJr/escambo/discussions</url>
+  <url type="donation">https://ko-fi.com/cleomenezesjr</url>
+  <summary>Test and develop APIs</summary>
+  <screenshots>
+    <screenshot type="default">
+      <image>
+        https://raw.githubusercontent.com/CleoMenezesJr/escambo/main/data/screenshots/escambo-light.png
+      </image>
+      <caption>Main window - Light mode</caption>
+    </screenshot>
+    <screenshot>
+      <image>
+        https://raw.githubusercontent.com/CleoMenezesJr/escambo/main/data/screenshots/escambo-dark.png
+      </image>
+      <caption>Main window - Dark mode</caption>
+    </screenshot>
+  </screenshots>
+  <description>
+    <p>Escambo is an HTTP-based APIs test application for GNOME.</p>
+  </description>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="0.1.0" date="2023-05-13">
+      <description>
+        <p>Welcome to Escambo</p>
+      </description>
+    </release>
+  </releases>
 </component>
