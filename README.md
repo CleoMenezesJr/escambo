@@ -7,7 +7,7 @@
 <p align="center">Escambo is an HTTP-based APIs test application made in GTK4/Libadwaita.</p>
 
 <p align="center">
-  <img src ="screenshot.png" /></a>
+  <img src ="data/screenshots/escambo-dark.png" /></a>
 </p>
 
 ## 🏗️ Build
@@ -30,7 +30,7 @@ Enter the directory and build
 ```bash
 cd escambo
 flatpak-builder build io.github.cleomenezesjr.Escambo.json --user --install --force-clean
-```
+```https://raw.githubusercontent.com/CleoMenezesJr/escambo/main/data/screenshots/escambo-light.png
 
 Run
 
