@@ -1,0 +1,126 @@
+# German translations for Escambo.
+# Copyright (C) 2023 Escambo
+# This file is distributed under the same license as the PACKAGE package.
+# FineFindus <FineFindus@proton.me>, 2023.
+msgid ""
+msgstr ""
+"Project-Id-Version: escambo\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-03 12:32-0300\n"
+"PO-Revision-Date: 2023-05-17 22:35+0200\n"
+"Last-Translator: FineFindus <FineFindusGH@gmail.com>\n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.3\n"
+
+#: data/io.github.cleomenezesjr.Escambo.desktop.in:3
+msgid "Escambo"
+msgstr "Escambo"
+
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:7
+msgid "No description"
+msgstr "Keine Beschreibung"
+
+#: src/window.ui:44
+msgid "_Endpoint"
+msgstr "_Endpunkt"
+
+#: src/window.ui:60
+msgid "Request"
+msgstr "Anfrage"
+
+#: src/window.ui:63
+msgid "Check the method that is being used before sending a request"
+msgstr "Überprüfe die genutzte Methode vor dem Senden einer Anfrage"
+
+#: src/window.ui:64
+msgid "Method"
+msgstr "Methode"
+
+#: src/window.ui:80
+msgid "URL"
+msgstr "URL"
+
+#: src/window.ui:88
+msgid "Parameters"
+msgstr "Parameter"
+
+#: src/window.ui:91
+msgid "Type"
+msgstr "Typ"
+
+#: src/window.ui:125
+msgid "Raw"
+msgstr "Original"
+
+#: src/window.ui:135
+msgid "Go to edit parameters"
+msgstr "Parameter bearbeiten"
+
+#: src/window.ui:151
+msgid "Send Request"
+msgstr "Anfrage abschicken"
+
+#: src/window.ui:172
+msgid "_Cookies"
+msgstr "_Cookies"
+
+#: src/window.ui:189
+msgid "New Cookie"
+msgstr "Neuer Cookie"
+
+#: src/window.ui:195 src/window.ui:258 src/window.ui:321 src/window.ui:540
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: src/window.ui:205 src/window.ui:268 src/window.ui:331 src/window.ui:550
+msgid "Key"
+msgstr "Schlüssel"
+
+#: src/window.ui:211 src/window.ui:274 src/window.ui:337 src/window.ui:556
+msgid "Value"
+msgstr "Wert"
+
+#: src/window.ui:235
+msgid "_Headers"
+msgstr "_Header"
+
+#: src/window.ui:252
+msgid "New Header"
+msgstr "Neuer Header"
+
+#: src/window.ui:298
+msgid "Auth"
+msgstr "Auth"
+
+#: src/window.ui:315
+msgid "New Auth"
+msgstr "Neuer Auth"
+
+#: src/window.ui:404
+msgid "Loading…"
+msgstr "Lade…"
+
+#: src/window.ui:436 src/window.ui:478 src/window.ui:511
+msgid "Back"
+msgstr "Zurück"
+
+#: src/window.ui:534
+msgid "New Parameter"
+msgstr "Neuer Parameter"
+
+#: src/window.ui:586
+msgid "_Preferences"
+msgstr "_Einstellungen"
+
+#: src/window.ui:590
+msgid "_Keyboard Shortcuts"
+msgstr "_Tastenkürzel"
+
+#: src/window.ui:594
+msgid "_About Escambo"
+msgstr "_Info zu Escambo"
