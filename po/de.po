@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: escambo\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-03 12:32-0300\n"
-"PO-Revision-Date: 2023-05-17 22:35+0200\n"
+"POT-Creation-Date: 2023-05-19 11:58+0200\n"
+"PO-Revision-Date: 2023-05-19 13:20+0200\n"
 "Last-Translator: FineFindus <FineFindusGH@gmail.com>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -21,106 +21,155 @@ msgstr ""
 msgid "Escambo"
 msgstr "Escambo"
 
-#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:7
-msgid "No description"
-msgstr "Keine Beschreibung"
+#: data/io.github.cleomenezesjr.Escambo.desktop.in:4
+msgid "An HTTP-based APIs test application for GNOME"
+msgstr "Eine HTTP-basierende APIs Test App für GNOME"
 
-#: src/window.ui:44
-msgid "_Endpoint"
-msgstr "_Endpunkt"
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:14
+msgid "Test and develop APIs"
+msgstr "Teste und entwickle APIs"
 
-#: src/window.ui:60
-msgid "Request"
-msgstr "Anfrage"
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:20
+msgid "Main window - Light mode"
+msgstr "Hauptfenster - Heller Modus"
 
-#: src/window.ui:63
-msgid "Check the method that is being used before sending a request"
-msgstr "Überprüfe die genutzte Methode vor dem Senden einer Anfrage"
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:26
+msgid "Main window - Dark mode"
+msgstr "Hauptfenster - Dunkler Modus"
 
-#: src/window.ui:64
-msgid "Method"
-msgstr "Methode"
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:30
+msgid "Escambo is an HTTP-based APIs test application for GNOME."
+msgstr "Escambo ist eine HTTP-basierende APIs Test App für GNOME."
 
-#: src/window.ui:80
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:36
+msgid "Welcome to Escambo"
+msgstr "Willkommen bei Escambo"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:6
+msgid "Method type"
+msgstr "Methodentyp"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:7
+msgid "Select method type dropdown."
+msgstr "Wähle einen Methodentyp in der Dropdown-Liste."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:11
 msgid "URL"
 msgstr "URL"
 
-#: src/window.ui:88
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:12
+msgid "Popular URL entry."
+msgstr "Beliebte URL Einträge."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:16
 msgid "Parameters"
 msgstr "Parameter"
 
-#: src/window.ui:91
-msgid "Type"
-msgstr "Typ"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:17
+msgid "Toggle parameters switch."
+msgstr "Parameter Schalter umschalten."
 
-#: src/window.ui:125
-msgid "Raw"
-msgstr "Original"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:21
+msgid "Body"
+msgstr "Nachrichtenrumpf"
 
-#: src/window.ui:135
-msgid "Go to edit parameters"
-msgstr "Parameter bearbeiten"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:22
+msgid "Toggle body switch."
+msgstr "Nachrichtenrumpf Schalter umschalten."
 
-#: src/window.ui:151
-msgid "Send Request"
-msgstr "Anfrage abschicken"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:26
+msgid "Body type"
+msgstr "Nachrichtenrumpftyp"
 
-#: src/window.ui:172
-msgid "_Cookies"
-msgstr "_Cookies"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:27
+msgid "Toggle body type button."
+msgstr "Nachrichtenrumpftyp Schalter umschalten."
 
-#: src/window.ui:189
-msgid "New Cookie"
-msgstr "Neuer Cookie"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:31
+msgid "Cookies"
+msgstr "Cookies"
 
-#: src/window.ui:195 src/window.ui:258 src/window.ui:321 src/window.ui:540
-msgid "Add"
-msgstr "Hinzufügen"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:32
+msgid "Toggle cookies switch."
+msgstr "Cookies Schalter umschalten."
 
-#: src/window.ui:205 src/window.ui:268 src/window.ui:331 src/window.ui:550
-msgid "Key"
-msgstr "Schlüssel"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:36
+msgid "Headers"
+msgstr "Headers"
 
-#: src/window.ui:211 src/window.ui:274 src/window.ui:337 src/window.ui:556
-msgid "Value"
-msgstr "Wert"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:37
+msgid "Toggle headers switch."
+msgstr "Header Schalter umschalten."
 
-#: src/window.ui:235
-msgid "_Headers"
-msgstr "_Header"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:41
+msgid "Authentication"
+msgstr "Authentifizierung"
 
-#: src/window.ui:252
-msgid "New Header"
-msgstr "Neuer Header"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:42
+msgid "Toggle auths switch."
+msgstr "Auth Schalter umschalten."
 
-#: src/window.ui:298
-msgid "Auth"
-msgstr "Auth"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:46
+msgid "Auth type"
+msgstr "Authtype"
 
-#: src/window.ui:315
-msgid "New Auth"
-msgstr "Neuer Auth"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:47
+msgid "Select auth type dropdown."
+msgstr "Wähle Authtyp aus der Dropdown-List."
 
-#: src/window.ui:404
-msgid "Loading…"
-msgstr "Lade…"
+#~ msgid "No description"
+#~ msgstr "Keine Beschreibung"
 
-#: src/window.ui:436 src/window.ui:478 src/window.ui:511
-msgid "Back"
-msgstr "Zurück"
+#~ msgid "_Endpoint"
+#~ msgstr "_Endpunkt"
 
-#: src/window.ui:534
-msgid "New Parameter"
-msgstr "Neuer Parameter"
+#~ msgid "Request"
+#~ msgstr "Anfrage"
 
-#: src/window.ui:586
-msgid "_Preferences"
-msgstr "_Einstellungen"
+#~ msgid "Check the method that is being used before sending a request"
+#~ msgstr "Überprüfe die genutzte Methode vor dem Senden einer Anfrage"
 
-#: src/window.ui:590
-msgid "_Keyboard Shortcuts"
-msgstr "_Tastenkürzel"
+#~ msgid "Type"
+#~ msgstr "Typ"
 
-#: src/window.ui:594
-msgid "_About Escambo"
-msgstr "_Info zu Escambo"
+#~ msgid "Raw"
+#~ msgstr "Original"
+
+#~ msgid "Go to edit parameters"
+#~ msgstr "Parameter bearbeiten"
+
+#~ msgid "Send Request"
+#~ msgstr "Anfrage abschicken"
+
+#~ msgid "New Cookie"
+#~ msgstr "Neuer Cookie"
+
+#~ msgid "Add"
+#~ msgstr "Hinzufügen"
+
+#~ msgid "Key"
+#~ msgstr "Schlüssel"
+
+#~ msgid "Value"
+#~ msgstr "Wert"
+
+#~ msgid "New Header"
+#~ msgstr "Neuer Header"
+
+#~ msgid "New Auth"
+#~ msgstr "Neuer Auth"
+
+#~ msgid "Loading…"
+#~ msgstr "Lade…"
+
+#~ msgid "Back"
+#~ msgstr "Zurück"
+
+#~ msgid "New Parameter"
+#~ msgstr "Neuer Parameter"
+
+#~ msgid "_Preferences"
+#~ msgstr "_Einstellungen"
+
+#~ msgid "_Keyboard Shortcuts"
+#~ msgstr "_Tastenkürzel"
