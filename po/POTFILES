@@ -3,3 +3,4 @@ data/io.github.cleomenezesjr.Escambo.appdata.xml.in
 data/io.github.cleomenezesjr.Escambo.gschema.xml
 src/main.py
 src/window.py
+src/gtk/window.blp
