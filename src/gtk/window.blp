@@ -370,70 +370,64 @@ template EscamboWindow : Adw.ApplicationWindow {
                     StackPage {
                         name: "loading";
                         child:
-                            WindowHandle {
-                                vexpand: true;
-                                hexpand: true;
+                          Box {
+                              orientation: vertical;
+                              spacing: 12;
+                              margin-top: 12;
+                              margin-bottom: 12;
+                              margin-start: 12;
+                              margin-end: 12;
+                              halign: center;
+                              valign: center;
+                              vexpand: true;
+                              hexpand: true;
 
-                                Box {
-                                    orientation: vertical;
-                                    spacing: 12;
-                                    margin-top: 12;
-                                    margin-bottom: 12;
-                                    margin-start: 12;
-                                    margin-end: 12;
-                                    halign: center;
-                                    valign: center;
+                              Spinner spinner {
+                                  width-request: 32;
+                                  height-request: 32;
+                              }
 
-                                    Spinner spinner {
-                                        width-request: 32;
-                                        height-request: 32;
-                                    }
+                              Label {
+                                  wrap: true;
+                                  label: _("Loading…");
 
-                                    Label {
-                                        wrap: true;
-                                        label: _("Loading…");
-
-                                        styles [
-                                            "title-1",
-                                        ]
-                                    }
-                                }
-                            };
+                                  styles [
+                                      "title-1",
+                                  ]
+                              }
+                          };
                     }
 
                     StackPage {
                         name: "response";
-                        child:
-                        WindowHandle {
-                            vexpand: true;
-                            hexpand: true;
                             child:
                                 Box {
-                                    orientation: vertical;
+                                  vexpand: true;
+                                  hexpand: true;
+                                  orientation: vertical;
 
-                                    Adw.HeaderBar {
-                                        title-widget:
-                                            Adw.WindowTitle response_page_header {
-                                                title: "Response";
-                                            };
+                                  Adw.HeaderBar {
+                                      title-widget:
+                                          Adw.WindowTitle response_page_header {
+                                              title: "Response";
+                                          };
 
-                                            [start]
-                                            Button {
-                                                valign: center;
-                                                tooltip-text: _("Back");
-                                                icon-name: "go-previous-symbolic";
-                                                clicked => go_home();
-                                            }
-                                    }
+                                          [start]
+                                          Button {
+                                              valign: center;
+                                              tooltip-text: _("Back");
+                                              icon-name: "go-previous-symbolic";
+                                              clicked => go_home();
+                                          }
+                                  }
 
-                                    ScrolledWindow {
-                                        hexpand: true;
-                                        vexpand: true;
-                                        child:
-                                            .SourceView response_source_view {};
-                                    }
+                                  ScrolledWindow {
+                                      hexpand: true;
+                                      vexpand: true;
+                                      child:
+                                          .SourceView response_source_view {};
+                                  }
                                 };
-                        };
                     }
                 }
             }
