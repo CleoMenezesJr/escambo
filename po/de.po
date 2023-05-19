@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: escambo\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-19 11:58+0200\n"
-"PO-Revision-Date: 2023-05-19 13:20+0200\n"
+"POT-Creation-Date: 2023-05-19 19:25+0200\n"
+"PO-Revision-Date: 2023-05-19 19:31+0200\n"
 "Last-Translator: FineFindus <FineFindusGH@gmail.com>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -53,7 +53,7 @@ msgstr "Methodentyp"
 msgid "Select method type dropdown."
 msgstr "Wähle einen Methodentyp in der Dropdown-Liste."
 
-#: data/io.github.cleomenezesjr.Escambo.gschema.xml:11
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:11 src/gtk/window.blp:71
 msgid "URL"
 msgstr "URL"
 
@@ -69,7 +69,7 @@ msgstr "Parameter"
 msgid "Toggle parameters switch."
 msgstr "Parameter Schalter umschalten."
 
-#: data/io.github.cleomenezesjr.Escambo.gschema.xml:21
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:21 src/gtk/window.blp:115
 msgid "Body"
 msgstr "Nachrichtenrumpf"
 
@@ -85,7 +85,7 @@ msgstr "Nachrichtenrumpftyp"
 msgid "Toggle body type button."
 msgstr "Nachrichtenrumpftyp Schalter umschalten."
 
-#: data/io.github.cleomenezesjr.Escambo.gschema.xml:31
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:31 src/gtk/window.blp:200
 msgid "Cookies"
 msgstr "Cookies"
 
@@ -93,7 +93,7 @@ msgstr "Cookies"
 msgid "Toggle cookies switch."
 msgstr "Cookies Schalter umschalten."
 
-#: data/io.github.cleomenezesjr.Escambo.gschema.xml:36
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:36 src/gtk/window.blp:252
 msgid "Headers"
 msgstr "Headers"
 
@@ -117,11 +117,134 @@ msgstr "Authtype"
 msgid "Select auth type dropdown."
 msgstr "Wähle Authtyp aus der Dropdown-List."
 
+#: src/gtk/window.blp:37
+msgid "_Endpoint"
+msgstr "_Endpunkt"
+
+#: src/gtk/window.blp:56
+msgid "HTTP request methods"
+msgstr "HTTP Anfrage Methoden"
+
+#: src/gtk/window.blp:57
+msgid "Method"
+msgstr "Methode"
+
+#: src/gtk/window.blp:60
+msgid "GET"
+msgstr "GET"
+
+#: src/gtk/window.blp:61
+msgid "POST"
+msgstr "POST"
+
+#: src/gtk/window.blp:62
+msgid "PUT"
+msgstr "PUT"
+
+#: src/gtk/window.blp:63
+msgid "PATCH"
+msgstr "PATCH"
+
+#: src/gtk/window.blp:64
+msgid "DELETE"
+msgstr "DELETE"
+
+#: src/gtk/window.blp:79
+msgid "Send Request"
+msgstr "Anfrage absenden"
+
+#: src/gtk/window.blp:93 src/gtk/window.blp:338
+msgid "Query Parameters"
+msgstr "Abfrage Parameter"
+
+#: src/gtk/window.blp:98
+msgid "Go to edit Parameters"
+msgstr "Parameter bearbeiten"
+
+#: src/gtk/window.blp:119
+msgid "Go to edit Body"
+msgstr "Nachrichtenrumpf bearbeiten"
+
+#: src/gtk/window.blp:155
+msgid "Raw"
+msgstr "Original"
+
+#: src/gtk/window.blp:181
+msgid "_Cookies"
+msgstr "_Cookies"
+
+#. icon-name: "list-add-symbolic";
+#: src/gtk/window.blp:210
+msgid "Create New Cookie..."
+msgstr "Neuen Cookie Erstellen"
+
+#: src/gtk/window.blp:233
+msgid "_Headers"
+msgstr "Headers_"
+
+#: src/gtk/window.blp:261
+msgid "Create New Header..."
+msgstr "Neuen Header ERstellen…"
+
+#: src/gtk/window.blp:284 src/gtk/window.blp:303
+msgid "Authorization"
+msgstr "Authentifizierung"
+
+#: src/gtk/window.blp:312
+msgid "Type"
+msgstr "Typ"
+
+#: src/gtk/window.blp:324 src/gtk/window.blp:514 src/gtk/window.blp:581
+msgid "Key"
+msgstr "Schlüssel"
+
+#: src/gtk/window.blp:329 src/gtk/window.blp:519 src/gtk/window.blp:586
+msgid "Value"
+msgstr "Wert"
+
+#: src/gtk/window.blp:334
+msgid "Add to"
+msgstr "Hinzufügen zu"
+
+#: src/gtk/window.blp:337
+msgid "Header"
+msgstr "Header"
+
+#: src/gtk/window.blp:392
+msgid "Loading…"
+msgstr "Lade…"
+
+#: src/gtk/window.blp:418 src/gtk/window.blp:450 src/gtk/window.blp:478
+#: src/gtk/window.blp:545
+msgid "Back"
+msgstr "Zurück"
+
+#: src/gtk/window.blp:499
+msgid "New Body"
+msgstr "Neuer Nachrichtenrumpf"
+
+#: src/gtk/window.blp:505 src/gtk/window.blp:572
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: src/gtk/window.blp:566
+msgid "New Parameter"
+msgstr "Neuer Parameter"
+
+#: src/gtk/window.blp:611
+msgid "_Show Response"
+msgstr "_Zeige Antwort"
+
+#: src/gtk/window.blp:615
+msgid "_Keyboard Shortcuts"
+msgstr "_Tastenkürzel"
+
+#: src/gtk/window.blp:619
+msgid "_About Escambo"
+msgstr "_Info zu Escambo"
+
 #~ msgid "No description"
 #~ msgstr "Keine Beschreibung"
-
-#~ msgid "_Endpoint"
-#~ msgstr "_Endpunkt"
 
 #~ msgid "Request"
 #~ msgstr "Anfrage"
@@ -129,47 +252,8 @@ msgstr "Wähle Authtyp aus der Dropdown-List."
 #~ msgid "Check the method that is being used before sending a request"
 #~ msgstr "Überprüfe die genutzte Methode vor dem Senden einer Anfrage"
 
-#~ msgid "Type"
-#~ msgstr "Typ"
-
-#~ msgid "Raw"
-#~ msgstr "Original"
-
-#~ msgid "Go to edit parameters"
-#~ msgstr "Parameter bearbeiten"
-
-#~ msgid "Send Request"
-#~ msgstr "Anfrage abschicken"
-
-#~ msgid "New Cookie"
-#~ msgstr "Neuer Cookie"
-
-#~ msgid "Add"
-#~ msgstr "Hinzufügen"
-
-#~ msgid "Key"
-#~ msgstr "Schlüssel"
-
-#~ msgid "Value"
-#~ msgstr "Wert"
-
-#~ msgid "New Header"
-#~ msgstr "Neuer Header"
-
 #~ msgid "New Auth"
 #~ msgstr "Neuer Auth"
 
-#~ msgid "Loading…"
-#~ msgstr "Lade…"
-
-#~ msgid "Back"
-#~ msgstr "Zurück"
-
-#~ msgid "New Parameter"
-#~ msgstr "Neuer Parameter"
-
 #~ msgid "_Preferences"
 #~ msgstr "_Einstellungen"
-
-#~ msgid "_Keyboard Shortcuts"
-#~ msgstr "_Tastenkürzel"
