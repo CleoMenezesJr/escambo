@@ -225,7 +225,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                 body=self.settings.get_boolean("body") and body,
                 parameters=self.settings.get_boolean("parameters")
                 and self.param,
-                authentication=[self.auth_type, self.auths],
+                authorization=[self.auth_type, self.auths],
             )
             get_resolve_requests_attr = getattr(
                 resolve_requests, f"resolve_{method_list[method]}"
@@ -546,7 +546,7 @@ class EscamboWindow(Adw.ApplicationWindow):
             "body": [BODY, "body"],
             "parameter": [PARAM, "param"],
             "header": [HEADERS, "headers"],
-            "authentication": [AUTHS, "auths"],
+            "authorization": [AUTHS, "auths"],
         }
 
         for file in files:
@@ -557,9 +557,9 @@ class EscamboWindow(Adw.ApplicationWindow):
                 self.param = overrides if "parameter" in file else self.param
                 self.headers = overrides if "header" in file else self.headers
                 self.auths = (
-                    overrides if "authentication" in file else self.auths
+                    overrides if "authorization" in file else self.auths
                 )
-                if file != "authentication":
+                if file != "authorization":
                     if not bool(overrides):
                         getattr(
                             self, f"group_overrides_{files[file][1]}"

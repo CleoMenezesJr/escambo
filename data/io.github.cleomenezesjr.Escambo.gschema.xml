@@ -9,7 +9,7 @@
     <key type="s" name="entry-url">
       <default>""</default>
       <summary>URL</summary>
-      <description>Popular URL entry.</description>
+      <description>URL input field content.</description>
     </key>
     <key type="b" name="parameters">
       <default>true</default>
@@ -38,13 +38,13 @@
     </key>
     <key type="b" name="auths">
       <default>false</default>
-      <summary>Authentication</summary>
-      <description>Toggle auths switch.</description>
+      <summary>Authorizations</summary>
+      <description>Toggle authorizations switch.</description>
     </key>
     <key type="i" name="auth-type">
       <default>0</default>
-      <summary>Auth type</summary>
-      <description>Select auth type dropdown.</description>
+      <summary>Authorization type</summary>
+      <description>Select authorization type dropdown.</description>
     </key>
   </schema>
 </schemalist>

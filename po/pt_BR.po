@@ -60,8 +60,8 @@ msgid "URL"
 msgstr "URL"
 
 #: data/io.github.cleomenezesjr.Escambo.gschema.xml:12
-msgid "Popular URL entry."
-msgstr "A popular entrada de URL."
+msgid "URL input field content."
+msgstr "Conteúdo do campo de entrada de URL."
 
 #: data/io.github.cleomenezesjr.Escambo.gschema.xml:16
 msgid "Parameters"
@@ -104,20 +104,20 @@ msgid "Toggle headers switch."
 msgstr "Ativa cabeçalhos."
 
 #: data/io.github.cleomenezesjr.Escambo.gschema.xml:41
-msgid "Authentication"
-msgstr "Autenticação"
+msgid "Authorizations"
+msgstr "Autorizações"
 
 #: data/io.github.cleomenezesjr.Escambo.gschema.xml:42
-msgid "Toggle auths switch."
-msgstr "Ativa autenticações."
+msgid "Toggle authorizations switch."
+msgstr "Ativa autorizações."
 
 #: data/io.github.cleomenezesjr.Escambo.gschema.xml:46
-msgid "Auth type"
-msgstr "Tipo de autenticação"
+msgid "Authorization type"
+msgstr "Tipo de autorização"
 
 #: data/io.github.cleomenezesjr.Escambo.gschema.xml:47
-msgid "Select auth type dropdown."
-msgstr "Selecione o tipo de autenticação com um menu suspenso."
+msgid "Select authorization type dropdown."
+msgstr "Selecione o tipo de autorização com um menu suspenso."
 
 #: src/gtk/window.blp:37
 msgid "_Endpoint"
