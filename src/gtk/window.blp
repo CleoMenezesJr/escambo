@@ -64,13 +64,13 @@ template EscamboWindow : Adw.ApplicationWindow {
                                                                 _("DELETE")
                                                             ]
                                                         };
-                                                        notify::selected-item => on_entry_method_changed();
+                                                        notify::selected-item => $on_entry_method_changed();
                                                     }
 
                                                     Adw.EntryRow entry_url {
                                                         title: _("URL");
                                                         use-underline: true;
-                                                        changed => on_entry_url_changed();
+                                                        changed => $on_entry_url_changed();
                                                     }
                                                 }
 
@@ -92,13 +92,13 @@ template EscamboWindow : Adw.ApplicationWindow {
                                                         show-enable-switch: true;
                                                         title: _("Query Parameters");
                                                         subtitle: "https://?";
-                                                        notify::enable-expansion => on_param_switch_changed();
+                                                        notify::enable-expansion => $on_param_switch_changed();
 
                                                         Adw.ActionRow btn_edit_param {
                                                             title: _("Go to edit Parameters");
                                                             use-underline: true;
                                                             activatable: true;
-                                                            activated => on_edit_param_btn();
+                                                            activated => $on_edit_param_btn();
 
                                                             Image {
                                                                 icon-name: "go-next-symbolic";
@@ -113,13 +113,13 @@ template EscamboWindow : Adw.ApplicationWindow {
                                                       Adw.ExpanderRow expander_row_body {
                                                         show-enable-switch: true;
                                                         title: _("Body");
-                                                        notify::enable-expansion => on_body_switch_changed();
+                                                        notify::enable-expansion => $on_body_switch_changed();
 
                                                         Adw.ActionRow btn_edit_body {
                                                             title: _("Go to edit Body");
                                                             use-underline: true;
                                                             activatable: true;
-                                                            activated => on_edit_body_btn();
+                                                            activated => $on_edit_body_btn();
                                                             Box {
                                                                 valign: center;
                                                                 homogeneous: true;
@@ -154,7 +154,7 @@ template EscamboWindow : Adw.ApplicationWindow {
                                                                     active: true;
                                                                     label: _("Raw");
                                                                     group: form_data_toggle_button_body;
-                                                                    toggled => on_body_type_changed();
+                                                                    toggled => $on_body_type_changed();
                                                                 }
                                                             }
                                                             Separator {
@@ -202,7 +202,7 @@ template EscamboWindow : Adw.ApplicationWindow {
                                                         Switch switch_cookies {
                                                             valign: center;
                                                             active: true;
-                                                            state-set => on_cookies_switch_state_change();
+                                                            state-set => $on_cookies_switch_state_change();
                                                         }
                                                     }
                                                     Adw.ActionRow create_new_cookie {
@@ -254,7 +254,7 @@ template EscamboWindow : Adw.ApplicationWindow {
                                                         Switch switch_headers {
                                                             valign: center;
                                                             active: true;
-                                                            state-set => on_headers_switch_state_change();
+                                                            state-set => $on_headers_switch_state_change();
                                                         }
                                                     }
                                                     Adw.ActionRow create_new_header {
@@ -305,7 +305,7 @@ template EscamboWindow : Adw.ApplicationWindow {
                                                       Switch switch_auths {
                                                           valign: center;
                                                           active: true;
-                                                          state-set => on_auths_switch_state_change();
+                                                          state-set => $on_auths_switch_state_change();
                                                       }
                                                   }
                                                   Adw.ComboRow auth_type {
@@ -316,7 +316,7 @@ template EscamboWindow : Adw.ApplicationWindow {
                                                               "Bearer Token",
                                                           ]
                                                       };
-                                                      notify::selected-item => on_auth_type_changed();
+                                                      notify::selected-item => $on_auth_type_changed();
                                                   }
                                               }
                                               Adw.PreferencesGroup api_key_prefs {
@@ -338,7 +338,7 @@ template EscamboWindow : Adw.ApplicationWindow {
                                                               _("Query Parameters"),
                                                           ]
                                                       };
-                                                      notify::selected-item => on_auth_entry_active();
+                                                      notify::selected-item => $on_auth_entry_active();
                                                   }
                                               }
                                               Adw.PreferencesGroup bearer_token_prefs {
@@ -417,7 +417,7 @@ template EscamboWindow : Adw.ApplicationWindow {
                                               valign: center;
                                               tooltip-text: _("Back");
                                               icon-name: "go-previous-symbolic";
-                                              clicked => go_home();
+                                              clicked => $go_home();
                                           }
                                   }
 
@@ -425,7 +425,7 @@ template EscamboWindow : Adw.ApplicationWindow {
                                       hexpand: true;
                                       vexpand: true;
                                       child:
-                                          .SourceView response_source_view {};
+                                          $SourceView response_source_view {};
                                   }
                                 };
                     }
@@ -449,7 +449,7 @@ template EscamboWindow : Adw.ApplicationWindow {
                             valign: center;
                             tooltip-text: _("Back");
                             icon-name: "go-previous-symbolic";
-                            clicked => go_home();
+                            clicked => $go_home();
                         }
                 }
 
@@ -457,7 +457,7 @@ template EscamboWindow : Adw.ApplicationWindow {
                     hexpand: true;
                     vexpand: true;
                     child:
-                        .SourceView raw_source_view_body {};
+                        $SourceView raw_source_view_body {};
                 }
             }
             //Leaflet Raw end
@@ -477,7 +477,7 @@ template EscamboWindow : Adw.ApplicationWindow {
                             valign: center;
                             tooltip-text: _("Back");
                             icon-name: "go-previous-symbolic";
-                            clicked => go_home();
+                            clicked => $go_home();
                         }
                 }
 
@@ -530,7 +530,7 @@ template EscamboWindow : Adw.ApplicationWindow {
                             valign: center;
                             tooltip-text: _("Back");
                             icon-name: "go-previous-symbolic";
-                            clicked => go_home();
+                            clicked => $go_home();
                         }
                 }
 

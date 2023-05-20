@@ -3,7 +3,7 @@ using Adw 1;
 
 template DateRow : Adw.ActionRow {
     activatable: true;
-    activated => _on_activated();
+    activated => $_on_activated();
 
     Box {
       spacing: 6;
@@ -24,7 +24,7 @@ template DateRow : Adw.ActionRow {
                 spacing: 12;
 
                 Calendar calendar {
-                    day-selected => _on_data_changed();
+                    day-selected => $_on_data_changed();
                 }
 
                 Box {
@@ -50,8 +50,8 @@ template DateRow : Adw.ActionRow {
                                 step-increment: 1;
                             };
 
-                            value-changed => _on_data_changed();
-                            output => _add_leading_zero();
+                            value-changed => $_on_data_changed();
+                            output => $_add_leading_zero();
                         }
 
                         Label {
@@ -67,8 +67,8 @@ template DateRow : Adw.ActionRow {
                                 step-increment: 1;
                             };
 
-                              value-changed => _on_data_changed();
-                              output => _add_leading_zero();
+                              value-changed => $_on_data_changed();
+                              output => $_add_leading_zero();
                           }
                       }
                   }

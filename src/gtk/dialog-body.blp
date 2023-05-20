@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-template BodyDialog : .AdwWindow {
+template BodyDialog : $AdwWindow {
   default-width: "400";
   modal: true;
 
@@ -15,7 +15,7 @@ template BodyDialog : .AdwWindow {
   Box {
     orientation: vertical;
 
-    .AdwHeaderBar {
+    $AdwHeaderBar {
       show-start-title-buttons: false;
       show-end-title-buttons: false;
 
@@ -29,27 +29,27 @@ template BodyDialog : .AdwWindow {
       Button btn_add {
         label: _("Add");
         sensitive: false;
-        clicked => on_save();
+        clicked => $on_save();
 
         styles ["suggested-action"]
       }
     }
 
-    .AdwPreferencesPage {
+    $AdwPreferencesPage {
 
-      .AdwPreferencesGroup {
+      $AdwPreferencesGroup {
             Adw.EntryRow entry_body_key {
                 hexpand: true;
                 title: _("Key");
                 use-underline: true;
-                changed => on_entry_changed();
+                changed => $on_entry_changed();
             }
 
             Adw.EntryRow entry_body_value {
                 hexpand: true;
                 title: _("Value");
                 use-underline: true;
-                changed => on_entry_changed();
+                changed => $on_entry_changed();
             }
       }
     }
