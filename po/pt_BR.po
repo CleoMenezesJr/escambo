@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: escambo\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-03 12:32-0300\n"
-"PO-Revision-Date: 2023-01-03 14:27-0300\n"
+"POT-Creation-Date: 2023-05-19 22:31-0300\n"
+"PO-Revision-Date: 2023-05-19 22:51-0300\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
-"Language-Team: Brazilian Portuguese <https://br.gnome.org/traducao>\n"
+"Language-Team: Brazilian Portuguese <https://br.gnome.org/traducao/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,106 +23,240 @@ msgstr ""
 msgid "Escambo"
 msgstr "Escambo"
 
-#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:7
-msgid "No description"
-msgstr "Sem descrição"
+#: data/io.github.cleomenezesjr.Escambo.desktop.in:4
+msgid "An HTTP-based APIs test application for GNOME"
+msgstr "Um aplicativo para testar APIs baseadas em HTTP para o GNOME"
 
-#: src/window.ui:44
-msgid "_Endpoint"
-msgstr "_Endpoint"
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:14
+msgid "Test and develop APIs"
+msgstr "Teste e desenvolva APIs"
 
-#: src/window.ui:60
-msgid "Request"
-msgstr "Requisição"
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:20
+msgid "Main window - Light mode"
+msgstr "Janela principal - modo claro"
 
-#: src/window.ui:63
-msgid "Check the method that is being used before sending a request"
-msgstr "Verifica o método que está sendo usado antes de enviar uma requisição"
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:26
+msgid "Main window - Dark mode"
+msgstr "Janela principal - modo escuro"
 
-#: src/window.ui:64
-msgid "Method"
-msgstr "Método"
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:30
+msgid "Escambo is an HTTP-based APIs test application for GNOME."
+msgstr "Escambo é um aplicativo de teste de APIs basedas em HTTP para o GNOME"
 
-#: src/window.ui:80
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:36
+msgid "Welcome to Escambo"
+msgstr "Boas-vindas ao Escambo"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:6
+msgid "Method type"
+msgstr "Tipo de método"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:7
+msgid "Select method type dropdown."
+msgstr "Selecione o tipo de método com um menu suspenso."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:11 src/gtk/window.blp:71
 msgid "URL"
 msgstr "URL"
 
-#: src/window.ui:88
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:12
+msgid "Popular URL entry."
+msgstr "A popular entrada de URL."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:16
 msgid "Parameters"
 msgstr "Parâmetros"
 
-#: src/window.ui:91
-msgid "Type"
-msgstr "Tipo"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:17
+msgid "Toggle parameters switch."
+msgstr "Ativa parâmetros."
 
-#: src/window.ui:125
-msgid "Raw"
-msgstr "Bruto"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:21 src/gtk/window.blp:115
+msgid "Body"
+msgstr "Corpo"
 
-#: src/window.ui:135
-msgid "Go to edit parameters"
-msgstr "Ir para editar parâmetros"
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:22
+msgid "Toggle body switch."
+msgstr "Ativa corpo da chamada"
 
-#: src/window.ui:151
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:26
+msgid "Body type"
+msgstr "Tipo de corpo"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:27
+msgid "Toggle body type button."
+msgstr "Ativa o botão de tipo de corpo da chamada."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:31 src/gtk/window.blp:200
+msgid "Cookies"
+msgstr "Cookies"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:32
+msgid "Toggle cookies switch."
+msgstr "Ativa cookies."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:36 src/gtk/window.blp:252
+msgid "Headers"
+msgstr "Cabeçalhos"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:37
+msgid "Toggle headers switch."
+msgstr "Ativa cabeçalhos."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:41
+msgid "Authentication"
+msgstr "Autenticação"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:42
+msgid "Toggle auths switch."
+msgstr "Ativa autenticações."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:46
+msgid "Auth type"
+msgstr "Tipo de autenticação"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:47
+msgid "Select auth type dropdown."
+msgstr "Selecione o tipo de autenticação com um menu suspenso."
+
+#: src/gtk/window.blp:37
+msgid "_Endpoint"
+msgstr "_Endpoint"
+
+#: src/gtk/window.blp:56
+msgid "HTTP request methods"
+msgstr "Métodos de requisição HTTP"
+
+#: src/gtk/window.blp:57
+msgid "Method"
+msgstr "Método"
+
+#: src/gtk/window.blp:60
+msgid "GET"
+msgstr "GET"
+
+#: src/gtk/window.blp:61
+msgid "POST"
+msgstr "POST"
+
+#: src/gtk/window.blp:62
+msgid "PUT"
+msgstr "PUT"
+
+#: src/gtk/window.blp:63
+msgid "PATCH"
+msgstr "PATCH"
+
+#: src/gtk/window.blp:64
+msgid "DELETE"
+msgstr "DELETE"
+
+#: src/gtk/window.blp:79
 msgid "Send Request"
 msgstr "Enviar requisição"
 
-#: src/window.ui:172
+#: src/gtk/window.blp:93 src/gtk/window.blp:338
+msgid "Query Parameters"
+msgstr "Parâmetros da consulta"
+
+#: src/gtk/window.blp:98
+msgid "Go to edit Parameters"
+msgstr "Ir para edição dos parâmetros"
+
+#: src/gtk/window.blp:119
+msgid "Go to edit Body"
+msgstr "Ir para edição do corpo"
+
+#: src/gtk/window.blp:155
+msgid "Raw"
+msgstr "Bruto"
+
+#: src/gtk/window.blp:181
 msgid "_Cookies"
 msgstr "_Cookies"
 
-#: src/window.ui:189
-msgid "New Cookie"
-msgstr "Novo cookie"
+#. icon-name: "list-add-symbolic";
+#: src/gtk/window.blp:210
+msgid "Create New Cookie..."
+msgstr "Criar novo cookie..."
 
-#: src/window.ui:195 src/window.ui:258 src/window.ui:321 src/window.ui:540
-msgid "Add"
-msgstr "Adicionar"
-
-#: src/window.ui:205 src/window.ui:268 src/window.ui:331 src/window.ui:550
-msgid "Key"
-msgstr "Chave"
-
-#: src/window.ui:211 src/window.ui:274 src/window.ui:337 src/window.ui:556
-msgid "Value"
-msgstr "Valor"
-
-#: src/window.ui:235
+#: src/gtk/window.blp:233
 msgid "_Headers"
 msgstr "Cabeçal_hos"
 
-#: src/window.ui:252
-msgid "New Header"
-msgstr "Novo cabeçalho"
+#: src/gtk/window.blp:261
+msgid "Create New Header..."
+msgstr "Criar novo cabeçalho..."
 
-#: src/window.ui:298
-msgid "Auth"
-msgstr "Auth"
+#: src/gtk/window.blp:284 src/gtk/window.blp:303
+msgid "Authorization"
+msgstr "Autorização"
 
-#: src/window.ui:315
-msgid "New Auth"
-msgstr "Nova autenticação"
+#: src/gtk/window.blp:312
+msgid "Type"
+msgstr "Tipo"
 
-#: src/window.ui:404
+#: src/gtk/window.blp:324 src/gtk/window.blp:514 src/gtk/window.blp:581
+msgid "Key"
+msgstr "Chave"
+
+#: src/gtk/window.blp:329 src/gtk/window.blp:519 src/gtk/window.blp:586
+msgid "Value"
+msgstr "Valor"
+
+#: src/gtk/window.blp:334
+msgid "Add to"
+msgstr "Adicionar valor a"
+
+#: src/gtk/window.blp:337
+msgid "Header"
+msgstr "Cabeçalho"
+
+#: src/gtk/window.blp:392
 msgid "Loading…"
 msgstr "Carregando…"
 
-#: src/window.ui:436 src/window.ui:478 src/window.ui:511
+#: src/gtk/window.blp:418 src/gtk/window.blp:450 src/gtk/window.blp:478
+#: src/gtk/window.blp:545
 msgid "Back"
 msgstr "Voltar"
 
-#: src/window.ui:534
+#: src/gtk/window.blp:499
+msgid "New Body"
+msgstr "Novo corpo"
+
+#: src/gtk/window.blp:505 src/gtk/window.blp:572
+msgid "Add"
+msgstr "Adicionar"
+
+#: src/gtk/window.blp:566
 msgid "New Parameter"
 msgstr "Novo parâmetro"
 
-#: src/window.ui:586
-msgid "_Preferences"
-msgstr "_Preferências"
+#: src/gtk/window.blp:611
+msgid "_Show Response"
+msgstr "_Mostrar resposta"
 
-#: src/window.ui:590
+#: src/gtk/window.blp:615
 msgid "_Keyboard Shortcuts"
 msgstr "Atalhos de _teclado"
 
-#: src/window.ui:594
+#: src/gtk/window.blp:619
 msgid "_About Escambo"
 msgstr "_Sobre o Escambo"
+
+#~ msgid "No description"
+#~ msgstr "Sem descrição"
+
+#~ msgid "Request"
+#~ msgstr "Requisição"
+
+#~ msgid "Check the method that is being used before sending a request"
+#~ msgstr ""
+#~ "Verifica o método que está sendo usado antes de enviar uma requisição"
+
+#~ msgid "New Auth"
+#~ msgstr "Nova autenticação"
+
+#~ msgid "_Preferences"
+#~ msgstr "_Preferências"
