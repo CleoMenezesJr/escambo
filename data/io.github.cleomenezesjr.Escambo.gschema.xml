@@ -38,7 +38,7 @@
     </key>
     <key type="b" name="auths">
       <default>false</default>
-      <summary>Authentication</summary>
+      <summary>Authorization</summary>
       <description>Toggle auths switch.</description>
     </key>
     <key type="i" name="auth-type">
