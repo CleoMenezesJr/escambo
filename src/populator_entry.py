@@ -1,5 +1,6 @@
 import json
 
+from escambo.dialog_body import BodyDialog
 from escambo.dialog_cookies import CookieDialog
 from escambo.dialog_headers import HeaderDialog
 from gi.repository import Adw, Gtk
@@ -26,7 +27,7 @@ class PupulatorEntry(Adw.ActionRow):
         Set the DLL name as ActionRow title and set the
         combo_type to the type of override
         """
-        if "cookies" in self.content or "headers" in self.content:
+        if any(i in self.content for i in ["cookies", "headers", "body"]):
             self.set_title(self.override[1][0] or "—")
             self.set_subtitle(self.override[1][1] or "—")
         elif "auths" in self.content:
@@ -40,9 +41,6 @@ class PupulatorEntry(Adw.ActionRow):
             )
 
             self.window.bearer_token.set_text(self.override["Bearer Token"][0])
-        else:
-            self.set_title(self.override[0])
-            self.set_subtitle(self.override[1])
 
         # update status
         self.window.update_subtitle_parameters()
@@ -137,6 +135,13 @@ class PupulatorEntry(Adw.ActionRow):
             new_window = HeaderDialog(
                 parent_window=self.window,
                 title="Edit Header",
+                content=self,
+            )
+            new_window.present()
+        elif "body" in self.content:
+            new_window = BodyDialog(
+                parent_window=self.window,
+                title="Edit Body",
                 content=self,
             )
             new_window.present()

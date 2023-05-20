@@ -496,28 +496,14 @@ template EscamboWindow : Adw.ApplicationWindow {
                                     spacing: 20;
 
                                     Adw.PreferencesGroup {
-                                        title: _("New Body");
-                                        header-suffix:
-                                            Button btn_add_body {
-                                                child:
-                                                    Adw.ButtonContent {
-                                                        icon-name: "list-add-symbolic";
-                                                        label: _("Add");
-                                                    };
-
-                                                    styles [
-                                                        "flat",
-                                                    ]
-                                            };
-
-                                        Adw.EntryRow entry_body_key {
-                                            title: _("Key");
-                                            use-underline: true;
-                                        }
-
-                                        Adw.EntryRow entry_body_value {
-                                            title: _("Value");
-                                            use-underline: true;
+                                        Adw.ActionRow create_new_body {
+                                            /* icon-name: "list-add-symbolic"; */
+                                            title: _("Create New Cookie...");
+                                            activatable: true;
+                                            Image {
+                                                icon-name: "go-next-symbolic";
+                                                styles ["dim-label"]
+                                            }
                                         }
                                     }
 

@@ -27,6 +27,7 @@ from urllib.parse import urlparse
 
 from escambo.common_scripts import has_parameter, is_valid_url
 from escambo.date_row import DateRow
+from escambo.dialog_body import BodyDialog
 from escambo.dialog_cookies import CookieDialog
 from escambo.dialog_headers import HeaderDialog
 from escambo.populator_entry import PupulatorEntry
@@ -70,9 +71,7 @@ class EscamboWindow(Adw.ApplicationWindow):
     btn_send_request = Gtk.Template.Child()
 
     expander_row_body = Gtk.Template.Child()
-    entry_body_key = Gtk.Template.Child()
-    entry_body_value = Gtk.Template.Child()
-    btn_add_body = Gtk.Template.Child()
+    create_new_body = Gtk.Template.Child()
     group_overrides_body = Gtk.Template.Child()
     counter_label_form_data_body = Gtk.Template.Child()
 
@@ -115,11 +114,15 @@ class EscamboWindow(Adw.ApplicationWindow):
 
         # Connect signals
         self.btn_send_request.connect("clicked", self.__on_send)
+        # TODO: connect show_*_dialog signal from template
         self.create_new_cookie.connect(
             "activated", self._show_cookie_dialog, "New Cookie"
         )
         self.create_new_header.connect(
             "activated", self._show_header_dialog, "New Header"
+        )
+        self.create_new_body.connect(
+            "activated", self._show_body_dialog, "New Body"
         )
         self.api_key_auth_key.connect(
             "apply", self.on_auth_entry_active, "api_key_auth_key"
@@ -130,7 +133,6 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.bearer_token.connect(
             "apply", self.on_auth_entry_active, "bearer_token"
         )
-        self.btn_add_body.connect("clicked", self.__save_override, "body")
         self.btn_add_parameter.connect(
             "clicked", self.__save_override, "param"
         )
@@ -173,7 +175,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                 }
                 which_method_thread = threading.Thread(
                     target=self.__which_method,
-                    args=(method, url, headers),
+                    args=(method, url, headers, body),
                 )
                 which_method_thread.daemon = True
                 which_method_thread.start()
@@ -183,8 +185,8 @@ class EscamboWindow(Adw.ApplicationWindow):
                 self.response_stack.props.visible_child_name = "loading"
 
     def __which_body_type(self, body_type: bool) -> dict | None:
-        if body_type:
-            body = self.body
+        if not body_type:
+            body = {value[0]: value[1] for key, value in self.body.items()}
         else:
             start, end = self.raw_buffer.get_bounds()
             raw_code = self.raw_buffer.get_text(start, end, True)
@@ -205,6 +207,7 @@ class EscamboWindow(Adw.ApplicationWindow):
         method: int,
         url: str,
         headers: dict | None,
+        body: dict | None,
     ) -> Callable | None:
         try:
             method_list = {
@@ -219,7 +222,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                 self.session,
                 cookies=self.switch_cookies.get_active() and self.cookies,
                 headers=self.settings.get_boolean("headers") and headers,
-                body=self.settings.get_boolean("body") and self.body,
+                body=self.settings.get_boolean("body") and body,
                 parameters=self.settings.get_boolean("parameters")
                 and self.param,
                 authentication=[self.auth_type, self.auths],
@@ -308,6 +311,12 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     def _show_auth_dialog(self, widget, title, content=None):
         new_window = AuthDialog(
+            parent_window=self, title=title, content=content
+        )
+        new_window.present()
+
+    def _show_body_dialog(self, widget, title, content=None):
+        new_window = BodyDialog(
             parent_window=self, title=title, content=content
         )
         new_window.present()
@@ -449,41 +458,46 @@ class EscamboWindow(Adw.ApplicationWindow):
                 # Clean up field
                 self.group_overrides_headers.set_description("")
             case "body":
-                body_key = self.entry_body_key.get_text()
-                body_value = self.entry_body_value.get_text()
+                title: str = _args[2]
+                subtitle: str = _args[3]
+                id: str = _args[4]
+                insertion_date = id or dt.today().isoformat()
 
-                if body_key != "" and body_value != "":
-                    with open(BODY, "r+") as file:
-                        file_content = json.load(file)
-                        if not any(
-                            [i == body_key for i in file_content.keys()]
-                        ):
-                            # Save Body
-                            file_content.update({body_key: body_value})
-                            file.seek(0)
-                            json.dump(file_content, file, indent=2)
+                # Insert Body
+                with open(BODY, "r+") as file:
+                    file_content = json.load(file)
+                    # Save Body
+                    file_content[insertion_date] = [title, subtitle]
+                    file.truncate(0)
+                    file.seek(0)
+                    json.dump(file_content, file, indent=2)
 
-                            # Populate UI
-                            _entry = PupulatorEntry(
-                                window=self,
-                                override=[body_key, body_value],
-                                content=BODY,
-                            )
-                            GLib.idle_add(
-                                self.group_overrides_body.add, _entry
-                            )
-                        else:
-                            return self.toast_overlay.add_toast(
-                                Adw.Toast.new(("Key already exists"))
-                            )
+                    # Populate UI
+                    _entry = PupulatorEntry(
+                        window=self,
+                        override=[
+                            insertion_date,
+                            [title, subtitle],
+                        ],
+                        content=BODY,
+                    )
+                    if not any(
+                        [i == insertion_date for i in self.body.keys()]
+                    ):
+                        GLib.idle_add(self.group_overrides_body.add, _entry)
+                        self.toast_overlay.add_toast(
+                            Adw.Toast.new("Body created")
+                        )
+                    else:
+                        self.toast_overlay.add_toast(
+                            Adw.Toast.new("Body edited")
+                        )
 
-                    self.body = file_content
-                    self.body_counter(file_content)
+                self.body = file_content
+                self.body_counter(file_content)
 
-                    # Clean up fields
-                    self.group_overrides_body.set_description("")
-                    self.entry_body_key.set_text("")
-                    self.entry_body_value.set_text("")
+                # Clean up field
+                self.group_overrides_body.set_description("")
             case "param":
                 param_key = self.entry_param_key.get_text()
                 param_value = self.entry_param_value.get_text()
