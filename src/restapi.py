@@ -15,7 +15,7 @@ class ResolveRequests:
         headers: dict = None,
         body: dict = None,
         parameters: dict = None,
-        authentication: dict = None,
+        authorization: dict = None,
     ) -> None:
         # common variables and references
         self.url = url
@@ -23,7 +23,7 @@ class ResolveRequests:
         self.body = body
         self.params = parameters
         self.cookies = cookies
-        self.auths = authentication
+        self.auths = authorization
 
         if self.cookies:
             self.set_cookie_session()
