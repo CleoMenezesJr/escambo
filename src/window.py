@@ -417,8 +417,8 @@ class EscamboWindow(Adw.ApplicationWindow):
                 # Clean up field
                 self.group_overrides_cookies.set_description("")
             case "headers":
-                title: str = _args[2]
-                subtitle: str = _args[3]
+                title: str = _args[2].strip()
+                subtitle: str = _args[3].strip()
                 id: str = _args[4]
                 insertion_date = id or dt.today().isoformat()
 
