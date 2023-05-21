@@ -19,7 +19,7 @@ template $EscamboWindow : Adw.ApplicationWindow {
                     title-widget:
                         Adw.ViewSwitcherTitle switcher_title {
                             stack: stack;
-                            title: bind EscamboWindow.title;
+                            title: bind template.title;
                         };
                     [end]
                     MenuButton {
