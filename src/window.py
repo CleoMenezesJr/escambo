@@ -463,6 +463,12 @@ class EscamboWindow(Adw.ApplicationWindow):
                 id: str = _args[4]
                 insertion_date = id or dt.today().isoformat()
 
+                if any(title == each[0] for each in self.body.values()):
+                    self.toast_overlay.add_toast(
+                        Adw.Toast.new(f"Key \"{title}\" already exists")
+                    )
+                    return
+
                 # Insert Body
                 with open(BODY, "r+") as file:
                     file_content = json.load(file)
