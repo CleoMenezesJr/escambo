@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-template CookieDialog : .AdwWindow {
+template $CookieDialog : $AdwWindow {
   default-width: "400";
   modal: true;
 
@@ -15,7 +15,7 @@ template CookieDialog : .AdwWindow {
   Box {
     orientation: vertical;
 
-    .AdwHeaderBar {
+    $AdwHeaderBar {
       show-start-title-buttons: false;
       show-end-title-buttons: false;
 
@@ -29,30 +29,30 @@ template CookieDialog : .AdwWindow {
       Button btn_add {
         label: _("Add");
         sensitive: false;
-        clicked => on_save();
+        clicked => $on_save();
 
         styles ["suggested-action"]
       }
     }
 
-    .AdwPreferencesPage {
+    $AdwPreferencesPage {
 
-      .AdwPreferencesGroup {
+      $AdwPreferencesGroup {
             Adw.EntryRow entry_cookie_key {
                 hexpand: true;
                 title: _("Name");
                 use-underline: true;
-                changed => on_entry_changed();
+                changed => $on_entry_changed();
             }
 
             Adw.EntryRow entry_cookie_value {
                 hexpand: true;
                 title: _("Value");
                 use-underline: true;
-                changed => on_entry_changed();
+                changed => $on_entry_changed();
             }
       }
-      .AdwPreferencesGroup {
+      $AdwPreferencesGroup {
             Adw.EntryRow entry_cookie_domain {
 
                 title: _("Domain");
@@ -70,7 +70,7 @@ template CookieDialog : .AdwWindow {
                 title: _("Expirable");
                 enable-expansion: false;
 
-                .DateRow entry_cookie_expires{
+                $DateRow entry_cookie_expires{
                     title: _("Expires");
                     subtitle: _("Select date");
                     use-underline: true;

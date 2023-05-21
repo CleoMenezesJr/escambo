@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-template PupulatorEntry:
+template $PupulatorEntry:
 Adw.ActionRow {
 	title: "Pupulator Entry";
 	subtitle: _("Pupulator Entry");
@@ -10,7 +10,7 @@ Adw.ActionRow {
             valign: center;
             icon-name: "document-edit-symbolic";
             tooltip-text: _("Edit");
-            clicked => on_edit();
+            clicked => $on_edit();
 
             styles [
                 "flat",
