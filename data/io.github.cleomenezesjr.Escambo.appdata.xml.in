@@ -29,8 +29,22 @@
   <description>
     <p>Escambo is an HTTP-based APIs test application for GNOME.</p>
   </description>
-  <content_rating type="oars-1.1" />
+  <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.1.1" date="2023-05-21">
+      <description>
+        <ul>
+          <li>Fix inability to select response code</li>
+          <li>Update to Blueprint to 0.8.1</li>
+          <li>Update Brazilian Portuguese translation</li>
+          <li>Add German translation</li>
+          <li>Be able to create Header with empty value</li>
+          <li>Check for duplicate data keys</li>
+          <li>Add new way to add new Body Form Data</li>
+          <li>and many more</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.0" date="2023-05-13">
       <description>
         <p>Welcome to Escambo</p>
