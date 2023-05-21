@@ -52,4 +52,5 @@ class HeaderDialog(Adw.Window):
         # Enable/Disable add button
         self.btn_add.props.sensitive = (
             self.entry_header_key.get_text()
+            and self.entry_header_value.get_text()
         )
