@@ -72,7 +72,7 @@ class EscamboApplication(Adw.Application):
             application_name="Escambo",
             application_icon="io.github.cleomenezesjr.Escambo",
             developer_name="Cleo Menezes Jr.",
-            version="0.1.0",
+            version="0.1.1",
             developers=["Cleo Menezes Jr. https://github.com/CleoMenezesJr"],
             copyright="© 2022 Cleo Menezes Jr.",
             comments="An HTTP-based APIs test application for GNOME.",
