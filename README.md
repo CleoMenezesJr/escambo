@@ -77,3 +77,4 @@ This does not only look great but also makes you rethink what to add to a commit
 
 The name is an allusion to the exchange mechanism that allows communication between the application and other external systems.
 With affection, I want to start giving more meaning to the culture and history of Brazil through my apps.
+

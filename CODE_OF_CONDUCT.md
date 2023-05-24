@@ -5,3 +5,4 @@ Much like a good many other open source projects, this is not a democracy. At be
 Other than that, basically just be cool. If you're cool, I'll be cool and we're all cool. Cool? Do we really need any other rules?
 
 The owner of this repository (Cleo Menezes Jr.) reserves the right, at his whim, to decide what "cool" means at any particular moment. But as a guideline, "cool" is generally defined as being kind and respectful to others.
+
