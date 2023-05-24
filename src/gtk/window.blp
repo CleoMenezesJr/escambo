@@ -21,6 +21,9 @@ template $EscamboWindow : Adw.ApplicationWindow {
                             stack: stack;
                             title: bind template.title;
                         };
+                    styles [
+                      "flat",
+                    ]
                     [end]
                     MenuButton {
                         icon-name: "open-menu-symbolic";
@@ -471,6 +474,9 @@ template $EscamboWindow : Adw.ApplicationWindow {
                         Adw.WindowTitle {
                             title: "Form Data";
                         };
+                        styles [
+                          "flat",
+                        ]
 
                         [start]
                         Button {
@@ -524,6 +530,9 @@ template $EscamboWindow : Adw.ApplicationWindow {
                         Adw.WindowTitle {
                             title: "Edit Parameters";
                         };
+                        styles [
+                          "flat",
+                        ]
 
                         [start]
                         Button {
