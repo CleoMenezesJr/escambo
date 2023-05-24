@@ -30,7 +30,7 @@ from escambo.date_row import DateRow
 from escambo.dialog_body import BodyDialog
 from escambo.dialog_cookies import CookieDialog
 from escambo.dialog_headers import HeaderDialog
-from escambo.populator_entry import PupulatorEntry
+from escambo.populator_entry import PopulatorEntry
 from escambo.restapi import ResolveRequests
 from escambo.sourceview import SourceView
 from gi.repository import Adw, Gio, GLib, Gtk
@@ -388,7 +388,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                     json.dump(file_content, file, indent=2)
 
                     # Populate UI
-                    _entry = PupulatorEntry(
+                    _entry = PopulatorEntry(
                         window=self,
                         override=[
                             insertion_date,
@@ -432,7 +432,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                     json.dump(file_content, file, indent=2)
 
                     # Populate UI
-                    _entry = PupulatorEntry(
+                    _entry = PopulatorEntry(
                         window=self,
                         override=[
                             insertion_date,
@@ -479,7 +479,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                     json.dump(file_content, file, indent=2)
 
                     # Populate UI
-                    _entry = PupulatorEntry(
+                    _entry = PopulatorEntry(
                         window=self,
                         override=[
                             insertion_date,
@@ -520,7 +520,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                             json.dump(file_content, file, indent=2)
 
                             # Populate UI
-                            _entry = PupulatorEntry(
+                            _entry = PopulatorEntry(
                                 window=self,
                                 override=[param_key, param_value],
                                 content=PARAM,
@@ -575,7 +575,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                             self, f"group_overrides_{files[file][1]}"
                         ).set_description("")
                         for override in overrides:
-                            _entry = PupulatorEntry(
+                            _entry = PopulatorEntry(
                                 window=self,
                                 override=[override, overrides[override]],
                                 content=files[file][0],
@@ -588,7 +588,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                                 _entry,
                             )
                 else:
-                    PupulatorEntry(
+                    PopulatorEntry(
                         window=self,
                         override=overrides,
                         content=files[file][0],
