@@ -9,8 +9,8 @@ from gi.repository import Adw, Gtk
 @Gtk.Template(
     resource_path="/io/github/cleomenezesjr/Escambo/gtk/populator-entry.ui"
 )
-class PupulatorEntry(Adw.ActionRow):
-    __gtype_name__ = "PupulatorEntry"
+class PopulatorEntry(Adw.ActionRow):
+    __gtype_name__ = "PopulatorEntry"
 
     # region Widgets
     btn_remove = Gtk.Template.Child()
