@@ -64,3 +64,4 @@ def str_to_dict_cookie(cookies: str, id: str = None) -> dict:
                     case "path":
                         dict_cookie[formatted_key] = formatted_value
     return dict_cookie
+

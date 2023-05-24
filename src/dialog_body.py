@@ -53,3 +53,4 @@ class BodyDialog(Adw.Window):
         self.btn_add.props.sensitive = (
             self.entry_body_key.get_text() and self.entry_body_value.get_text()
         )
+

@@ -136,3 +136,4 @@ class ResolveRequests:
                 self.session.headers.update(
                     {"Authorization": f"Bearer {auth_values[auth_type][0]}"}
                 )
+

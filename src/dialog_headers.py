@@ -53,3 +53,4 @@ class HeaderDialog(Adw.Window):
         self.btn_add.props.sensitive = (
             self.entry_header_key.get_text()
         )
+

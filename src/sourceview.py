@@ -34,3 +34,4 @@ class SourceView(GtkSource.View):
             self.text_buffer.set_style_scheme(self._adwaita_dark)
         else:
             self.text_buffer.set_style_scheme(self._adwaita)
+

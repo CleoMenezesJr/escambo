@@ -145,3 +145,4 @@ class PupulatorEntry(Adw.ActionRow):
                 content=self,
             )
             new_window.present()
+

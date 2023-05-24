@@ -52,3 +52,4 @@ class DateRow(Adw.ActionRow):
     def _add_leading_zero(self, spin_button):
         spin_button.props.text = format(int(spin_button.props.value), "02")
         return True
+

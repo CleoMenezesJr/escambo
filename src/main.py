@@ -107,3 +107,4 @@ def main(version):
     """The application's entry point."""
     app = EscamboApplication()
     return app.run(sys.argv)
+

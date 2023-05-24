@@ -543,7 +543,6 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     def populate_overrides_list(self) -> None:
         # TODO populate url preview with parameters
-
         """
         This function populate rows from json files
         """
@@ -698,3 +697,4 @@ class EscamboWindow(Adw.ApplicationWindow):
         type = widget.props.selected_item.get_string()
         self.bearer_token_prefs.props.visible = type == "Bearer Token"
         self.api_key_prefs.props.visible = type == "Api Key"
+

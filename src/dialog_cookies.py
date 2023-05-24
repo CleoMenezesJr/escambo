@@ -89,3 +89,4 @@ class CookieDialog(Adw.Window):
             self.entry_cookie_key.get_text()
             and self.entry_cookie_value.get_text()
         )
+
