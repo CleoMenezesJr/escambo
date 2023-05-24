@@ -543,6 +543,7 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     def populate_overrides_list(self) -> None:
         # TODO populate url preview with parameters
+
         """
         This function populate rows from json files
         """
