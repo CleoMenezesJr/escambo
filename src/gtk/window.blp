@@ -74,18 +74,6 @@ template $EscamboWindow : Adw.ApplicationWindow {
                                                     }
                                                 }
 
-                                                Button btn_send_request {
-                                                    halign: center;
-                                                    label: _("Send Request");
-                                                    //margin-bottom: 12;
-                                                    tooltip-text: "Send REST";
-
-                                                    styles [
-                                                    "pill",
-                                                    "suggested-action",
-                                                    ]
-                                                }
-
                                                 Adw.PreferencesGroup {
 
                                                       Adw.ExpanderRow expander_row_parameters {
@@ -168,6 +156,18 @@ template $EscamboWindow : Adw.ApplicationWindow {
                                                         }
                                                       }
 
+                                                }
+
+                                                Button btn_send_request {
+                                                    halign: center;
+                                                    label: _("Send Request");
+                                                    //margin-bottom: 12;
+                                                    tooltip-text: "Send REST";
+
+                                                    styles [
+                                                    "pill",
+                                                    "suggested-action",
+                                                    ]
                                                 }
                                             };
                                     };
