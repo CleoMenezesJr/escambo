@@ -24,6 +24,10 @@ template $EscamboWindow : Adw.ApplicationWindow {
 
           ;
 
+          styles [
+            "flat",
+          ]
+
           [end]
           MenuButton {
             icon-name: "open-menu-symbolic";
@@ -539,8 +543,12 @@ template $EscamboWindow : Adw.ApplicationWindow {
 
           Adw.HeaderBar {
             title-widget: Adw.WindowTitle {
-              title: "Form Data";
+              title: _("Form Data");
             }
+
+            styles [
+              "flat",
+            ]
 
             ;
 
@@ -601,8 +609,12 @@ template $EscamboWindow : Adw.ApplicationWindow {
 
         Adw.HeaderBar {
           title-widget: Adw.WindowTitle {
-            title: "Edit Parameters";
+            title: _("Edit Parameters");
           }
+
+          styles [
+            "flat",
+          ]
 
           ;
 
