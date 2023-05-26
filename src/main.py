@@ -65,17 +65,17 @@ class EscamboApplication(Adw.Application):
             ["<primary>r"],
         )
 
-    def on_about_action(self, widget, _):
+    def on_about_action(self, *args):
         """Callback for the app.about action."""
         about = Adw.AboutWindow(
             transient_for=self.props.active_window,
-            application_name="Escambo",
+            application_name=_("Escambo"),
             application_icon="io.github.cleomenezesjr.Escambo",
             developer_name="Cleo Menezes Jr.",
             version="0.1.1",
             developers=["Cleo Menezes Jr. https://github.com/CleoMenezesJr"],
             copyright="© 2022 Cleo Menezes Jr.",
-            comments="An HTTP-based APIs test application for GNOME.",
+            comments=_("An HTTP-based APIs test application for GNOME."),
             license_type=Gtk.License.GPL_3_0,
             issue_url="https://github.com/CleoMenezesJr/escambo/issues/new",
             support_url="https://ko-fi.com/cleomenezesjr",
