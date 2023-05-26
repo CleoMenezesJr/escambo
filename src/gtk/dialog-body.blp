@@ -6,6 +6,7 @@ template $BodyDialog : $AdwWindow {
   modal: true;
 
   ShortcutController {
+
     Shortcut {
       trigger: "Escape";
       action: "action(window.close)";
@@ -31,26 +32,29 @@ template $BodyDialog : $AdwWindow {
         sensitive: false;
         clicked => $on_save();
 
-        styles ["suggested-action"]
+        styles [
+          "suggested-action",
+        ]
       }
     }
 
     $AdwPreferencesPage {
 
       $AdwPreferencesGroup {
-            Adw.EntryRow entry_body_key {
-                hexpand: true;
-                title: _("Key");
-                use-underline: true;
-                changed => $on_entry_changed();
-            }
 
-            Adw.EntryRow entry_body_value {
-                hexpand: true;
-                title: _("Value");
-                use-underline: true;
-                changed => $on_entry_changed();
-            }
+        Adw.EntryRow entry_body_key {
+            hexpand: true;
+            title: _("Key");
+            use-underline: true;
+            changed => $on_entry_changed();
+        }
+
+        Adw.EntryRow entry_body_value {
+            hexpand: true;
+            title: _("Value");
+            use-underline: true;
+            changed => $on_entry_changed();
+        }
       }
     }
   }
