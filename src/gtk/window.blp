@@ -490,7 +490,6 @@ template $EscamboWindow : Adw.ApplicationWindow {
                 ScrolledWindow {
                     vexpand: true;
                     child:
-                    Adw.ToastOverlay toast_overlay {
                         Adw.Clamp {
                             margin-top: 24;
                             margin-start: 12;
@@ -516,7 +515,7 @@ template $EscamboWindow : Adw.ApplicationWindow {
                                     Adw.PreferencesGroup group_overrides_body {}
                                 };
                         }
-                    };
+                    ;
                 }
             }
             //Leaflet Form Data end
