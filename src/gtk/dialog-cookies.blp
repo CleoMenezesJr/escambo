@@ -6,7 +6,6 @@ template $CookieDialog : $AdwWindow {
   modal: true;
 
   ShortcutController {
-
     Shortcut {
       trigger: "Escape";
       action: "action(window.close)";
@@ -32,56 +31,51 @@ template $CookieDialog : $AdwWindow {
         sensitive: false;
         clicked => $on_save();
 
-        styles [
-          "suggested-action",
-        ]
+        styles ["suggested-action"]
       }
     }
 
     $AdwPreferencesPage {
 
       $AdwPreferencesGroup {
+            Adw.EntryRow entry_cookie_key {
+                hexpand: true;
+                title: _("Name");
+                use-underline: true;
+                changed => $on_entry_changed();
+            }
 
-        Adw.EntryRow entry_cookie_key {
-          hexpand: true;
-          title: _("Name");
-          use-underline: true;
-          changed => $on_entry_changed();
-        }
-
-        Adw.EntryRow entry_cookie_value {
-          hexpand: true;
-          title: _("Value");
-          use-underline: true;
-          changed => $on_entry_changed();
-        }
+            Adw.EntryRow entry_cookie_value {
+                hexpand: true;
+                title: _("Value");
+                use-underline: true;
+                changed => $on_entry_changed();
+            }
       }
-
       $AdwPreferencesGroup {
+            Adw.EntryRow entry_cookie_domain {
 
-        Adw.EntryRow entry_cookie_domain {
-          title: _("Domain");
-          text: "domain.com";
-          use-underline: true;
-        }
+                title: _("Domain");
+                text: "domain.com";
+                use-underline: true;
+            }
 
-        Adw.EntryRow entry_cookie_path {
-          title: _("Path");
-          text: "/";
-          use-underline: true;
-        }
+            Adw.EntryRow entry_cookie_path {
+                title: _("Path");
+                text: "/";
+                use-underline: true;
+            }
+            Adw.ExpanderRow expander_row_expires {
+                show-enable-switch: true;
+                title: _("Expirable");
+                enable-expansion: false;
 
-        Adw.ExpanderRow expander_row_expires {
-          show-enable-switch: true;
-          title: _("Expirable");
-          enable-expansion: false;
-
-          $DateRow entry_cookie_expires{
-            title: _("Expires");
-            subtitle: _("Select date");
-            use-underline: true;
+                $DateRow entry_cookie_expires{
+                    title: _("Expires");
+                    subtitle: _("Select date");
+                    use-underline: true;
+                }
           }
-        }
       }
     }
   }
