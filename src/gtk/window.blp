@@ -2,597 +2,690 @@ using Gtk 4.0;
 using Adw 1;
 
 template $EscamboWindow : Adw.ApplicationWindow {
-    default-width: 769;
-    default-height: 490;
-    title: _("Escambo");
+  default-width: 769;
+  default-height: 490;
+  title: _("Escambo");
 
-    Adw.ToastOverlay toast_overlay {
-        Adw.Leaflet leaflet {
-            can-unfold: false;
+  Adw.ToastOverlay toast_overlay {
 
-            //Leaflet Home
-            Box home {
+    Adw.Leaflet leaflet {
+      can-unfold: false;
+
+      //Leaflet Home
+      Box home {
+        orientation: vertical;
+
+        Adw.HeaderBar header_color {
+          centering-policy: strict;
+          title-widget: Adw.ViewSwitcherTitle switcher_title {
+            stack: stack;
+            title: bind template.title;
+          }
+
+          ;
+
+          styles [
+            "flat",
+          ]
+
+          [end]
+          MenuButton {
+            icon-name: "open-menu-symbolic";
+            menu-model: primary_menu;
+          }
+        }
+
+        Adw.ViewStack stack {
+          vexpand: true;
+
+          //Endpoint start
+          Adw.ViewStackPage {
+            name: "endpoint";
+            title: _("_Endpoint");
+            icon-name: "network-transmit-receive-symbolic";
+            use-underline: true;
+            child:
+            ScrolledWindow {
+              child:
+              Adw.Clamp {
+                margin-top: 24;
+                margin-start: 12;
+                margin-end: 12;
+                tightening-threshold: 300;
+                child:
+                Box {
+                  orientation: vertical;
+                  spacing: 24;
+
+                  Adw.PreferencesGroup {
+
+                    Adw.ComboRow entry_method {
+                      subtitle: _("HTTP request methods");
+                      title: _("Method");
+                      model: StringList {
+                        strings [
+                          _("GET"),
+                          _("POST"),
+                          _("PUT"),
+                          _("PATCH"),
+                          _("DELETE"),
+                        ]
+                      }
+
+                      ;
+
+                      notify::selected-item => $on_entry_method_changed();
+                    }
+
+                    Adw.EntryRow entry_url {
+                      title: _("URL");
+                      use-underline: true;
+                      changed => $on_entry_url_changed();
+                    }
+                  }
+
+                  Button btn_send_request {
+                    halign: center;
+                    label: _("Send Request");
+                    //margin-bottom: 12;
+                    tooltip-text: _("Send REST");
+
+                    styles [
+                      "pill",
+                      "suggested-action",
+                    ]
+                  }
+
+                  Adw.PreferencesGroup {
+
+                    Adw.ExpanderRow expander_row_parameters {
+                      show-enable-switch: true;
+                      title: _("Query Parameters");
+                      subtitle: "https://?";
+                      notify::enable-expansion => $on_param_switch_changed();
+
+                      Adw.ActionRow btn_edit_param {
+                        title: _("Go to edit Parameters");
+                        use-underline: true;
+                        activatable: true;
+                        activated => $on_edit_param_btn();
+
+                        Image {
+                          icon-name: "go-next-symbolic";
+                        }
+                      }
+                    }
+                  }
+
+                  Adw.PreferencesGroup {
+
+                    Adw.ExpanderRow expander_row_body {
+                      show-enable-switch: true;
+                      title: _("Body");
+                      notify::enable-expansion => $on_body_switch_changed();
+
+                      Adw.ActionRow btn_edit_body {
+                        title: _("Go to edit Body");
+                        use-underline: true;
+                        activatable: true;
+                        activated => $on_edit_body_btn();
+
+                        Box {
+                          valign: center;
+                          homogeneous: true;
+
+                          styles [
+                            "linked",
+                          ]
+
+                            ToggleButton form_data_toggle_button_body {
+                              child:
+                              Box {
+                                valign: center;
+
+                                Label counter_label_form_data_body {
+                                  valign: center;
+                                  margin-top: 2;
+                                  margin-end: 4;
+
+                                  styles [
+                                    "status-badge",
+                                    "numeric",
+                                  ]
+                                }
+
+                                Label {
+                                  label: _("Form Data");
+                                }
+                              }
+
+                              ;
+                            }
+
+                            ToggleButton raw_toggle_button_body {
+                              active: true;
+                              label: _("Raw");
+                              group: form_data_toggle_button_body;
+                              toggled => $on_body_type_changed();
+                            }
+                          }
+
+                          Separator {
+                           margin-top: 12;
+                           margin-bottom: 12;
+                          }
+
+                          Image {
+                            icon-name: "go-next-symbolic";
+                          }
+                        }
+                      }
+                    }
+                  }
+
+                  ;
+                }
+
+                ;
+              }
+
+              ;
+            }
+            //Endpoint end
+
+            //Cookies start
+            Adw.ViewStackPage cookies_page {
+              name: "cookies";
+              title: _("_Cookies");
+              icon-name: "auth-fingerprint-symbolic";
+              use-underline: true;
+              child:
+              ScrolledWindow {
+                child:
+                Adw.Clamp {
+                  margin-top: 24;
+                  margin-start: 12;
+                  margin-end: 12;
+                  tightening-threshold: 300;
+                  child:
+                  Box {
+                    orientation: vertical;
+                    spacing: 20;
+
+                    Adw.PreferencesGroup {
+
+                      Adw.ActionRow row_cookie {
+                        activatable-widget: switch_cookies;
+                        title: _("Cookies");
+
+                        Switch switch_cookies {
+                          valign: center;
+                          active: true;
+                          state-set => $on_cookies_switch_state_change();
+                        }
+                      }
+
+                      Adw.ActionRow create_new_cookie {
+                        /* icon-name: "list-add-symbolic"; */
+                        title: _("Create New Cookie...");
+                        activatable: true;
+
+                        Image {
+                          icon-name: "go-next-symbolic";
+
+                          styles [
+                            "dim-label",
+                          ]
+                        }
+                      }
+                    }
+
+                    Separator {
+                      visible: false;
+                    }
+
+                    Adw.PreferencesGroup group_overrides_cookies {
+                    }
+                  }
+
+                  ;
+                }
+
+                ;
+              }
+
+              ;
+            }
+            //Cookies end
+
+            //Headers start
+            Adw.ViewStackPage headers_page {
+              name: "headers";
+              title: _("_Headers");
+              icon-name: "user-info-symbolic";
+              use-underline: true;
+              child:
+              ScrolledWindow {
+                child:
+                Adw.Clamp {
+                  margin-top: 24;
+                  margin-start: 12;
+                  margin-end: 12;
+                  tightening-threshold: 300;
+                  child:
+                  Box {
+                    orientation: vertical;
+                    spacing: 20;
+
+                    Adw.PreferencesGroup {
+
+                      Adw.ActionRow row_headers {
+                        activatable-widget: switch_headers;
+                        title: _("Headers");
+
+                        Switch switch_headers {
+                          valign: center;
+                          active: true;
+                          state-set => $on_headers_switch_state_change();
+                        }
+                      }
+
+                      Adw.ActionRow create_new_header {
+                        title: _("Create New Header...");
+                        activatable: true;
+
+                        Image {
+                          icon-name: "go-next-symbolic";
+
+                          styles [
+                            "dim-label",
+                          ]
+                        }
+                      }
+                    }
+
+                    Separator {
+                      visible: false;
+                    }
+
+                    Adw.PreferencesGroup group_overrides_headers {
+                    }
+                  }
+
+                  ;
+                }
+
+                ;
+              }
+
+              ;
+            }
+            //Headers end
+
+            //Auth start
+            Adw.ViewStackPage auths_page{
+              name: "auth";
+              title: _("Authorization");
+              icon-name: "channel-secure-symbolic";
+              use-underline: true;
+              child:
+              ScrolledWindow {
+                child:
+                Adw.Clamp {
+                  margin-top: 24;
+                  margin-start: 12;
+                  margin-end: 12;
+                  tightening-threshold: 300;
+                  child:
+                  Box {
+                    orientation: vertical;
+                    spacing: 20;
+
+                    Adw.PreferencesGroup {
+
+                      Adw.ActionRow row_auth {
+                        activatable-widget: switch_auths;
+                        title: _("Authorization");
+
+                        Switch switch_auths {
+                          valign: center;
+                          active: true;
+                          state-set => $on_auths_switch_state_change();
+                        }
+                      }
+
+                      Adw.ComboRow auth_type {
+                        title: _("Type");
+                        model: StringList {
+                          strings [
+                            "Api Key",
+                            "Bearer Token",
+                          ]
+                        }
+
+                        ;
+
+                        notify::selected-item => $on_auth_type_changed();
+                      }
+                    }
+
+                    Adw.PreferencesGroup api_key_prefs {
+
+                      Adw.EntryRow api_key_auth_key {
+                        title: _("Key");
+                        show-apply-button: true;
+                      }
+
+                      Adw.EntryRow api_key_auth_value {
+                        title: _("Value");
+                        show-apply-button: true;
+                      }
+
+                      Adw.ComboRow api_key_auth_add_to {
+                        title: _("Add to");
+                        model: StringList {
+                          strings [
+                            _("Header"),
+                            _("Query Parameters"),
+                          ]
+                        }
+
+                        ;
+
+                        notify::selected-item => $on_auth_entry_active();
+                      }
+                    }
+
+                    Adw.PreferencesGroup bearer_token_prefs {
+                      visible: false;
+
+                      Adw.EntryRow bearer_token {
+                        title: _("Token");
+                        show-apply-button: true;
+                      }
+                    }
+                  }
+
+                  ;
+                }
+
+                ;
+              }
+
+              ;
+            }
+            //Auth end
+          }
+
+          Adw.ViewSwitcherBar switcher_bar {
+            stack: stack;
+            reveal: bind switcher_title.title-visible;
+          }
+        }
+        //Leaflet Home end
+
+        //Leaflet Response
+        Box response_page {
+
+          Stack response_stack {
+            transition-type: crossfade;
+
+            StackPage {
+              name: "loading";
+              child:
+              Box {
+                orientation: vertical;
+                spacing: 12;
+                margin-top: 12;
+                margin-bottom: 12;
+                margin-start: 12;
+                margin-end: 12;
+                halign: center;
+                valign: center;
+                vexpand: true;
+                hexpand: true;
+
+                Spinner spinner {
+                  width-request: 32;
+                  height-request: 32;
+                }
+
+                Label {
+                  wrap: true;
+                  label: _("Loading…");
+
+                  styles [
+                    "title-1",
+                  ]
+                }
+              }
+
+              ;
+            }
+
+            StackPage {
+              name: "response";
+              child:
+              Box {
+                vexpand: true;
+                hexpand: true;
                 orientation: vertical;
 
-                Adw.HeaderBar header_color {
-                    centering-policy: strict;
-                    title-widget:
-                        Adw.ViewSwitcherTitle switcher_title {
-                            stack: stack;
-                            title: bind template.title;
-                        };
+                Adw.HeaderBar {
+                  title-widget: Adw.WindowTitle response_page_header {
+                    title: _("Response");
+                  }
+
+                  ;
+
+                  [start]
+                  Button {
+                    valign: center;
+                    tooltip-text: _("Back");
+                    icon-name: "go-previous-symbolic";
+                    clicked => $go_home();
+                  }
+                }
+
+                ScrolledWindow {
+                  hexpand: true;
+                  vexpand: true;
+                  child:
+                  $SourceView response_source_view {
+                  }
+
+                  ;
+                }
+              }
+
+              ;
+            }
+          }
+        }
+        //Leaflet Response end
+
+        //Leaflet Raw
+        Box raw_page_body {
+          orientation: vertical;
+
+          Adw.HeaderBar {
+            title-widget: Adw.WindowTitle {
+              title: _("Raw");
+              subtitle: _("JSON Format");
+            }
+
+            ;
+
+            [start]
+            Button {
+              valign: center;
+              tooltip-text: _("Back");
+              icon-name: "go-previous-symbolic";
+              clicked => $go_home();
+            }
+          }
+
+          ScrolledWindow {
+            hexpand: true;
+            vexpand: true;
+            child:
+            $SourceView raw_source_view_body {
+            }
+
+            ;
+          }
+        }
+        //Leaflet Raw end
+
+        //Leaflet Form Data
+        Box form_data_page_body {
+          orientation: vertical;
+
+          Adw.HeaderBar {
+            title-widget: Adw.WindowTitle {
+              title: _("Form Data");
+            }
+
+            ;
+
+            styles [
+              "flat",
+            ]
+
+            [start]
+            Button {
+              valign: center;
+              tooltip-text: _("Back");
+              icon-name: "go-previous-symbolic";
+              clicked => $go_home();
+            }
+          }
+
+          ScrolledWindow {
+            vexpand: true;
+            child:
+            Adw.ToastOverlay toast_overlaa {
+              Adw.Clamp {
+                margin-top: 24;
+                margin-start: 12;
+                margin-end: 12;
+                tightening-threshold: 300;
+                child:
+                Box {
+                  orientation: vertical;
+                  spacing: 20;
+
+                  Adw.PreferencesGroup {
+                    Adw.ActionRow create_new_body {
+                      /* icon-name: "list-add-symbolic"; */
+                      title: _("Create New Body...");
+                      activatable: true;
+                      Image {
+                        icon-name: "go-next-symbolic";
+
+                        styles [
+                          "dim-label",
+                        ]
+                      }
+                    }
+                  }
+
+                  Adw.PreferencesGroup group_overrides_body {
+                  }
+                }
+
+                ;
+              }
+            }
+
+            ;
+          }
+        }
+        //Leaflet Form Data end
+
+        //Leaflet Edit Parameters
+        Box form_data_page_parameters {
+        orientation: vertical;
+
+        Adw.HeaderBar {
+          title-widget: Adw.WindowTitle {
+            title: _("Edit Parameters");
+          }
+
+          ;
+
+          styles [
+            "flat",
+          ]
+
+          [start]
+          Button {
+            valign: center;
+            tooltip-text: _("Back");
+            icon-name: "go-previous-symbolic";
+            clicked => $go_home();
+          }
+        }
+
+        ScrolledWindow {
+          vexpand: true;
+          child:
+          Adw.ToastOverlay {
+
+            Adw.Clamp {
+              margin-top: 24;
+              margin-start: 12;
+              margin-end: 12;
+              tightening-threshold: 300;
+              child:
+              Box {
+                orientation: vertical;
+                spacing: 20;
+
+                Adw.PreferencesGroup {
+                  title: _("New Parameter");
+                  header-suffix: Button btn_add_parameter {
+                    child:
+                    Adw.ButtonContent {
+                      icon-name: "list-add-symbolic";
+                      label: _("Add");
+                    }
+
+                    ;
+
                     styles [
                       "flat",
                     ]
-                    [end]
-                    MenuButton {
-                        icon-name: "open-menu-symbolic";
-                        menu-model: primary_menu;
-                    }
+                  }
+
+                  ;
+
+                  Adw.EntryRow entry_param_key {
+                    title: _("Key");
+                    use-underline: true;
+                  }
+
+                  Adw.EntryRow entry_param_value {
+                    title: _("Value");
+                    use-underline: true;
+                  }
                 }
 
-                Adw.ViewStack stack {
-                    vexpand: true;
-
-                    //Endpoint start
-                    Adw.ViewStackPage {
-                        name: "endpoint";
-                        title: _("_Endpoint");
-                        icon-name: "network-transmit-receive-symbolic";
-                        use-underline: true;
-                        child:
-                            ScrolledWindow {
-                                child:
-                                    Adw.Clamp {
-                                        margin-top: 24;
-                                        margin-start: 12;
-                                        margin-end: 12;
-                                        tightening-threshold: 300;
-                                        child:
-                                            Box {
-                                                orientation: vertical;
-                                                spacing: 24;
-
-                                                Adw.PreferencesGroup {
-
-                                                    Adw.ComboRow entry_method {
-                                                        subtitle: _("HTTP request methods");
-                                                        title: _("Method");
-                                                        model: StringList {
-                                                            strings [
-                                                                _("GET"),
-                                                                _("POST"),
-                                                                _("PUT"),
-                                                                _("PATCH"),
-                                                                _("DELETE")
-                                                            ]
-                                                        };
-                                                        notify::selected-item => $on_entry_method_changed();
-                                                    }
-
-                                                    Adw.EntryRow entry_url {
-                                                        title: _("URL");
-                                                        use-underline: true;
-                                                        changed => $on_entry_url_changed();
-                                                    }
-                                                }
-
-                                                Button btn_send_request {
-                                                    halign: center;
-                                                    label: _("Send Request");
-                                                    //margin-bottom: 12;
-                                                    tooltip-text: _("Send REST");
-
-                                                    styles [
-                                                    "pill",
-                                                    "suggested-action",
-                                                    ]
-                                                }
-
-                                                Adw.PreferencesGroup {
-
-                                                      Adw.ExpanderRow expander_row_parameters {
-                                                        show-enable-switch: true;
-                                                        title: _("Query Parameters");
-                                                        subtitle: "https://?";
-                                                        notify::enable-expansion => $on_param_switch_changed();
-
-                                                        Adw.ActionRow btn_edit_param {
-                                                            title: _("Go to edit Parameters");
-                                                            use-underline: true;
-                                                            activatable: true;
-                                                            activated => $on_edit_param_btn();
-
-                                                            Image {
-                                                                icon-name: "go-next-symbolic";
-                                                            }
-                                                        }
-                                                      }
-
-                                                }
-
-                                                Adw.PreferencesGroup {
-
-                                                      Adw.ExpanderRow expander_row_body {
-                                                        show-enable-switch: true;
-                                                        title: _("Body");
-                                                        notify::enable-expansion => $on_body_switch_changed();
-
-                                                        Adw.ActionRow btn_edit_body {
-                                                            title: _("Go to edit Body");
-                                                            use-underline: true;
-                                                            activatable: true;
-                                                            activated => $on_edit_body_btn();
-                                                            Box {
-                                                                valign: center;
-                                                                homogeneous: true;
-                                                            
-                                                                styles [
-                                                                    "linked",
-                                                                ]
-                                                                ToggleButton form_data_toggle_button_body {
-                                                                    child:
-                                                                        Box {
-                                                                            valign: center;
-                                                            
-                                                                            Label counter_label_form_data_body {
-                                                                                valign: center;
-                                                                                margin-top: 2;
-                                                                                margin-end: 4;
-                                                            
-                                                                                styles [
-                                                                                    "status-badge",
-                                                                                    "numeric",
-                                                                                ]
-                                                                            }
-                                                            
-                                                                            Label {
-                                                                                label: _("Form Data");
-                                                                            }
-                                                                        };
-                                                                }
-                                                            
-                                                            
-                                                                ToggleButton raw_toggle_button_body {
-                                                                    active: true;
-                                                                    label: _("Raw");
-                                                                    group: form_data_toggle_button_body;
-                                                                    toggled => $on_body_type_changed();
-                                                                }
-                                                            }
-                                                            Separator {
-                                                               margin-top: 12;
-                                                               margin-bottom: 12;
-                                                            }
-
-                                                            Image {
-                                                                icon-name: "go-next-symbolic";
-                                                            }
-                                                        }
-                                                      }
-
-                                                }
-                                            };
-                                    };
-                            };
-                    }
-                    //Endpoint end
-
-                    //Cookies start
-                    Adw.ViewStackPage cookies_page {
-                        name: "cookies";
-                        title: _("_Cookies");
-                        icon-name: "auth-fingerprint-symbolic";
-                        use-underline: true;
-                        child:
-                            ScrolledWindow {
-                                child:
-                                    Adw.Clamp {
-                                        margin-top: 24;
-                                        margin-start: 12;
-                                        margin-end: 12;
-                                        tightening-threshold: 300;
-                                        child:
-                                            Box {
-                                                orientation: vertical;
-                                                spacing: 20;
-
-                                                Adw.PreferencesGroup {
-                                                    Adw.ActionRow row_cookie {
-                                                        activatable-widget: switch_cookies;
-                                                        title: _("Cookies");
-
-                                                        Switch switch_cookies {
-                                                            valign: center;
-                                                            active: true;
-                                                            state-set => $on_cookies_switch_state_change();
-                                                        }
-                                                    }
-                                                    Adw.ActionRow create_new_cookie {
-                                                        /* icon-name: "list-add-symbolic"; */
-                                                        title: _("Create New Cookie...");
-                                                        activatable: true;
-                                                        Image {
-                                                            icon-name: "go-next-symbolic";
-                                                            styles ["dim-label"]
-                                                        }
-                                                    }
-                                                }
-                                                Separator {
-                                                    visible: false;
-                                                }
-
-                                                Adw.PreferencesGroup group_overrides_cookies {
-                                                }
-                                            };
-                                    };
-                            };
-                    }
-                    //Cookies end
-
-                    //Headers start
-                    Adw.ViewStackPage headers_page {
-                        name: "headers";
-                        title: _("_Headers");
-                        icon-name: "user-info-symbolic";
-                        use-underline: true;
-                        child:
-                            ScrolledWindow {
-                                child:
-                                    Adw.Clamp {
-                                        margin-top: 24;
-                                        margin-start: 12;
-                                        margin-end: 12;
-                                        tightening-threshold: 300;
-                                        child:
-                                            Box {
-                                                orientation: vertical;
-                                                spacing: 20;
-
-                                                Adw.PreferencesGroup {
-                                                    Adw.ActionRow row_headers {
-                                                        activatable-widget: switch_headers;
-                                                        title: _("Headers");
-
-                                                        Switch switch_headers {
-                                                            valign: center;
-                                                            active: true;
-                                                            state-set => $on_headers_switch_state_change();
-                                                        }
-                                                    }
-                                                    Adw.ActionRow create_new_header {
-                                                        title: _("Create New Header...");
-                                                        activatable: true;
-                                                        Image {
-                                                            icon-name: "go-next-symbolic";
-                                                            styles ["dim-label"]
-                                                        }
-                                                    }
-                                                }
-                                                Separator {
-                                                    visible: false;
-                                                }
-
-                                                Adw.PreferencesGroup group_overrides_headers {
-                                                }
-                                            };
-                                    };
-                            };
-                    }
-                    //Headers end
-
-                    //Auth start
-                    Adw.ViewStackPage auths_page{
-                        name: "auth";
-                        title: _("Authorization");
-                        icon-name: "channel-secure-symbolic";
-                        use-underline: true;
-                        child:
-                            ScrolledWindow {
-                              child:
-                                  Adw.Clamp {
-                                      margin-top: 24;
-                                      margin-start: 12;
-                                      margin-end: 12;
-                                      tightening-threshold: 300;
-                                      child:
-                                          Box {
-                                              orientation: vertical;
-                                              spacing: 20;
-
-                                              Adw.PreferencesGroup {
-                                                  Adw.ActionRow row_auth {
-                                                      activatable-widget: switch_auths;
-                                                      title: _("Authorization");
-
-                                                      Switch switch_auths {
-                                                          valign: center;
-                                                          active: true;
-                                                          state-set => $on_auths_switch_state_change();
-                                                      }
-                                                  }
-                                                  Adw.ComboRow auth_type {
-                                                      title: _("Type");
-                                                      model: StringList {
-                                                          strings [
-                                                              "Api Key",
-                                                              "Bearer Token",
-                                                          ]
-                                                      };
-                                                      notify::selected-item => $on_auth_type_changed();
-                                                  }
-                                              }
-                                              Adw.PreferencesGroup api_key_prefs {
-                                                  Adw.EntryRow api_key_auth_key {
-                                                      title: _("Key");
-                                                      show-apply-button: true;
-                                                  }
-
-                                                  Adw.EntryRow api_key_auth_value {
-                                                      title: _("Value");
-                                                      show-apply-button: true;
-                                                  }
-
-                                                  Adw.ComboRow api_key_auth_add_to {
-                                                      title: _("Add to");
-                                                      model: StringList {
-                                                          strings [
-                                                              _("Header"),
-                                                              _("Query Parameters"),
-                                                          ]
-                                                      };
-                                                      notify::selected-item => $on_auth_entry_active();
-                                                  }
-                                              }
-                                              Adw.PreferencesGroup bearer_token_prefs {
-                                                  visible: false;
-                                                  Adw.EntryRow bearer_token {
-                                                      title: _("Token");
-                                                      show-apply-button: true;
-                                                  }
-                                              }
-                                          };
-                                  };
-                            };
-                    }
-                    //Auth end
+                // TODO change to plural
+                Adw.PreferencesGroup group_overrides_param {
                 }
+              }
 
-                Adw.ViewSwitcherBar switcher_bar {
-                    stack: stack;
-                    reveal: bind switcher_title.title-visible;
-                }
+              ;
             }
-            //Leaflet Home end
+          }
 
-            //Leaflet Response
-            Box response_page {
-                Stack response_stack {
-                    transition-type: crossfade;
-
-                    StackPage {
-                        name: "loading";
-                        child:
-                          Box {
-                              orientation: vertical;
-                              spacing: 12;
-                              margin-top: 12;
-                              margin-bottom: 12;
-                              margin-start: 12;
-                              margin-end: 12;
-                              halign: center;
-                              valign: center;
-                              vexpand: true;
-                              hexpand: true;
-
-                              Spinner spinner {
-                                  width-request: 32;
-                                  height-request: 32;
-                              }
-
-                              Label {
-                                  wrap: true;
-                                  label: _("Loading…");
-
-                                  styles [
-                                      "title-1",
-                                  ]
-                              }
-                          };
-                    }
-
-                    StackPage {
-                        name: "response";
-                            child:
-                                Box {
-                                  vexpand: true;
-                                  hexpand: true;
-                                  orientation: vertical;
-
-                                  Adw.HeaderBar {
-                                      title-widget:
-                                          Adw.WindowTitle response_page_header {
-                                              title: _("Response");
-                                          };
-
-                                          [start]
-                                          Button {
-                                              valign: center;
-                                              tooltip-text: _("Back");
-                                              icon-name: "go-previous-symbolic";
-                                              clicked => $go_home();
-                                          }
-                                  }
-
-                                  ScrolledWindow {
-                                      hexpand: true;
-                                      vexpand: true;
-                                      child:
-                                          $SourceView response_source_view {};
-                                  }
-                                };
-                    }
-                }
-            }
-            //Leaflet Response end
-
-            //Leaflet Raw
-            Box raw_page_body {
-                orientation: vertical;
-
-                Adw.HeaderBar {
-                    title-widget:
-                        Adw.WindowTitle {
-                            title: _("Raw");
-                            subtitle: _("JSON Format");
-                        };
-
-                        [start]
-                        Button {
-                            valign: center;
-                            tooltip-text: _("Back");
-                            icon-name: "go-previous-symbolic";
-                            clicked => $go_home();
-                        }
-                }
-
-                ScrolledWindow {
-                    hexpand: true;
-                    vexpand: true;
-                    child:
-                        $SourceView raw_source_view_body {};
-                }
-            }
-            //Leaflet Raw end
-
-            //Leaflet Form Data
-            Box form_data_page_body {
-                orientation: vertical;
-
-                Adw.HeaderBar {
-                    title-widget:
-                        Adw.WindowTitle {
-                            title: _("Form Data");
-                        };
-                        styles [
-                          "flat",
-                        ]
-
-                        [start]
-                        Button {
-                            valign: center;
-                            tooltip-text: _("Back");
-                            icon-name: "go-previous-symbolic";
-                            clicked => $go_home();
-                        }
-                }
-
-                ScrolledWindow {
-                    vexpand: true;
-                    child:
-                    Adw.ToastOverlay toast_overlaa {
-                        Adw.Clamp {
-                            margin-top: 24;
-                            margin-start: 12;
-                            margin-end: 12;
-                            tightening-threshold: 300;
-                            child:
-                                Box {
-                                    orientation: vertical;
-                                    spacing: 20;
-
-                                    Adw.PreferencesGroup {
-                                        Adw.ActionRow create_new_body {
-                                            /* icon-name: "list-add-symbolic"; */
-                                            title: _("Create New Body...");
-                                            activatable: true;
-                                            Image {
-                                                icon-name: "go-next-symbolic";
-                                                styles ["dim-label"]
-                                            }
-                                        }
-                                    }
-
-                                    Adw.PreferencesGroup group_overrides_body {}
-                                };
-                        }
-                    };
-                }
-            }
-            //Leaflet Form Data end
-
-            //Leaflet Edit Parameters
-            Box form_data_page_parameters {
-                orientation: vertical;
-
-                Adw.HeaderBar {
-                    title-widget:
-                        Adw.WindowTitle {
-                            title: _("Edit Parameters");
-                        };
-                        styles [
-                          "flat",
-                        ]
-
-                        [start]
-                        Button {
-                            valign: center;
-                            tooltip-text: _("Back");
-                            icon-name: "go-previous-symbolic";
-                            clicked => $go_home();
-                        }
-                }
-
-                ScrolledWindow {
-                    vexpand: true;
-                    child:
-                    Adw.ToastOverlay {
-                        Adw.Clamp {
-                            margin-top: 24;
-                            margin-start: 12;
-                            margin-end: 12;
-                            tightening-threshold: 300;
-                            child:
-                                Box {
-                                    orientation: vertical;
-                                    spacing: 20;
-
-                                    Adw.PreferencesGroup {
-                                        title: _("New Parameter");
-                                        header-suffix:
-                                            Button btn_add_parameter {
-                                                child:
-                                                    Adw.ButtonContent {
-                                                        icon-name: "list-add-symbolic";
-                                                        label: _("Add");
-                                                    };
-
-                                                    styles [
-                                                        "flat",
-                                                    ]
-                                            };
-
-                                        Adw.EntryRow entry_param_key {
-                                            title: _("Key");
-                                            use-underline: true;
-                                        }
-
-                                        Adw.EntryRow entry_param_value {
-                                            title: _("Value");
-                                            use-underline: true;
-                                        }
-                                    }
-
-                                    // TODO change to plural
-                                    Adw.PreferencesGroup group_overrides_param {}
-                                };
-                        }
-                    };
-                }
-            }
-            //Leaflet Edit Parameters end
+          ;
         }
+      }
+      //Leaflet Edit Parameters end
     }
+  }
 }
 
 menu primary_menu {

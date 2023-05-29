@@ -2,78 +2,85 @@ using Gtk 4.0;
 using Adw 1;
 
 template $DateRow : Adw.ActionRow {
-    activatable: true;
-    activated => $_on_activated();
+  activatable: true;
+  activated => $_on_activated();
+
+  Box {
+    spacing: 6;
+
+    Label label {
+        xalign: 0;
+    }
 
     Box {
-      spacing: 6;
+      valign: center;
 
-      Label label {
-          xalign: 0;
+      Image {
+          icon-name: "x-office-calendar-symbolic";
       }
 
-      Box {
-        valign: center;
+      Popover popover {
 
-        Image {
-            icon-name: "x-office-calendar-symbolic";
-        }
+        Box {
+          spacing: 12;
 
-        Popover popover {
+          Calendar calendar {
+              day-selected => $_on_data_changed();
+          }
+
+          Box {
+            orientation: vertical;
+            spacing: 6;
+
+            Label {
+                label: _("Time");
+                xalign: 0;
+
+                styles [
+                  "heading",
+                ]
+            }
+
             Box {
-                spacing: 12;
+              spacing: 3;
 
-                Calendar calendar {
-                    day-selected => $_on_data_changed();
+              SpinButton hours {
+                orientation: vertical;
+                numeric: true;
+                adjustment: Adjustment {
+                  lower: 0;
+                  upper: 23;
+                  step-increment: 1;
                 }
 
-                Box {
-                    orientation: vertical;
-                    spacing: 6;
+                ;
 
-                    Label {
-                        label: _("Time");
-                        xalign: 0;
-
-                        styles ["heading"]
-                    }
-
-                    Box {
-                        spacing: 3;
-
-                        SpinButton hours {
-                            orientation: vertical;
-                            numeric: true;
-                            adjustment: Adjustment {
-                                lower: 0;
-                                upper: 23;
-                                step-increment: 1;
-                            };
-
-                            value-changed => $_on_data_changed();
-                            output => $_add_leading_zero();
-                        }
-
-                        Label {
-                            label: ":";
-                        }
-
-                        SpinButton minutes {
-                            orientation: vertical;
-                            numeric: true;
-                            adjustment: Adjustment {
-                                lower: 0;
-                                upper: 59;
-                                step-increment: 1;
-                            };
-
-                              value-changed => $_on_data_changed();
-                              output => $_add_leading_zero();
-                          }
-                      }
-                  }
+                value-changed => $_on_data_changed();
+                output => $_add_leading_zero();
               }
+
+              Label {
+                label: ":";
+              }
+
+              SpinButton minutes {
+                orientation: vertical;
+                numeric: true;
+                adjustment: Adjustment {
+                  lower: 0;
+                  upper: 59;
+                  step-increment: 1;
+                }
+
+                ;
+
+                value-changed => $_on_data_changed();
+                output => $_add_leading_zero();
+              }
+            }
           }
         }
+      }
     }
+  }
 }
