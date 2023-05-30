@@ -68,6 +68,12 @@ This does not only look great but also makes you rethink what to add to a commit
 | :fire: `:fire:`                                           | When you removed something.                                               |
 | :truck: `:truck:`                                         | When you moved / renamed something.                                       |
 
+## I want to create a pot file!
+
+You can use this command to create a pot file for translation:
+
+`xgettext --files-from=po/POTFILES --output=po/escambo.pot --from-code=UTF-8 --add-comments --keyword=_ --keyword=C_:1c,2`
+
 ## 🔄 Why "Escambo"
 
 > Escambo, in general, means exchange or barter.
