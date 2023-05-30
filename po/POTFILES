@@ -2,5 +2,12 @@ data/io.github.cleomenezesjr.Escambo.desktop.in
 data/io.github.cleomenezesjr.Escambo.appdata.xml.in
 data/io.github.cleomenezesjr.Escambo.gschema.xml
 src/main.py
+src/populator_entry.py
 src/window.py
+src/gtk/date-row.blp
+src/gtk/dialog-body.blp
+src/gtk/dialog-cookies.blp
+src/gtk/dialog-headers.blp
+src/gtk/help-overlay.ui
+src/gtk/populator-entry.blp
 src/gtk/window.blp
