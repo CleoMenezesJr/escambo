@@ -111,11 +111,11 @@ class PopulatorEntry(Adw.ActionRow):
         subtitle = f"\n{self.get_subtitle()}" if self.get_subtitle() else ""
         dialog = Adw.MessageDialog.new(
             self.window,
-            "Are you sure you want to delete it?",
+            _("Are you sure you want to delete it?"),
             (f"{self.get_title()}{subtitle}"),
         )
-        dialog.add_response("cancel", ("Cancel"))
-        dialog.add_response("ok", ("Delete"))
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("ok", _("Delete"))
         dialog.set_response_appearance(
             "ok", Adw.ResponseAppearance.DESTRUCTIVE
         )
@@ -127,21 +127,21 @@ class PopulatorEntry(Adw.ActionRow):
         if "cookies" in self.content:
             new_window = CookieDialog(
                 parent_window=self.window,
-                title="Edit Cookie",
+                title=_("Edit Cookie"),
                 content=self,
             )
             new_window.present()
         elif "headers" in self.content:
             new_window = HeaderDialog(
                 parent_window=self.window,
-                title="Edit Header",
+                title=_("Edit Header"),
                 content=self,
             )
             new_window.present()
         elif "body" in self.content:
             new_window = BodyDialog(
                 parent_window=self.window,
-                title="Edit Body",
+                title=_("Edit Body"),
                 content=self,
             )
             new_window.present()

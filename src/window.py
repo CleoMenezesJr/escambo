@@ -116,13 +116,13 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.btn_send_request.connect("clicked", self.__on_send)
         # TODO: connect show_*_dialog signal from template
         self.create_new_cookie.connect(
-            "activated", self._show_cookie_dialog, "New Cookie"
+            "activated", self._show_cookie_dialog, _("New Cookie")
         )
         self.create_new_header.connect(
-            "activated", self._show_header_dialog, "New Header"
+            "activated", self._show_header_dialog, _("New Header")
         )
         self.create_new_body.connect(
-            "activated", self._show_body_dialog, "New Body"
+            "activated", self._show_body_dialog, _("New Body")
         )
         self.api_key_auth_key.connect(
             "apply", self.on_auth_entry_active, "api_key_auth_key"
@@ -160,12 +160,12 @@ class EscamboWindow(Adw.ApplicationWindow):
         method = self.entry_method.get_selected()
 
         if not url:
-            self.toast_overlay.add_toast(Adw.Toast.new(("Enter a URL")))
+            self.toast_overlay.add_toast(Adw.Toast.new(_("Enter a URL")))
         else:
             if not is_valid_url(url):
                 self.toast_overlay.add_toast(
                     Adw.Toast.new(
-                        ("URL using bad/illegal format or missing URL")
+                        _("URL using bad/illegal format or missing URL")
                     )
                 )
             else:
@@ -195,7 +195,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                     body = json.loads(raw_code)
                 except ValueError:
                     return self.toast_overlay.add_toast(
-                        Adw.Toast.new(("Body must be in JSON format"))
+                        Adw.Toast.new(_("Body must be in JSON format"))
                     )
             else:
                 body = None
@@ -234,7 +234,7 @@ class EscamboWindow(Adw.ApplicationWindow):
         except exceptions.ConnectionError:
             self.leaflet.set_visible_child(self.home)
             return self.toast_overlay.add_toast(
-                Adw.Toast.new(("Error: Couldn't resolve host name "))
+                Adw.Toast.new(_("Error: Couldn't resolve host name "))
             )
 
         # Dynamically change syntax highlight
@@ -404,11 +404,11 @@ class EscamboWindow(Adw.ApplicationWindow):
                             _entry,
                         )
                         self.toast_overlay.add_toast(
-                            Adw.Toast.new("Cookie created")
+                            Adw.Toast.new(_("Cookie created"))
                         )
                     else:
                         self.toast_overlay.add_toast(
-                            Adw.Toast.new("Cookie edited")
+                            Adw.Toast.new(_("Cookie edited"))
                         )
 
                 self.cookies = file_content
@@ -445,11 +445,11 @@ class EscamboWindow(Adw.ApplicationWindow):
                     ):
                         GLib.idle_add(self.group_overrides_headers.add, _entry)
                         self.toast_overlay.add_toast(
-                            Adw.Toast.new("Header created")
+                            Adw.Toast.new(_("Header created"))
                         )
                     else:
                         self.toast_overlay.add_toast(
-                            Adw.Toast.new("Header edited")
+                            Adw.Toast.new(_("Header edited"))
                         )
 
                 self.headers = file_content
@@ -465,7 +465,7 @@ class EscamboWindow(Adw.ApplicationWindow):
 
                 if any(title == each[0] for each in self.body.values()):
                     self.toast_overlay.add_toast(
-                        Adw.Toast.new(f"Key \"{title}\" already exists")
+                        Adw.Toast.new(_(f"Key “{title}” already exists"))
                     )
                     return
 
@@ -492,11 +492,11 @@ class EscamboWindow(Adw.ApplicationWindow):
                     ):
                         GLib.idle_add(self.group_overrides_body.add, _entry)
                         self.toast_overlay.add_toast(
-                            Adw.Toast.new("Body created")
+                            Adw.Toast.new(_("Body created"))
                         )
                     else:
                         self.toast_overlay.add_toast(
-                            Adw.Toast.new("Body edited")
+                            Adw.Toast.new(_("Body edited"))
                         )
 
                 self.body = file_content
@@ -530,7 +530,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                             )
                         else:
                             return self.toast_overlay.add_toast(
-                                Adw.Toast.new(("Key already exists"))
+                                Adw.Toast.new(_("Key already exists"))
                             )
 
                     self.param = file_content
