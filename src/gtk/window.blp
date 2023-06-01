@@ -4,7 +4,7 @@ using Adw 1;
 template $EscamboWindow : Adw.ApplicationWindow {
   default-width: 769;
   default-height: 490;
-  title: "Escambo";
+  title: _("Escambo");
 
   Adw.ToastOverlay toast_overlay {
 
@@ -88,7 +88,7 @@ template $EscamboWindow : Adw.ApplicationWindow {
                     halign: center;
                     label: _("Send Request");
                     //margin-bottom: 12;
-                    tooltip-text: "Send REST";
+                    tooltip-text: _("Send REST");
 
                     styles [
                       "pill",
@@ -155,7 +155,7 @@ template $EscamboWindow : Adw.ApplicationWindow {
                                 }
 
                                 Label {
-                                  label: "Form Data";
+                                  label: _("Form Data");
                                 }
                               }
 
@@ -400,7 +400,7 @@ template $EscamboWindow : Adw.ApplicationWindow {
                       visible: false;
 
                       Adw.EntryRow bearer_token {
-                        title: "Token";
+                        title: _("Token");
                         show-apply-button: true;
                       }
                     }
@@ -473,7 +473,7 @@ template $EscamboWindow : Adw.ApplicationWindow {
 
                 Adw.HeaderBar {
                   title-widget: Adw.WindowTitle response_page_header {
-                    title: "Response";
+                    title: _("Response");
                   }
 
                   ;
@@ -510,8 +510,8 @@ template $EscamboWindow : Adw.ApplicationWindow {
 
           Adw.HeaderBar {
             title-widget: Adw.WindowTitle {
-              title: "Raw";
-              subtitle: "JSON Format";
+              title: _("Raw");
+              subtitle: _("JSON Format");
             }
 
             ;
