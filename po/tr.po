@@ -1,0 +1,489 @@
+# Turkish translation for gnome-builder.
+# Copyright (C) 2023 gnome-builder's COPYRIGHT HOLDER
+# This file is distributed under the same license as the gnome-builder package.
+#
+# Sabri Ünal <libreajans@gmail.com>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: io.github.cleomenezesjr.Escambo\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-30 06:47+0300\n"
+"PO-Revision-Date: 2023-05-30 06:48+0300\n"
+"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
+"Language-Team: Turkish <takim@gnome.org.tr>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: data/io.github.cleomenezesjr.Escambo.desktop.in:3
+msgid "Escambo"
+msgstr "Escambo"
+
+#: data/io.github.cleomenezesjr.Escambo.desktop.in:4
+msgid "An HTTP-based APIs test application for GNOME"
+msgstr "GNOME için HTTP tabanlı API test uygulaması"
+
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:14
+msgid "Test and develop APIs"
+msgstr "API test et ve geliştir"
+
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:20
+msgid "Main window - Light mode"
+msgstr "Ana pencere - Açık kip"
+
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:26
+msgid "Main window - Dark mode"
+msgstr "Ana pencere - Koyu kip"
+
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:30
+msgid "Escambo is an HTTP-based APIs test application for GNOME."
+msgstr "Escambo, GNOME için HTTP tabanlı API test uygulamasıdır."
+
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:37
+msgid "Fix inability to select response code"
+msgstr "Yanıt kodunu seçememe hatası düzeltildi"
+
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:38
+msgid "Update to Blueprint to 0.8.1"
+msgstr "Blueprint 0.8.1 sürümüne güncellendi"
+
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:39
+msgid "Update Brazilian Portuguese translation"
+msgstr "Brezilya Portekizcesi çevirisi güncellendi"
+
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:40
+msgid "Add German translation"
+msgstr "Almanca çeviri eklendi"
+
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:41
+msgid "Be able to create Header with empty value"
+msgstr "Boş değerle Üst Bilgi oluşturmak artık mümkün"
+
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:42
+msgid "Check for duplicate data keys"
+msgstr "Çift veri anahtarları denetimi"
+
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:43
+msgid "Add new way to add new Body Form Data"
+msgstr "Gövde Formu Verileri eklemenin yeni bir yolu eklendi"
+
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:44
+msgid "and many more"
+msgstr "ve çok daha fazlası"
+
+#: data/io.github.cleomenezesjr.Escambo.appdata.xml.in:50
+msgid "Welcome to Escambo"
+msgstr "Escamboʼya Hoş Geldiniz"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:6
+msgid "Method type"
+msgstr "Metot türü"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:7
+msgid "Select method type dropdown."
+msgstr "Metot türü açılır menüsü seç."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:11 src/gtk/window.blp:81
+msgid "URL"
+msgstr "URL"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:12
+msgid "URL input field content."
+msgstr "URL girdi alanı içeriği."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:16
+msgid "Parameters"
+msgstr "Parametreler"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:17
+msgid "Toggle parameters switch."
+msgstr "Parametreler düğmesini aç/kapat."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:21 src/gtk/window.blp:124
+msgid "Body"
+msgstr "Gövde"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:22
+msgid "Toggle body switch."
+msgstr "Gövde düğmesini aç/kapat."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:26
+msgid "Body type"
+msgstr "Gövde türü"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:27
+msgid "Toggle body type button."
+msgstr "Gövde türü düğmesi aç/kapat."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:31 src/gtk/window.blp:219
+msgid "Cookies"
+msgstr "Çerezler"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:32
+msgid "Toggle cookies switch."
+msgstr "Çerezler düğmesini aç/kapat."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:36 src/gtk/window.blp:284
+msgid "Headers"
+msgstr "Üst Bilgiler"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:37
+msgid "Toggle headers switch."
+msgstr "Üst bilgiler düğmesini aç/kapat."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:41
+msgid "Authorizations"
+msgstr "Yetkilendirme"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:42
+msgid "Toggle authorizations switch."
+msgstr "Yetkilendirme düğmesini aç/kapat."
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:46
+msgid "Authorization type"
+msgstr "Yetkilendirme türü"
+
+#: data/io.github.cleomenezesjr.Escambo.gschema.xml:47
+msgid "Select authorization type dropdown."
+msgstr "Yetkilendirme türü açılır menüsü seç."
+
+#: src/populator_entry.py:114
+msgid "Are you sure you want to delete it?"
+msgstr "Silmek istediğinize emin misiniz?"
+
+#: src/populator_entry.py:117
+msgid "Cancel"
+msgstr "İptal"
+
+#: src/populator_entry.py:118
+msgid "Delete"
+msgstr "Sil"
+
+#: src/populator_entry.py:130
+msgid "Edit Cookie"
+msgstr "Çerez Düzenle"
+
+#: src/populator_entry.py:137
+msgid "Edit Header"
+msgstr "Üst Bilgi Düzenle"
+
+#: src/populator_entry.py:144
+msgid "Edit Body"
+msgstr "Gövde Düzenle"
+
+#: src/window.py:119
+msgid "New Cookie"
+msgstr "Yeni Çerez"
+
+#: src/window.py:122
+msgid "New Header"
+msgstr "Yeni Üst Bilgi"
+
+#: src/window.py:125
+msgid "New Body"
+msgstr "Yeni Gövde"
+
+#: src/window.py:163
+msgid "Enter a URL"
+msgstr "URL giriniz"
+
+#: src/window.py:168
+msgid "URL using bad/illegal format or missing URL"
+msgstr "URL Kötü/geçersiz biçimlendirilmiş veya yok"
+
+#: src/window.py:198
+msgid "Body must be in JSON format"
+msgstr "Gövde JSON biçiminde olmalıdır"
+
+#: src/window.py:237
+msgid "Error: Couldn't resolve host name "
+msgstr "Hata: Ana bilgisayar adı çözümlenemedi"
+
+#: src/window.py:407
+msgid "Cookie created"
+msgstr "Çerez oluşturuldu"
+
+#: src/window.py:411
+msgid "Cookie edited"
+msgstr "Çerez düzenlendi"
+
+#: src/window.py:448
+msgid "Header created"
+msgstr "Üst bilgi oluşturuldu"
+
+#: src/window.py:452
+msgid "Header edited"
+msgstr "Üst bilgi düzenlendi"
+
+#: src/window.py:468
+#, python-brace-format
+msgid "Key “{title}” already exists"
+msgstr "“{title}” anahtarı zaten var"
+
+#: src/window.py:495
+msgid "Body created"
+msgstr "Gövde oluşturuldu"
+
+#: src/window.py:499
+msgid "Body edited"
+msgstr "Gövde düzenlendi"
+
+#: src/window.py:533
+msgid "Key already exists"
+msgstr "Anahtar zaten var"
+
+#: src/gtk/date-row.blp:36
+msgid "Time"
+msgstr "Saat"
+
+#: src/gtk/dialog-body.blp:24 src/gtk/dialog-cookies.blp:24
+#: src/gtk/dialog-headers.blp:24
+msgid "_Cancel"
+msgstr "_İptal"
+
+#: src/gtk/dialog-body.blp:31 src/gtk/dialog-cookies.blp:31
+#: src/gtk/dialog-headers.blp:31 src/gtk/window.blp:651
+msgid "Add"
+msgstr "Ekle"
+
+#: src/gtk/dialog-body.blp:47 src/gtk/dialog-headers.blp:47
+#: src/gtk/window.blp:375 src/gtk/window.blp:664
+msgid "Key"
+msgstr "Anahtar"
+
+#: src/gtk/dialog-body.blp:54 src/gtk/dialog-cookies.blp:54
+#: src/gtk/dialog-headers.blp:54 src/gtk/window.blp:380 src/gtk/window.blp:669
+msgid "Value"
+msgstr "Değer"
+
+#: src/gtk/dialog-cookies.blp:47
+msgid "Name"
+msgstr "Ad"
+
+#: src/gtk/dialog-cookies.blp:63
+msgid "Domain"
+msgstr "Alan adı"
+
+#: src/gtk/dialog-cookies.blp:69
+msgid "Path"
+msgstr "Yol"
+
+#: src/gtk/dialog-cookies.blp:76
+msgid "Expirable"
+msgstr "Süresi dolmuş"
+
+#: src/gtk/dialog-cookies.blp:80
+msgid "Expires"
+msgstr "Son Kullanım"
+
+#: src/gtk/dialog-cookies.blp:81
+msgid "Select date"
+msgstr "Tarih seç"
+
+#: src/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Genel"
+
+#: src/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Kısayolları Göster"
+
+#: src/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Show Response Page"
+msgstr "Yanıt Sayfasını Göster"
+
+#: src/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Send Request"
+msgstr "İstek Gönder"
+
+#: src/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Çık"
+
+#: src/gtk/populator-entry.blp:7
+msgid "Populator Entry"
+msgstr "[giriş yok]"
+
+#: src/gtk/populator-entry.blp:12
+msgid "Edit"
+msgstr "Düzen"
+
+#: src/gtk/populator-entry.blp:23
+msgid "Remove"
+msgstr "Kaldır"
+
+#: src/gtk/window.blp:44
+msgid "_Endpoint"
+msgstr "_Sorgu Adresi"
+
+#: src/gtk/window.blp:63
+msgid "HTTP request methods"
+msgstr "HTTP istek metotları"
+
+#: src/gtk/window.blp:64
+msgid "Method"
+msgstr "Metot"
+
+#: src/gtk/window.blp:67
+msgid "GET"
+msgstr "GET"
+
+#: src/gtk/window.blp:68
+msgid "POST"
+msgstr "POST"
+
+#: src/gtk/window.blp:69
+msgid "PUT"
+msgstr "PUT"
+
+#: src/gtk/window.blp:70
+msgid "PATCH"
+msgstr "PATCH"
+
+#: src/gtk/window.blp:71
+msgid "DELETE"
+msgstr "DELETE"
+
+#: src/gtk/window.blp:89
+msgid "Send Request"
+msgstr "İstek Gönder"
+
+#. margin-bottom: 12;
+#: src/gtk/window.blp:91
+msgid "Send REST"
+msgstr "REST Gönder"
+
+#: src/gtk/window.blp:103 src/gtk/window.blp:389
+msgid "Query Parameters"
+msgstr "Sorgu Parametreleri"
+
+#: src/gtk/window.blp:108
+msgid "Go to edit Parameters"
+msgstr "Parametre Düzenlemeye Git"
+
+#: src/gtk/window.blp:128
+msgid "Go to edit Body"
+msgstr "Gövde Düzenlemeye Git"
+
+#: src/gtk/window.blp:158 src/gtk/window.blp:546
+msgid "Form Data"
+msgstr "Form Verisi"
+
+#: src/gtk/window.blp:167 src/gtk/window.blp:513
+msgid "Raw"
+msgstr "Ham"
+
+#: src/gtk/window.blp:199
+msgid "_Cookies"
+msgstr "_Çerezler"
+
+#. icon-name: "list-add-symbolic";
+#: src/gtk/window.blp:230
+msgid "Create New Cookie..."
+msgstr "Yeni Çerez Oluştur..."
+
+#: src/gtk/window.blp:264
+msgid "_Headers"
+msgstr "_Üst Bilgiler"
+
+#: src/gtk/window.blp:294
+msgid "Create New Header..."
+msgstr "Yeni Üst Bilgi Oluştur..."
+
+#: src/gtk/window.blp:328 src/gtk/window.blp:348
+msgid "Authorization"
+msgstr "Yetkilendirme"
+
+#: src/gtk/window.blp:358
+msgid "Type"
+msgstr "Tür"
+
+#: src/gtk/window.blp:361
+msgid "Api Key"
+msgstr "API Anahtarı"
+
+#: src/gtk/window.blp:362
+msgid "Bearer Token"
+msgstr "Bearer Jetonu"
+
+#: src/gtk/window.blp:385
+msgid "Add to"
+msgstr "Şuraya ekle"
+
+#: src/gtk/window.blp:388
+msgid "Header"
+msgstr "Üst Bilgi"
+
+#: src/gtk/window.blp:403
+msgid "Token"
+msgstr "Jeton"
+
+#: src/gtk/window.blp:455
+msgid "Loading…"
+msgstr "Yükleniyor…"
+
+#: src/gtk/window.blp:476
+msgid "Response"
+msgstr "Yanıt"
+
+#: src/gtk/window.blp:484 src/gtk/window.blp:522 src/gtk/window.blp:558
+#: src/gtk/window.blp:624
+msgid "Back"
+msgstr "Geri"
+
+#: src/gtk/window.blp:514
+msgid "JSON Format"
+msgstr "JSON Biçimi"
+
+#. icon-name: "list-add-symbolic";
+#: src/gtk/window.blp:581
+msgid "Create New Body..."
+msgstr "Yeni Gövde Oluştur..."
+
+#: src/gtk/window.blp:612
+msgid "Edit Parameters"
+msgstr "Parametreleri Düzenle"
+
+#: src/gtk/window.blp:646
+msgid "New Parameter"
+msgstr "Yeni Parametre"
+
+#: src/gtk/window.blp:699
+msgid "_Show Response"
+msgstr "Yanıtı _Göster"
+
+#: src/gtk/window.blp:703
+msgid "_Keyboard Shortcuts"
+msgstr "Klavye _Kısayolları"
+
+#: src/gtk/window.blp:707
+msgid "_About Escambo"
+msgstr "Escambo _Hakkında"
+
+#, python-brace-format
+#~ msgid "No {file} added."
+#~ msgstr "{file} eklenmedi."
+
+#~ msgid "cookies"
+#~ msgstr "çerezler"
+
+#~ msgid "body"
+#~ msgstr "gövde"
+
+#~ msgid "param"
+#~ msgstr "param"
+
+#~ msgid "headers"
+#~ msgstr "üst bilgiler"
+
+#~ msgid "auths"
+#~ msgstr "yetkilendirme"
