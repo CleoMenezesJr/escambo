@@ -564,38 +564,36 @@ template $EscamboWindow : Adw.ApplicationWindow {
           ScrolledWindow {
             vexpand: true;
             child:
-            Adw.ToastOverlay toast_overlaa {
-              Adw.Clamp {
-                margin-top: 24;
-                margin-start: 12;
-                margin-end: 12;
-                tightening-threshold: 300;
-                child:
-                Box {
-                  orientation: vertical;
-                  spacing: 20;
+            Adw.Clamp {
+              margin-top: 24;
+              margin-start: 12;
+              margin-end: 12;
+              tightening-threshold: 300;
+              child:
+              Box {
+                orientation: vertical;
+                spacing: 20;
 
-                  Adw.PreferencesGroup {
-                    Adw.ActionRow create_new_body {
-                      /* icon-name: "list-add-symbolic"; */
-                      title: _("Create New Body...");
-                      activatable: true;
-                      Image {
-                        icon-name: "go-next-symbolic";
+                Adw.PreferencesGroup {
+                  Adw.ActionRow create_new_body {
+                    /* icon-name: "list-add-symbolic"; */
+                    title: _("Create New Body...");
+                    activatable: true;
+                    Image {
+                      icon-name: "go-next-symbolic";
 
-                        styles [
-                          "dim-label",
-                        ]
-                      }
+                      styles [
+                        "dim-label",
+                      ]
                     }
-                  }
-
-                  Adw.PreferencesGroup group_overrides_body {
                   }
                 }
 
-                ;
+                Adw.PreferencesGroup group_overrides_body {
+                }
               }
+
+              ;
             }
 
             ;
