@@ -35,6 +35,7 @@ from escambo.restapi import ResolveRequests
 from escambo.sourceview import SourceView
 from gi.repository import Adw, Gio, GLib, Gtk
 from requests import Session, exceptions
+from .curl_parser import CurlParser
 
 # constants
 COOKIES = os.path.join(GLib.get_user_config_dir(), "escambo", "cookies.json")
@@ -619,7 +620,7 @@ class EscamboWindow(Adw.ApplicationWindow):
 
         # url entry
         url_entry = self.settings.get_string("entry-url")
-        self.entry_url.set_text(url_entry)
+        self.__populate_url(url_entry)
 
         # parameters
         self.expander_row_parameters.set_enable_expansion(
@@ -656,8 +657,14 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_entry_url_changed(self, widget) -> None:
-        self.settings.set_string("entry-url", widget.get_text())
+        self.__url_changed(widget.get_text())
+
+    def __url_changed(self, value: str) -> None:
+        self.settings.set_string("entry-url", value)
         self.update_subtitle_parameters()
+        
+    def __populate_url(self, value: str) -> None:
+        self.entry_url.set_text(value)
 
     @Gtk.Template.Callback()
     def on_param_switch_changed(self, widget, args) -> None:
@@ -698,3 +705,9 @@ class EscamboWindow(Adw.ApplicationWindow):
         type = widget.props.selected_item.get_string()
         self.bearer_token_prefs.props.visible = type == "Bearer Token"
         self.api_key_prefs.props.visible = type == "Api Key"
+
+    def __populate_from_curl(self, curl: CurlParser) -> None:
+
+        # URL
+        self.__url_changed(curl.url)
+        self.__populate_url(curl.url)
