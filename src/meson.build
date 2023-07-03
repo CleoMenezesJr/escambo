@@ -9,6 +9,7 @@ blueprints = custom_target('blueprints',
     'gtk/dialog-body.blp',
     'gtk/dialog-cookies.blp',
     'gtk/dialog-headers.blp',
+    'gtk/dialog-import.blp',
     'gtk/date-row.blp',
   ),
   output: '.',
@@ -49,8 +50,10 @@ escambo_sources = [
   'dialog_body.py',
   'dialog_cookies.py',
   'dialog_headers.py',
+  'dialog_import.py',
   'date_row.py',
   'common_scripts.py',
+  'curl_parcer.py'
 ]
 
 install_data(escambo_sources, install_dir: moduledir)
