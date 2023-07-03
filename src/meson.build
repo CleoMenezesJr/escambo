@@ -53,7 +53,7 @@ escambo_sources = [
   'dialog_import.py',
   'date_row.py',
   'common_scripts.py',
-  'curl_parcer.py'
+  'curl_parser.py'
 ]
 
 install_data(escambo_sources, install_dir: moduledir)
