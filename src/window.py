@@ -616,7 +616,7 @@ class EscamboWindow(Adw.ApplicationWindow):
 
         # method
         method = self.settings.get_int("method-type")
-        self.entry_method.set_selected(method)
+        self.__populate_method(method)
 
         # url entry
         url_entry = self.settings.get_string("entry-url")
@@ -653,7 +653,13 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_entry_method_changed(self, widget, args) -> None:
-        self.settings.set_int("method-type", widget.get_selected())
+        self.__method_changed(widget.get_selected())
+
+    def __method_changed(self, value: int) -> None:
+        self.settings.set_int("method-type", value)
+
+    def __populate_method(self, value: int) -> None:
+        self.entry_method.set_selected(value)
 
     @Gtk.Template.Callback()
     def on_entry_url_changed(self, widget) -> None:
@@ -711,3 +717,15 @@ class EscamboWindow(Adw.ApplicationWindow):
         # URL
         self.__url_changed(curl.url)
         self.__populate_url(curl.url)
+
+        # Method
+        method_list = {
+            "get": 0,
+            "post": 1,
+            "put": 2,
+            "patch": 3,
+            "delete": 4,
+        }
+        method_id = method_list[curl.method.lower()]
+        self.__method_changed(method_id)
+        self.__populate_method(method_id)
