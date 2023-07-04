@@ -1,20 +1,22 @@
-import argparse
-import json
-import shlex
-
-curl_command5 = """curl -X POST -H 'Authorization: Bearer token' -d "{'resourceNetworkInterface':[{'ipAddress': 'ipaddress'}]}" 'https://$$opsramp_instance.com/api/v2/tenants/$$tenantId/resources/$resourceId'"""
-
-# print(argv)
+from argparse import ArgumentParser
+from shlex import split
 
 class CurlParser():
 
     def __init__(self, curl):
-        
         self.__curl = curl
-        argv = shlex.split(curl.strip())
+        argv = split(curl.strip())
         del argv[0]
+        try:
+            self.__data = self.__get_parser().parse_args(argv)
+        except:
+            print('Catching an argumentError')
+        else: 
+            self.__headers = self.__create_headers_dict(self.__data.headers)
+            # print(self.__data)
 
-        parser = argparse.ArgumentParser()
+    def __get_parser(self) -> ArgumentParser:
+        parser = ArgumentParser(add_help=False, exit_on_error=False)
         parser.add_argument('url')
         parser.add_argument('-d', '--data')
         parser.add_argument('-b', '--data-binary', '--data-raw', default=None)
@@ -25,12 +27,11 @@ class CurlParser():
         parser.add_argument('--user', '-u', default=())
         parser.add_argument('-i', '--include', action='store_true')
         parser.add_argument('-s', '--silent', action='store_true')
-        self.__data = parser.parse_args(argv)
-        if self.__data.headers:
-            self.__headers = dict([self.__split_header(header) for header in self.__data.headers])
-        else:
-            self.__headers = dict()
-        # print(self.__data)
+        return parser
+
+    def __create_headers_dict(self, headers) -> dict:
+        if not self.__data.headers: return dict()
+        return dict([self.__split_header(header) for header in headers])
 
     def __split_header(sefl, header):
         header_split = header.split(': ')
