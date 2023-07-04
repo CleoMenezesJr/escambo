@@ -38,11 +38,11 @@ class CurlParser():
         return (header_split[0], header_split[1])
 
     @property
-    def headers(self):
+    def headers(self) -> dict[str, str]:
         return {k:self.__headers[k] for k in self.__headers.keys() if not k == "Authorization"}
 
     @property
-    def authorization(self):
+    def authorization(self) -> str:
         try:
             authHeader = self.__headers["Authorization"]
         except KeyError as e:
@@ -52,9 +52,9 @@ class CurlParser():
             return authHeader
 
     @property
-    def method(self):
+    def method(self) -> str:
         return self.__data.method
 
     @property
-    def url(self):
+    def url(self) -> str:
         return self.__data.url
