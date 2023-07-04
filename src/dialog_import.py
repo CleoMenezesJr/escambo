@@ -20,8 +20,12 @@ class ImportDialog(Adw.Window):
     def on_import(self, *args) -> None:
         print("On import")
         value = self.entry_curl.get_text()
-        parsed = CurlParser(value)
-        self.__window._EscamboWindow__populate_from_curl(parsed)
+        try:
+            parsed = CurlParser(value)
+        except Exception as e:
+            print("Error importing cURL")
+        else:
+            self.__window._EscamboWindow__populate_from_curl(parsed)
         self.close()
 
     @Gtk.Template.Callback()

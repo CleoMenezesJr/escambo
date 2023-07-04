@@ -10,7 +10,7 @@ class CurlParser():
         try:
             self.__data = self.__get_parser().parse_args(argv)
         except:
-            print('Catching an argumentError')
+            raise Exception('Invalid cURL format')
         else: 
             self.__headers = self.__create_headers_dict(self.__data.headers)
             # print(self.__data)
