@@ -645,9 +645,9 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.headers_page.set_badge_number(len(self.headers))
 
         # auths
-        self.switch_auths.set_active(self.settings.get_boolean("auths"))
+        use_auth = self.settings.get_boolean("auths")
         auth_type = self.settings.get_int("auth-type")
-        self.auth_type.set_selected(auth_type)
+        self.__populate_auth(use_auth, auth_type)
 
         self.set_needs_attention()
 
@@ -701,16 +701,21 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_auths_switch_state_change(self, widget, state) -> None:
-        self.settings.set_boolean("auths", state)
+        self.__auths_state_changed(state)
         self.set_needs_attention(switches=["auths"])
+
+    def __auths_state_changed(self, state: bool) -> None:
+        self.settings.set_boolean("auths", state)
 
     @Gtk.Template.Callback()
     def on_auth_type_changed(self, widget, args):
-        self.settings.set_int("auth-type", widget.get_selected())
+        selected = widget.get_selected()
+        self.__auths_type_changed(selected)
 
-        type = widget.props.selected_item.get_string()
-        self.bearer_token_prefs.props.visible = type == "Bearer Token"
-        self.api_key_prefs.props.visible = type == "Api Key"
+    def __auths_type_changed(self, value: int) -> None:
+        self.settings.set_int("auth-type", value)
+        self.bearer_token_prefs.props.visible = value == 1
+        self.api_key_prefs.props.visible = value == 0
 
     def __populate_from_curl(self, curl: CurlParser) -> None:
 
@@ -729,3 +734,20 @@ class EscamboWindow(Adw.ApplicationWindow):
         method_id = method_list[curl.method.lower()]
         self.__method_changed(method_id)
         self.__populate_method(method_id)
+
+        #Authorization
+        token = curl.authorization
+        self.__auths_state_changed(token != None)
+        self.__auths_type_changed(1)
+        self.__populate_auth(token != None, 1)
+        if token != None: self.__populate_token(token)
+        else: self.__populate_token("")
+
+        self.set_needs_attention()
+
+    def __populate_auth(self, use_auth: bool, auth_type: int) -> None:
+        self.switch_auths.set_active(use_auth)
+        self.auth_type.set_selected(auth_type)
+
+    def __populate_token(self, token: str) -> None:
+        self.bearer_token.set_text(token)
