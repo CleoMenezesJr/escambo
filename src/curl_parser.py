@@ -44,12 +44,13 @@ class CurlParser():
     @property
     def authorization(self) -> str:
         try:
-            authHeader = self.__headers["Authorization"]
+            authHeader: str = self.__headers["Authorization"]
         except KeyError as e:
             print("no Authorization header")
             return None
         else:
-            return authHeader
+            if authHeader.startswith("Bearer"): return authHeader.split("Bearer ")[1]
+            else: return authHeader
 
     @property
     def method(self) -> str:
