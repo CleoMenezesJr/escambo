@@ -572,15 +572,6 @@ class EscamboWindow(Adw.ApplicationWindow):
         # params
         self.param = self.__read_file(PARAM)
         self.populate_overrides_list("param", PARAM, self.param, None, None)
-        # headers
-        self.headers = self.__read_file(HEADERS)
-        self.populate_overrides_list(
-            "headers", 
-            HEADERS, 
-            self.headers, 
-            lambda w: self.__headers_widgets.append(w), 
-            lambda w: self.__headers_widgets.remove(w)
-        )
 
         # method
         method = self.settings.get_int("method-type")
@@ -609,8 +600,16 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.cookies_page.set_badge_number(len(self.cookies))
 
         # headers
-        self.switch_headers.set_active(self.settings.get_boolean("headers"))
-        self.headers_page.set_badge_number(len(self.headers))
+        self.headers = self.__read_file(HEADERS)
+        self.populate_overrides_list(
+            "headers", 
+            HEADERS, 
+            self.headers, 
+            lambda w: self.__headers_widgets.append(w), 
+            lambda w: self.__headers_widgets.remove(w)
+        )
+        use_headers: bool = self.settings.get_boolean("headers")
+        self.__populate_headers_status(use_headers)
 
         # auths
         use_auth = self.settings.get_boolean("auths")
@@ -663,9 +662,16 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_headers_switch_state_change(self, widget, state) -> None:
-        self.settings.set_boolean("headers", state)
+        self.__headers_status_changed(state)
         self.headers_page.set_badge_number(len(self.headers))
         self.set_needs_attention(switches=["headers"])
+
+    def __headers_status_changed(self, status: bool) -> None:
+        self.settings.set_boolean("headers", status)
+
+    def __populate_headers_status(self, status: bool) -> None:
+        self.switch_headers.set_active(status)
+        self.headers_page.set_badge_number(len(self.headers))
 
     @Gtk.Template.Callback()
     def on_auths_switch_state_change(self, widget, state) -> None:
@@ -713,10 +719,13 @@ class EscamboWindow(Adw.ApplicationWindow):
 
         #Headers
         headers = curl.headers
+        has_headers = len(headers) > 0
         self.__clear_headers()
-        if (len(headers) > 0):
+        self.__headers_status_changed(has_headers)
+        self.__populate_headers_status(has_headers)
+        if (has_headers):
             for key in headers:
-                self.__save_override(None, "headers", key, headers[key], None)            
+                self.__save_override(None, "headers", key, headers[key], None)
 
         self.set_needs_attention()
 
@@ -728,8 +737,8 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.bearer_token.set_text(token)
 
     def __clear_headers(self) -> None:
+        self.headers = {}
         self.__clear_headers_file()
-        print(len(self.__headers_widgets))
         for widget in self.__headers_widgets:
             self.group_overrides_headers.remove(widget)
         self.__headers_widgets.clear()
