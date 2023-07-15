@@ -711,6 +711,13 @@ class EscamboWindow(Adw.ApplicationWindow):
         if token != None: self.__populate_token(token)
         else: self.__populate_token("")
 
+        #Headers
+        headers = curl.headers
+        self.__clear_headers()
+        if (len(headers) > 0):
+            for key in headers:
+                self.__save_override(None, "headers", key, headers[key], None)            
+
         self.set_needs_attention()
 
     def __populate_auth(self, use_auth: bool, auth_type: int) -> None:
@@ -719,3 +726,16 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     def __populate_token(self, token: str) -> None:
         self.bearer_token.set_text(token)
+
+    def __clear_headers(self) -> None:
+        self.__clear_headers_file()
+        print(len(self.__headers_widgets))
+        for widget in self.__headers_widgets:
+            self.group_overrides_headers.remove(widget)
+        self.__headers_widgets.clear()
+
+    def __clear_headers_file(self) -> None:
+        with open(HEADERS, "w") as json_file:
+            json_file.write(
+                json.dumps({})
+            )
