@@ -15,13 +15,14 @@ class PopulatorEntry(Adw.ActionRow):
     # region Widgets
     btn_remove = Gtk.Template.Child()
 
-    def __init__(self, window, override, content, **kwargs):
+    def __init__(self, window, override, content, remove, **kwargs):
         super().__init__(**kwargs)
 
         # common variables and references
         self.window = window
         self.override = override
         self.content = content
+        self.remove = remove
 
         """
         Set the DLL name as ActionRow title and set the
@@ -105,7 +106,7 @@ class PopulatorEntry(Adw.ActionRow):
                 self.window.body_counter(self.window.body)
                 # TODO
                 # Remove query parameter on subtitle
-
+                if self.remove != None: self.remove(self)
                 self.get_parent().remove(self)
 
         subtitle = f"\n{self.get_subtitle()}" if self.get_subtitle() else ""
