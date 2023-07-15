@@ -105,6 +105,8 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     spinner = Gtk.Template.Child()
 
+    __headers_widgets = []
+
     def __init__(self, **kwargs: dict) -> None:
         super().__init__(**kwargs)
 
@@ -367,11 +369,9 @@ class EscamboWindow(Adw.ApplicationWindow):
         ] = entry_content
 
     def __save_override(self, *_args: tuple) -> None:
-        """
-        This function check if the override name is not empty, then
-        store it in the configuration and add a new entry to
-        the list. It also clears the entry field
-        """
+        key: str = _args[2].strip()
+        value: str = _args[3].strip()
+        id: str = _args[4] or dt.today().isoformat()
         match _args[1]:
             case "cookies":
                 title: str = _args[2]
@@ -389,14 +389,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                     json.dump(file_content, file, indent=2)
 
                     # Populate UI
-                    _entry = PopulatorEntry(
-                        window=self,
-                        override=[
-                            insertion_date,
-                            [title, subtitle],
-                        ],
-                        content=COOKIES,
-                    )
+                    _entry = self.__create_populator_entry(COOKIES, id, key, value, None)
                     if not any(
                         [i == insertion_date for i in self.cookies.keys()]
                     ):
@@ -418,45 +411,17 @@ class EscamboWindow(Adw.ApplicationWindow):
                 # Clean up field
                 self.group_overrides_cookies.set_description("")
             case "headers":
-                title: str = _args[2].strip()
-                subtitle: str = _args[3].strip()
-                id: str = _args[4]
-                insertion_date = id or dt.today().isoformat()
-
-                # Insert Header
-                with open(HEADERS, "r+") as file:
-                    file_content = json.load(file)
-                    # Save Header
-                    file_content[insertion_date] = [title, subtitle]
-                    file.truncate(0)
-                    file.seek(0)
-                    json.dump(file_content, file, indent=2)
-
-                    # Populate UI
-                    _entry = PopulatorEntry(
-                        window=self,
-                        override=[
-                            insertion_date,
-                            [title, subtitle],
-                        ],
-                        content=HEADERS,
-                    )
-                    if not any(
-                        [i == insertion_date for i in self.headers.keys()]
-                    ):
-                        GLib.idle_add(self.group_overrides_headers.add, _entry)
-                        self.toast_overlay.add_toast(
-                            Adw.Toast.new(_("Header created"))
-                        )
-                    else:
-                        self.toast_overlay.add_toast(
-                            Adw.Toast.new(_("Header edited"))
-                        )
-
-                self.headers = file_content
-                self.headers_page.set_badge_number(len(file_content))
-
-                # Clean up field
+                _content = self.__add_item_to_file(HEADERS, id, key, value)
+                if not any([i == id for i in self.headers.keys()]): 
+                    print("going to else")
+                    _entry = self.__create_populator_entry(HEADERS, id, key, value, remove=lambda widget: self.__headers_widgets.remove(widget))
+                    self.__headers_widgets.append(_entry)
+                    GLib.idle_add(self.group_overrides_headers.add, _entry)
+                    self.toast_overlay.add_toast(Adw.Toast.new(_("Header created")))
+                else:
+                    self.toast_overlay.add_toast(Adw.Toast.new(_("Header edited")))
+                self.headers = _content
+                self.headers_page.set_badge_number(len(_content))
                 self.group_overrides_headers.set_description("")
             case "body":
                 title: str = _args[2]
@@ -480,14 +445,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                     json.dump(file_content, file, indent=2)
 
                     # Populate UI
-                    _entry = PopulatorEntry(
-                        window=self,
-                        override=[
-                            insertion_date,
-                            [title, subtitle],
-                        ],
-                        content=BODY,
-                    )
+                    _entry = self.__create_populator_entry(BODY, id, key, value, None)
                     if not any(
                         [i == insertion_date for i in self.body.keys()]
                     ):
@@ -521,11 +479,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                             json.dump(file_content, file, indent=2)
 
                             # Populate UI
-                            _entry = PopulatorEntry(
-                                window=self,
-                                override=[param_key, param_value],
-                                content=PARAM,
-                            )
+                            _entry = self.__create_populator_entry(PARAM, id, param_key, param_value, None)
                             GLib.idle_add(
                                 self.group_overrides_param.add, _entry
                             )
@@ -542,58 +496,55 @@ class EscamboWindow(Adw.ApplicationWindow):
                     self.entry_param_key.set_text("")
                     self.entry_param_value.set_text("")
 
-    def populate_overrides_list(self) -> None:
-        # TODO populate url preview with parameters
+    def __add_item_to_file(self, path: str, id: str, key: str, value: str) -> dict:
+        with open(path, "r+") as file:
+            file_content = json.load(file)
+            # Save Header
+            file_content[id] = [key, value]
+            file.truncate(0)
+            file.seek(0)
+            json.dump(file_content, file, indent=2)
+            return file_content
 
-        """
-        This function populate rows from json files
-        """
-        files = {
-            "cookie": [COOKIES, "cookies"],
-            "body": [BODY, "body"],
-            "parameter": [PARAM, "param"],
-            "header": [HEADERS, "headers"],
-            "authorization": [AUTHS, "auths"],
-        }
+    def __read_file(self, path: str):
+        with open(path, "r") as json_file:
+            return json.load(json_file)
+    
+    def __create_populator_entry(self, path: str, id: str, key: str, value: str, remove) -> PopulatorEntry:
+        return PopulatorEntry(
+            window=self,
+            override=[
+                id,
+                [key, value],
+            ],
+            content=path,
+            remove=remove 
+        )
 
-        for file in files:
-            with open(files[file][0], "r") as json_file:
-                overrides = json.load(json_file)
-                self.cookies = overrides if "cookie" in file else self.cookies
-                self.body = overrides if "body" in file else self.body
-                self.param = overrides if "parameter" in file else self.param
-                self.headers = overrides if "header" in file else self.headers
-                self.auths = (
-                    overrides if "authorization" in file else self.auths
+    def populate_overrides_list(self, container_name: str, path: str, file, add, remove) -> None:
+        if not bool(file):
+            getattr(
+                self, f"group_overrides_{container_name}"
+            ).set_description((f"No {container_name} added."))
+        else:
+            getattr(
+                self, f"group_overrides_{container_name}"
+            ).set_description("")
+            for entry_id in file:
+                _entry = self.__create_populator_entry(
+                    path=path,
+                    id=entry_id,
+                    key=file[entry_id][0],
+                    value=file[entry_id][1],
+                    remove=remove
                 )
-                if file != "authorization":
-                    if not bool(overrides):
-                        getattr(
-                            self, f"group_overrides_{files[file][1]}"
-                        ).set_description((f"No {file} added."))
-                    else:
-                        getattr(
-                            self, f"group_overrides_{files[file][1]}"
-                        ).set_description("")
-                        for override in overrides:
-                            _entry = PopulatorEntry(
-                                window=self,
-                                override=[override, overrides[override]],
-                                content=files[file][0],
-                            )
-
-                            GLib.idle_add(
-                                getattr(
-                                    self, f"group_overrides_{files[file][1]}"
-                                ).add,
-                                _entry,
-                            )
-                else:
-                    PopulatorEntry(
-                        window=self,
-                        override=overrides,
-                        content=files[file][0],
-                    )
+                if add: add(_entry)
+                GLib.idle_add(
+                    getattr(
+                        self, f"group_overrides_{container_name}"
+                    ).add,
+                    _entry,
+                )
 
     def body_counter(self, overrides) -> None:
         """Body counter and its visibility"""
@@ -612,7 +563,24 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     def update_states(self) -> None:
         # populate lists
-        self.populate_overrides_list()
+        # cookies
+        self.cookies = self.__read_file(COOKIES)
+        self.populate_overrides_list("cookies", COOKIES, self.cookies, None, None)
+        # body
+        self.body = self.__read_file(BODY)
+        self.populate_overrides_list("body", BODY, self.body, None, None)
+        # params
+        self.param = self.__read_file(PARAM)
+        self.populate_overrides_list("param", PARAM, self.param, None, None)
+        # headers
+        self.headers = self.__read_file(HEADERS)
+        self.populate_overrides_list(
+            "headers", 
+            HEADERS, 
+            self.headers, 
+            lambda w: self.__headers_widgets.append(w), 
+            lambda w: self.__headers_widgets.remove(w)
+        )
 
         # method
         method = self.settings.get_int("method-type")
