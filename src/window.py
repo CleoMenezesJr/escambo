@@ -461,9 +461,10 @@ class EscamboWindow(Adw.ApplicationWindow):
                 title: str = _args[2]
                 subtitle: str = _args[3]
                 id: str = _args[4]
+                edited: bool = id is not None
                 insertion_date = id or dt.today().isoformat()
 
-                if any(title == each[0] for each in self.body.values()):
+                if (not edited) and any(title == each[0] for each in self.body.values()):
                     self.toast_overlay.add_toast(
                         Adw.Toast.new(_(f"Key “{title}” already exists"))
                     )
