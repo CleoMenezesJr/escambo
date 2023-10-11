@@ -106,6 +106,7 @@ class EscamboWindow(Adw.ApplicationWindow):
     spinner = Gtk.Template.Child()
 
     __headers_widgets = []
+    __cookies_widgets = []
 
     def __init__(self, **kwargs: dict) -> None:
         super().__init__(**kwargs)
@@ -374,41 +375,17 @@ class EscamboWindow(Adw.ApplicationWindow):
         id: str = _args[4] or dt.today().isoformat()
         match _args[1]:
             case "cookies":
-                title: str = _args[2]
-                subtitle: str = _args[3]
-                id: str = _args[4]
-                insertion_date = id or dt.today().isoformat()
-
-                # Insert Cookie
-                with open(COOKIES, "r+") as file:
-                    file_content = json.load(file)
-                    # Save Cookies
-                    file_content[insertion_date] = [title, subtitle]
-                    file.truncate(0)
-                    file.seek(0)
-                    json.dump(file_content, file, indent=2)
-
-                    # Populate UI
+                _content = self.__add_item_to_file(COOKIES, id, key, value)
+                if not any([i == id for i in self.cookies.keys()]):
+                    print("creating cookie")
                     _entry = self.__create_populator_entry(COOKIES, id, key, value, None)
-                    if not any(
-                        [i == insertion_date for i in self.cookies.keys()]
-                    ):
-                        GLib.idle_add(
-                            self.group_overrides_cookies.add,
-                            _entry,
-                        )
-                        self.toast_overlay.add_toast(
-                            Adw.Toast.new(_("Cookie created"))
-                        )
-                    else:
-                        self.toast_overlay.add_toast(
-                            Adw.Toast.new(_("Cookie edited"))
-                        )
-
-                self.cookies = file_content
-                self.cookies_page.set_badge_number(len(file_content))
-
-                # Clean up field
+                    self.__cookies_widgets.append(_entry)
+                    GLib.idle_add(self.group_overrides_cookies.add, _entry)
+                    self.toast_overlay.add_toast(Adw.Toast.new(_("Cookie created")))
+                else:
+                    self.toast_overlay.add_toast(Adw.Toast.new(_("Cookie edited")))
+                self.cookies = _content
+                self.cookies_page.set_badge_number(len(_content))
                 self.group_overrides_cookies.set_description("")
             case "headers":
                 _content = self.__add_item_to_file(HEADERS, id, key, value)
@@ -596,8 +573,8 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.form_data_toggle_button_body.props.active = not self.is_raw
 
         # cookies
-        self.switch_cookies.set_active(self.settings.get_boolean("cookies"))
-        self.cookies_page.set_badge_number(len(self.cookies))
+        use_cookies = self.settings.get_boolean("cookies")
+        self.__populate_cookies_status(use_cookies)
 
         # headers
         self.headers = self.__read_file(HEADERS)
@@ -656,9 +633,16 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_cookies_switch_state_change(self, widget, state) -> None:
-        self.settings.set_boolean("cookies", state)
+        self.__cookies_status_changed(state)
         self.cookies_page.set_badge_number(len(self.cookies))
         self.set_needs_attention(switches=["cookies"])
+
+    def __cookies_status_changed(self, status: bool) -> None:
+        self.settings.set_boolean("cookies", status)
+
+    def __populate_cookies_status(self, status: bool) -> None:
+        self.switch_cookies.set_active(status)
+        self.cookies_page.set_badge_number(len(self.cookies))
 
     @Gtk.Template.Callback()
     def on_headers_switch_state_change(self, widget, state) -> None:
@@ -727,6 +711,16 @@ class EscamboWindow(Adw.ApplicationWindow):
             for key in headers:
                 self.__save_override(None, "headers", key, headers[key], None)
 
+        #Cookies
+        cookies = curl.cookies
+        has_cookies = len(cookies) > 0
+        self.__clear_cookies()
+        self.__cookies_status_changed(has_cookies)
+        self.__populate_cookies_status(has_cookies)
+        if (has_cookies):
+            for key in cookies:
+                self.__save_override(None, "cookies", key, key+"="+cookies[key], None)
+
         self.set_needs_attention()
 
     def __populate_auth(self, use_auth: bool, auth_type: int) -> None:
@@ -738,13 +732,20 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     def __clear_headers(self) -> None:
         self.headers = {}
-        self.__clear_headers_file()
+        self.__clear_file(HEADERS)
         for widget in self.__headers_widgets:
             self.group_overrides_headers.remove(widget)
         self.__headers_widgets.clear()
 
-    def __clear_headers_file(self) -> None:
-        with open(HEADERS, "w") as json_file:
+    def __clear_file(self, file: str) -> None:
+        with open(file, "w") as json_file:
             json_file.write(
                 json.dumps({})
             )
+
+    def __clear_cookies(self) -> None:
+        self.cookies = {}
+        self.__clear_file(COOKIES)
+        for widget in self.__cookies_widgets:
+            self.group_overrides_cookies.remove(widget)
+        self.__cookies_widgets.clear()
