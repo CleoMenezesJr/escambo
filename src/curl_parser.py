@@ -13,29 +13,44 @@ class CurlParser():
             raise Exception('Invalid cURL format')
         else: 
             self.__headers = self.__create_headers_dict(self.__data.headers)
-            # print(self.__data)
+            self.__cookies = self.__create_cookies_dict(self.__data.cookies)
+            print(self.__data)
 
     def __get_parser(self) -> ArgumentParser:
         parser = ArgumentParser(add_help=False, exit_on_error=False)
         parser.add_argument('url')
-        parser.add_argument('-d', '--data')
-        parser.add_argument('-b', '--data-binary', '--data-raw', default=None)
-        parser.add_argument('--request', '-X', dest='method', default='GET')
-        parser.add_argument('--header', '-H', dest='headers', action='append')
+        parser.add_argument('-X', '--request', dest='method', default='GET')
+        parser.add_argument('-H', '--header', dest='headers', action='append')
+        parser.add_argument('-b', '--cookie', dest='cookies', action='append')
+        parser.add_argument('-d', '--data', dest='data', action='append')
+        parser.add_argument('--data-raw', dest='data_raw', default=None)
+        parser.add_argument('--data-binary', dest='data_binary', default=None)
         parser.add_argument('--compressed', action='store_true')
-        parser.add_argument('-k', '--insecure', action='store_true')
-        parser.add_argument('--user', '-u', default=())
-        parser.add_argument('-i', '--include', action='store_true')
-        parser.add_argument('-s', '--silent', action='store_true')
+        parser.add_argument('-L', '--location', action='store_true')
         return parser
 
-    def __create_headers_dict(self, headers) -> dict:
-        if not self.__data.headers: return dict()
+    def __create_headers_dict(self, headers: list[str]) -> dict[str, str]:
+        if not headers: return dict()
         return dict([self.__split_header(header) for header in headers])
 
-    def __split_header(sefl, header):
+    def __split_header(self, header: str) -> tuple:
         header_split = header.split(': ')
-        return (header_split[0], header_split[1])
+        return self.__build_tuple(header_split)
+        
+    def __build_tuple(self, list: list[str]) -> tuple[str, str]:
+        return (list[0], list[1]) if len(list) > 1 else (list[0], "")
+    
+    def __create_cookies_dict(self, cookies: list[str]) -> dict[str, str]:
+        if not cookies: return dict()
+        result = dict[str, str]()
+        for cookie in cookies:
+            cookie_split = cookie.split('; ')
+            result = result | dict([self.__split_cookie(item) for item in cookie_split])
+        return result
+
+    def __split_cookie(self, cookie: str) -> tuple:
+        cookie_split = cookie.split("=")
+        return self.__build_tuple(cookie_split)
 
     @property
     def headers(self) -> dict[str, str]:
@@ -59,3 +74,5 @@ class CurlParser():
     @property
     def url(self) -> str:
         return self.__data.url
+
+# parsed = CurlParser("curl http://a.b.c -b \"a; b=B\" -b \"c=c\"")
