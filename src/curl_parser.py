@@ -74,5 +74,9 @@ class CurlParser():
     @property
     def url(self) -> str:
         return self.__data.url
+    
+    @property
+    def cookies(self) -> dict[str, str]:
+        return self.__cookies
 
 # parsed = CurlParser("curl http://a.b.c -b \"a; b=B\" -b \"c=c\"")
