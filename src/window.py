@@ -107,6 +107,7 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     __headers_widgets = []
     __cookies_widgets = []
+    __params_widgets = []
 
     def __init__(self, **kwargs: dict) -> None:
         super().__init__(**kwargs)
@@ -138,7 +139,14 @@ class EscamboWindow(Adw.ApplicationWindow):
             "apply", self.on_auth_entry_active, "bearer_token"
         )
         self.btn_add_parameter.connect(
-            "clicked", self.__save_override, "param"
+            "clicked", 
+            lambda button: self.__save_override(
+                button, 
+                "param", 
+                self.entry_param_key.get_text(), 
+                self.entry_param_value.get_text(),
+                None
+            )
         )
 
         # General
@@ -275,29 +283,21 @@ class EscamboWindow(Adw.ApplicationWindow):
     def go_home(self, widget) -> None:
         self.leaflet.set_visible_child(self.home)
 
-    def update_subtitle_parameters(self, *_args) -> None:
-        if self.settings.get_boolean("parameters"):
+    def update_subtitle_parameters(self, status: bool) -> None:
+        print(status)
+        if status == False: subtitle = ""
+        else:
             url_entry = self.entry_url.get_text()
             parameters = [f"{i}={self.param[i]}" for i in self.param]
             parsed_url = urlparse(url_entry)
             url_query_params = parsed_url.query.split("&")
-
-            if parsed_url.query:
-                parameters += url_query_params
-
+            if parsed_url.query: parameters += url_query_params
             param_position = url_entry.find("?")
-            url = (
-                url_entry[:param_position]
-                if has_parameter(url_entry)
-                else url_entry
-            )
-
+            url = (url_entry[:param_position] if has_parameter(url_entry) else url_entry)
             subtitle = (
                 f"{'https://' if not url_entry else url}"
                 + f"?{html.escape('&').join(parameters)}"
             )
-        else:
-            subtitle = ""
 
         GLib.idle_add(self.expander_row_parameters.set_subtitle, subtitle)
 
@@ -375,7 +375,7 @@ class EscamboWindow(Adw.ApplicationWindow):
         id: str = _args[4] or dt.today().isoformat()
         match _args[1]:
             case "cookies":
-                _content = self.__add_item_to_file(COOKIES, id, key, value)
+                _content = self.__add_item_to_file(COOKIES, id, [key, value])
                 if not any([i == id for i in self.cookies.keys()]):
                     print("creating cookie")
                     _entry = self.__create_populator_entry(COOKIES, id, key, value, remove=lambda widget: self.__cookies_widgets.remove(widget))
@@ -388,7 +388,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                 self.cookies_page.set_badge_number(len(_content))
                 self.group_overrides_cookies.set_description("")
             case "headers":
-                _content = self.__add_item_to_file(HEADERS, id, key, value)
+                _content = self.__add_item_to_file(HEADERS, id, [key, value])
                 if not any([i == id for i in self.headers.keys()]): 
                     print("going to else")
                     _entry = self.__create_populator_entry(HEADERS, id, key, value, remove=lambda widget: self.__headers_widgets.remove(widget))
@@ -441,43 +441,25 @@ class EscamboWindow(Adw.ApplicationWindow):
                 # Clean up field
                 self.group_overrides_body.set_description("")
             case "param":
-                param_key = self.entry_param_key.get_text()
-                param_value = self.entry_param_value.get_text()
+                if key == "" and value == "": return
+                _content = self.__add_item_to_file(PARAM, key, value)
+                if not any([i == key for i in self.param.keys()]):
+                    _entry = self.__create_populator_entry(PARAM, key, key, value, remove=lambda w: self.__params_widgets.remove(w))
+                    self.__params_widgets.append(_entry)
+                    GLib.idle_add(self.group_overrides_param.add, _entry)
+                else:
+                    return self.toast_overlay.add_toast(Adw.Toast.new(_("Param edited")))
+                self.param = _content
+                self.update_subtitle_parameters(True)
+                self.group_overrides_param.set_description("")
+                self.entry_param_key.set_text("")
+                self.entry_param_value.set_text("")
 
-                if param_key != "" and param_value != "":
-                    with open(PARAM, "r+") as file:
-                        file_content = json.load(file)
-                        if not any(
-                            [i == param_key for i in file_content.keys()]
-                        ):
-                            # Save Parameters
-                            file_content.update({param_key: param_value})
-                            file.seek(0)
-                            json.dump(file_content, file, indent=2)
-
-                            # Populate UI
-                            _entry = self.__create_populator_entry(PARAM, id, param_key, param_value, None)
-                            GLib.idle_add(
-                                self.group_overrides_param.add, _entry
-                            )
-                        else:
-                            return self.toast_overlay.add_toast(
-                                Adw.Toast.new(_("Key already exists"))
-                            )
-
-                    self.param = file_content
-                    self.update_subtitle_parameters()
-
-                    # Clean up fields
-                    self.group_overrides_param.set_description("")
-                    self.entry_param_key.set_text("")
-                    self.entry_param_value.set_text("")
-
-    def __add_item_to_file(self, path: str, id: str, key: str, value: str) -> dict:
+    def __add_item_to_file(self, path: str, id: str, value: str | list[str]) -> dict:
         with open(path, "r+") as file:
             file_content = json.load(file)
             # Save Header
-            file_content[id] = [key, value]
+            file_content[id] = value
             file.truncate(0)
             file.seek(0)
             json.dump(file_content, file, indent=2)
@@ -500,28 +482,29 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     def populate_overrides_list(self, container_name: str, path: str, file, add, remove) -> None:
         if not bool(file):
-            getattr(
-                self, f"group_overrides_{container_name}"
-            ).set_description((f"No {container_name} added."))
-        else:
-            getattr(
-                self, f"group_overrides_{container_name}"
-            ).set_description("")
-            for entry_id in file:
-                _entry = self.__create_populator_entry(
-                    path=path,
-                    id=entry_id,
-                    key=file[entry_id][0],
-                    value=file[entry_id][1],
-                    remove=remove
-                )
-                if add: add(_entry)
-                GLib.idle_add(
-                    getattr(
-                        self, f"group_overrides_{container_name}"
-                    ).add,
-                    _entry,
-                )
+            getattr(self, f"group_overrides_{container_name}").set_description((f"No {container_name} added."))
+            return
+        getattr(self, f"group_overrides_{container_name}").set_description("")
+        for entry_id in file:
+            _content = self.__read_entry_from_file(entry_id, file)
+            _entry = self.__create_populator_entry(path, entry_id, _content['key'], _content['value'], remove)
+            if add: add(_entry)
+            GLib.idle_add(
+                getattr(self, f"group_overrides_{container_name}").add, 
+                _entry
+            )
+
+    def __read_entry_from_file(self, id: str, file) -> {}:
+        key = id
+        value = file[id]
+        is_list = isinstance(file[id], list)
+        list_len = len(file[id])
+        if is_list and list_len > 1:
+            key = file[id][0]
+            value = file[id][0]
+        elif is_list and list_len == 1:
+            value = file[id][0]
+        return { 'key': key, 'value': value }
 
     def body_counter(self, overrides) -> None:
         """Body counter and its visibility"""
@@ -545,10 +528,6 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.body = self.__read_file(BODY)
         self.populate_overrides_list("body", BODY, self.body, None, None)
 
-        # params
-        self.param = self.__read_file(PARAM)
-        self.populate_overrides_list("param", PARAM, self.param, None, None)
-
         # method
         method = self.settings.get_int("method-type")
         self.__populate_method(method)
@@ -557,12 +536,6 @@ class EscamboWindow(Adw.ApplicationWindow):
         url_entry = self.settings.get_string("entry-url")
         self.__populate_url(url_entry)
 
-        # parameters
-        self.expander_row_parameters.set_enable_expansion(
-            self.settings.get_boolean("parameters")
-        )
-        self.update_subtitle_parameters()
-
         # body
         self.expander_row_body.set_enable_expansion(
             self.settings.get_boolean("body")
@@ -570,6 +543,20 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.body_counter(self.body)
         self.is_raw = self.settings.get_boolean("body-type")
         self.form_data_toggle_button_body.props.active = not self.is_raw
+
+        # parameters
+        self.param = self.__read_file(PARAM)
+        self.populate_overrides_list(
+            "param", 
+            PARAM, 
+            self.param, 
+            lambda w: self.__params_widgets.append(w), 
+            lambda w: self.__params_widgets.remove(w)
+        )
+        use_params = self.settings.get_boolean("parameters")
+        has_params = len(self.param) > 0
+        self.__param_status_changed(use_params and has_params)
+        self.__populate_params_status(use_params and has_params)
 
         # cookies
         self.cookies = self.__read_file(COOKIES)
@@ -618,15 +605,23 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     def __url_changed(self, value: str) -> None:
         self.settings.set_string("entry-url", value)
-        self.update_subtitle_parameters()
+        self.update_subtitle_parameters(self.settings.get_boolean("parameters"))
         
     def __populate_url(self, value: str) -> None:
         self.entry_url.set_text(value)
 
     @Gtk.Template.Callback()
-    def on_param_switch_changed(self, widget, args) -> None:
-        self.settings.set_boolean("parameters", widget.get_enable_expansion())
-        self.update_subtitle_parameters()
+    def on_param_switch_changed(self, widget: Adw.ExpanderRow, args) -> None:
+        self.__param_status_changed(widget.get_enable_expansion())
+        self.update_subtitle_parameters(self.settings.get_boolean("parameters"))
+
+    def __param_status_changed(self, status: bool) -> None:
+        self.settings.set_boolean("parameters", status)
+
+    def __populate_params_status(self, status: bool) -> None:
+        self.expander_row_parameters.set_expanded(status)
+        self.expander_row_parameters.set_enable_expansion(status)
+        self.update_subtitle_parameters(status)
 
     @Gtk.Template.Callback()
     def on_body_switch_changed(self, widget, args) -> None:
