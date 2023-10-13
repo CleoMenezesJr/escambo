@@ -540,15 +540,6 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     def update_states(self) -> None:
         # populate lists
-        # cookies
-        self.cookies = self.__read_file(COOKIES)
-        self.populate_overrides_list(
-            "cookies", 
-            COOKIES, 
-            self.cookies, 
-            lambda w: self.__cookies_widgets.append(w), 
-            lambda w: self.__cookies_widgets.remove(w)
-        )
 
         # body
         self.body = self.__read_file(BODY)
@@ -581,6 +572,14 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.form_data_toggle_button_body.props.active = not self.is_raw
 
         # cookies
+        self.cookies = self.__read_file(COOKIES)
+        self.populate_overrides_list(
+            "cookies", 
+            COOKIES, 
+            self.cookies, 
+            lambda w: self.__cookies_widgets.append(w), 
+            lambda w: self.__cookies_widgets.remove(w)
+        )
         use_cookies = self.settings.get_boolean("cookies")
         self.__populate_cookies_status(use_cookies)
 
