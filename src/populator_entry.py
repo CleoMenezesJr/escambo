@@ -28,7 +28,7 @@ class PopulatorEntry(Adw.ActionRow):
         Set the DLL name as ActionRow title and set the
         combo_type to the type of override
         """
-        if any(i in self.content for i in ["cookies", "headers", "body"]):
+        if any(i in self.content for i in ["cookies", "headers", "body", "param"]):
             self.set_title(self.override[1][0] or "—")
             self.set_subtitle(self.override[1][1] or "—")
         elif "auths" in self.content:
@@ -44,7 +44,7 @@ class PopulatorEntry(Adw.ActionRow):
             self.window.bearer_token.set_text(self.override["Bearer Token"][0])
 
         # update status
-        self.window.update_subtitle_parameters()
+        self.window.update_subtitle_parameters(self.window.settings.get_boolean("parameters"))
         # connect signals
         self.btn_remove.connect("clicked", self.__remove_override)
 
@@ -95,7 +95,7 @@ class PopulatorEntry(Adw.ActionRow):
                             ).set_description((f"No {file} added."))
 
                 # update status
-                self.window.update_subtitle_parameters()
+                self.window.update_subtitle_parameters(self.window.settings.get_boolean("parameters"))
 
                 self.window.cookies_page.set_badge_number(
                     len(self.window.cookies)
