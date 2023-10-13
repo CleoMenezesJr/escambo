@@ -378,7 +378,7 @@ class EscamboWindow(Adw.ApplicationWindow):
                 _content = self.__add_item_to_file(COOKIES, id, key, value)
                 if not any([i == id for i in self.cookies.keys()]):
                     print("creating cookie")
-                    _entry = self.__create_populator_entry(COOKIES, id, key, value, None)
+                    _entry = self.__create_populator_entry(COOKIES, id, key, value, remove=lambda widget: self.__cookies_widgets.remove(widget))
                     self.__cookies_widgets.append(_entry)
                     GLib.idle_add(self.group_overrides_cookies.add, _entry)
                     self.toast_overlay.add_toast(Adw.Toast.new(_("Cookie created")))
@@ -542,10 +542,18 @@ class EscamboWindow(Adw.ApplicationWindow):
         # populate lists
         # cookies
         self.cookies = self.__read_file(COOKIES)
-        self.populate_overrides_list("cookies", COOKIES, self.cookies, None, None)
+        self.populate_overrides_list(
+            "cookies", 
+            COOKIES, 
+            self.cookies, 
+            lambda w: self.__cookies_widgets.append(w), 
+            lambda w: self.__cookies_widgets.remove(w)
+        )
+
         # body
         self.body = self.__read_file(BODY)
         self.populate_overrides_list("body", BODY, self.body, None, None)
+
         # params
         self.param = self.__read_file(PARAM)
         self.populate_overrides_list("param", PARAM, self.param, None, None)
@@ -719,7 +727,7 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.__populate_cookies_status(has_cookies)
         if (has_cookies):
             for key in cookies:
-                self.__save_override(None, "cookies", key, key+"="+cookies[key], None)
+                self.__save_override(None, "cookies", key, cookies[key], None)
 
         self.set_needs_attention()
 

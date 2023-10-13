@@ -14,7 +14,6 @@ class CurlParser():
         else: 
             self.__headers = self.__create_headers_dict(self.__data.headers)
             self.__cookies = self.__create_cookies_dict(self.__data.cookies)
-            print(self.__data)
 
     def __get_parser(self) -> ArgumentParser:
         parser = ArgumentParser(add_help=False, exit_on_error=False)
@@ -44,13 +43,29 @@ class CurlParser():
         if not cookies: return dict()
         result = dict[str, str]()
         for cookie in cookies:
-            cookie_split = cookie.split('; ')
-            result = result | dict([self.__split_cookie(item) for item in cookie_split])
+            result = result | self.__split_cookie(cookie)
         return result
 
-    def __split_cookie(self, cookie: str) -> tuple:
-        cookie_split = cookie.split("=")
-        return self.__build_tuple(cookie_split)
+    def __split_cookie(self, cookie: str) -> dict[str, str]:
+        cookie_entries = cookie.split('; ')
+        result = dict[str, str]()
+        currentEntry: str = ""
+        currentEntryName: str = ""
+        for entry in cookie_entries:
+            entry_split = entry.split("=")
+            entry_len = len(entry_split)
+            match entry_split[0]:
+                case 'Domain' | 'Path' | 'Expires' if currentEntry and entry_len > 1:
+                    currentEntry = currentEntry + '; ' + entry
+                    if entry_split[0] == 'Domain' and entry_split[1]: currentEntryName = entry_split[1]
+                case 'Domain' | 'Path' | 'Expires': pass
+                case _ if entry_len > 0:
+                    if currentEntry: result[currentEntryName] = currentEntry
+                    currentEntryName = entry_split[0]
+                    if entry_len > 1: currentEntry = entry
+                    else: currentEntry = entry_split[0] + "=" + entry_split[0]
+        if currentEntry: result[currentEntryName] = currentEntry
+        return result
 
     @property
     def headers(self) -> dict[str, str]:
@@ -58,11 +73,8 @@ class CurlParser():
 
     @property
     def authorization(self) -> str:
-        try:
-            authHeader: str = self.__headers["Authorization"]
-        except KeyError as e:
-            print("no Authorization header")
-            return None
+        try: authHeader: str = self.__headers["Authorization"]
+        except KeyError as e: return None
         else:
             if authHeader.startswith("Bearer"): return authHeader.split("Bearer ")[1]
             else: return authHeader
@@ -78,5 +90,3 @@ class CurlParser():
     @property
     def cookies(self) -> dict[str, str]:
         return self.__cookies
-
-# parsed = CurlParser("curl http://a.b.c -b \"a; b=B\" -b \"c=c\"")
