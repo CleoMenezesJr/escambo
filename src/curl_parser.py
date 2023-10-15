@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 from shlex import split
+import re
 
 class CurlParser():
 
@@ -14,6 +15,7 @@ class CurlParser():
         else: 
             self.__headers = self.__create_headers_dict(self.__data.headers)
             self.__cookies = self.__create_cookies_dict(self.__data.cookies)
+            self.__params = self.__create_params_dict(self.__data.url)
 
     def __get_parser(self) -> ArgumentParser:
         parser = ArgumentParser(add_help=False, exit_on_error=False)
@@ -30,10 +32,10 @@ class CurlParser():
 
     def __create_headers_dict(self, headers: list[str]) -> dict[str, str]:
         if not headers: return dict()
-        return dict([self.__split_header(header) for header in headers])
+        return dict([self.__split(header, ': ') for header in headers])
 
-    def __split_header(self, header: str) -> tuple:
-        header_split = header.split(': ')
+    def __split(self, header: str, divider: str) -> tuple:
+        header_split = header.split(divider)
         return self.__build_tuple(header_split)
         
     def __build_tuple(self, list: list[str]) -> tuple[str, str]:
@@ -66,6 +68,12 @@ class CurlParser():
                     else: currentEntry = entry_split[0] + "=" + entry_split[0]
         if currentEntry: result[currentEntryName] = currentEntry
         return result
+    
+    def __create_params_dict(self, url: str) -> dict[str, str]:
+        q_match = re.search(r'\?((.+=[^#].+)#|(.+=.+)$)', url)
+        if not q_match: return dict() 
+        q_params = q_match.group(1).replace('#', "").split('&')
+        return dict([self.__split(param, '=') for param in q_params])
 
     @property
     def headers(self) -> dict[str, str]:
@@ -90,3 +98,10 @@ class CurlParser():
     @property
     def cookies(self) -> dict[str, str]:
         return self.__cookies
+    
+    @property
+    def params(self) -> dict[str, str]:
+        return self.__params
+    
+# parsed = CurlParser("curl http://a.b.c/aaa?b=b&d=d&e=e&f=F#title")
+# print(parsed.params)
