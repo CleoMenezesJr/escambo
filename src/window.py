@@ -723,6 +723,17 @@ class EscamboWindow(Adw.ApplicationWindow):
             for key in cookies:
                 self.__save_override(None, "cookies", key, cookies[key], None)
 
+        #Params
+        params = curl.params
+        has_params = len(params) > 0
+        self.__clear_params()
+        self.__param_status_changed(has_params)
+        self.__populate_params_status(has_params)
+        if has_params:
+            for key in params:
+                self.__save_override(None, "param", key, params[key], None)
+
+
         self.set_needs_attention()
 
     def __populate_auth(self, use_auth: bool, auth_type: int) -> None:
@@ -751,3 +762,10 @@ class EscamboWindow(Adw.ApplicationWindow):
         for widget in self.__cookies_widgets:
             self.group_overrides_cookies.remove(widget)
         self.__cookies_widgets.clear()
+
+    def __clear_params(self) -> None:
+        self.param = {}
+        self.__clear_file(PARAM)
+        for widget in self.__params_widgets:
+            self.group_overrides_param.remove(widget)
+        self.__params_widgets.clear()
