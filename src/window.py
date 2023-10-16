@@ -30,7 +30,7 @@ from escambo.date_row import DateRow
 from escambo.dialog_body import BodyDialog
 from escambo.dialog_cookies import CookieDialog
 from escambo.dialog_headers import HeaderDialog
-from escambo.populator_entry import PopulatorEntry
+from .populator_entry import PopulatorEntry
 from escambo.restapi import ResolveRequests
 from escambo.sourceview import SourceView
 from gi.repository import Adw, Gio, GLib, Gtk
@@ -439,13 +439,13 @@ class EscamboWindow(Adw.ApplicationWindow):
                 self.group_overrides_body.set_description("")
             case "param":
                 if key == "" and value == "": return
+                elif any([i == key for i in self.param.keys()]):
+                    return self.toast_overlay.add_toast(Adw.Toast.new(_(f"Key “{key}” already exists")))
                 _content = self.__add_item_to_file(PARAM, key, value)
-                if not any([i == key for i in self.param.keys()]):
-                    _entry = self.__create_populator_entry(PARAM, key, key, value, remove=lambda w: self.__params_widgets.remove(w))
-                    self.__params_widgets.append(_entry)
-                    GLib.idle_add(self.group_overrides_param.add, _entry)
-                else:
-                    return self.toast_overlay.add_toast(Adw.Toast.new(_("Param edited")))
+                _entry = self.__create_populator_entry(PARAM, key, key, value, remove=lambda w: self.__params_widgets.remove(w))
+                _entry.btn_edit.set_visible(False)
+                self.__params_widgets.append(_entry)
+                GLib.idle_add(self.group_overrides_param.add, _entry)
                 self.param = _content
                 self.update_subtitle_parameters(True)
                 self.group_overrides_param.set_description("")
@@ -477,7 +477,7 @@ class EscamboWindow(Adw.ApplicationWindow):
             remove=remove 
         )
 
-    def populate_overrides_list(self, container_name: str, path: str, file, add, remove) -> None:
+    def populate_overrides_list(self, container_name: str, path: str, file, add, remove, hide_edit = False) -> None:
         if not bool(file):
             getattr(self, f"group_overrides_{container_name}").set_description((f"No {container_name} added."))
             return
@@ -486,6 +486,7 @@ class EscamboWindow(Adw.ApplicationWindow):
             _content = self.__read_entry_from_file(entry_id, file)
             _entry = self.__create_populator_entry(path, entry_id, _content['key'], _content['value'], remove)
             if add: add(_entry)
+            if hide_edit: _entry.btn_edit.set_visible(False)
             GLib.idle_add(
                 getattr(self, f"group_overrides_{container_name}").add, 
                 _entry
@@ -548,7 +549,8 @@ class EscamboWindow(Adw.ApplicationWindow):
             PARAM, 
             self.param, 
             lambda w: self.__params_widgets.append(w), 
-            lambda w: self.__params_widgets.remove(w)
+            lambda w: self.__params_widgets.remove(w),
+            True
         )
         use_params = self.settings.get_boolean("parameters")
         has_params = len(self.param) > 0

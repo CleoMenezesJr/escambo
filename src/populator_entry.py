@@ -14,6 +14,7 @@ class PopulatorEntry(Adw.ActionRow):
 
     # region Widgets
     btn_remove = Gtk.Template.Child()
+    btn_edit = Gtk.Template.Child()
 
     def __init__(self, window, override, content, remove, **kwargs):
         super().__init__(**kwargs)
