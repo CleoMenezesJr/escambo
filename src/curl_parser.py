@@ -93,7 +93,7 @@ class CurlParser():
 
     @property
     def url(self) -> str:
-        return self.__data.url
+        return self.__data.url.split('?')[0]
     
     @property
     def cookies(self) -> dict[str, str]:
