@@ -284,7 +284,6 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.leaflet.set_visible_child(self.home)
 
     def update_subtitle_parameters(self, status: bool) -> None:
-        print(status)
         if status == False: subtitle = ""
         else:
             url_entry = self.entry_url.get_text()
@@ -377,7 +376,6 @@ class EscamboWindow(Adw.ApplicationWindow):
             case "cookies":
                 _content = self.__add_item_to_file(COOKIES, id, [key, value])
                 if not any([i == id for i in self.cookies.keys()]):
-                    print("creating cookie")
                     _entry = self.__create_populator_entry(COOKIES, id, key, value, remove=lambda widget: self.__cookies_widgets.remove(widget))
                     self.__cookies_widgets.append(_entry)
                     GLib.idle_add(self.group_overrides_cookies.add, _entry)
@@ -390,7 +388,6 @@ class EscamboWindow(Adw.ApplicationWindow):
             case "headers":
                 _content = self.__add_item_to_file(HEADERS, id, [key, value])
                 if not any([i == id for i in self.headers.keys()]): 
-                    print("going to else")
                     _entry = self.__create_populator_entry(HEADERS, id, key, value, remove=lambda widget: self.__headers_widgets.remove(widget))
                     self.__headers_widgets.append(_entry)
                     GLib.idle_add(self.group_overrides_headers.add, _entry)
