@@ -565,7 +565,9 @@ class EscamboWindow(Adw.ApplicationWindow):
             lambda w: self.__cookies_widgets.remove(w)
         )
         use_cookies = self.settings.get_boolean("cookies")
-        self.__populate_cookies_status(use_cookies)
+        has_cookies = len(self.cookies) > 0
+        self.__cookies_status_changed(use_cookies and has_cookies)
+        self.__populate_cookies_status(use_cookies and has_cookies)
 
         # headers
         self.headers = self.__read_file(HEADERS)
@@ -577,12 +579,13 @@ class EscamboWindow(Adw.ApplicationWindow):
             lambda w: self.__headers_widgets.remove(w)
         )
         use_headers: bool = self.settings.get_boolean("headers")
-        self.__populate_headers_status(use_headers)
+        has_headers: bool = len(self.headers) > 0
+        self.__headers_status_changed(use_headers and has_headers)
+        self.__populate_headers_status(use_headers and has_headers)
 
         # auths
-        use_auth = self.settings.get_boolean("auths")
         auth_type = self.settings.get_int("auth-type")
-        self.__populate_auth(use_auth, auth_type)
+        self.__populate_auth(False, auth_type)
 
         self.set_needs_attention()
 
