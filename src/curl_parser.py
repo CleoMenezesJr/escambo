@@ -4,7 +4,7 @@ import re
 
 class CurlParser():
 
-    def __init__(self, curl):
+    def __init__(self, curl: str):
         self.__curl = curl
         argv = split(curl.strip())
         del argv[0]

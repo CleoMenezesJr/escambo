@@ -1,4 +1,5 @@
 from gi.repository import Adw, Gtk
+from .window import EscamboWindow
 from .curl_parser import CurlParser
 
 @Gtk.Template(
@@ -10,7 +11,7 @@ class ImportDialog(Adw.Window):
     btn_import = Gtk.Template.Child()
     entry_curl = Gtk.Template.Child()
 
-    def __init__(self, parent, **kwargs):
+    def __init__(self, parent: EscamboWindow, **kwargs):
         super().__init__(**kwargs)
         self.set_transient_for(parent)
         self.set_title("Import")
@@ -25,7 +26,7 @@ class ImportDialog(Adw.Window):
         except Exception as e:
             print("Error importing cURL")
         else:
-            self.__window._EscamboWindow__populate_from_curl(parsed)
+            self.__window.populate_from_curl(parsed)
         self.close()
 
     @Gtk.Template.Callback()

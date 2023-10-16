@@ -677,7 +677,7 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.bearer_token_prefs.props.visible = value == 1
         self.api_key_prefs.props.visible = value == 0
 
-    def __populate_from_curl(self, curl: CurlParser) -> None:
+    def populate_from_curl(self, curl: CurlParser) -> None:
 
         # URL
         self.__url_changed(curl.url)
