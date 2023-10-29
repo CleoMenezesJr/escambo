@@ -103,5 +103,11 @@ class CurlParser():
     def params(self) -> dict[str, str]:
         return self.__params
     
+    @property 
+    def body(self) -> str | dict[str, str] | None:
+        if self.__data.data_raw: return self._data.data_raw
+        elif self.__data.data: return self.__data.data
+        else: return None 
+    
 # parsed = CurlParser("curl http://a.b.c/aaa?b=b&d=d&e=e&f=F#title")
 # print(parsed.params)
