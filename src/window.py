@@ -108,6 +108,7 @@ class EscamboWindow(Adw.ApplicationWindow):
     __headers_widgets = []
     __cookies_widgets = []
     __params_widgets = []
+    __body_widgets = []
 
     def __init__(self, **kwargs: dict) -> None:
         super().__init__(**kwargs)
@@ -149,6 +150,8 @@ class EscamboWindow(Adw.ApplicationWindow):
             )
         )
 
+        self.connect("close-request", lambda e: self.__on_close())
+
         # General
         self.cookies = self.headers = self.auths = self.body = self.param = {}
 
@@ -159,6 +162,18 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.raw_buffer = self.raw_source_view_body.get_buffer()
         self.response_buffer = self.response_source_view.get_buffer()
         self.response_source_view.props.editable = False
+
+    def __on_close(self) -> None:
+        if self.is_raw: self.__save_raw_body_to_file()
+        elif isinstance(self.body, str): 
+            self.__write_file(BODY, {}) 
+        else: 
+            self.__write_file(BODY, self.body)
+
+    def __save_raw_body_to_file(self) -> None:
+        start = self.raw_source_view_body.get_buffer().get_start_iter()
+        end = self.raw_source_view_body.get_buffer().get_end_iter()
+        self.__write_file(BODY, self.raw_source_view_body.get_buffer().get_text(start, end, True))
 
     def __on_send(self, *_args: tuple) -> None:
         """
@@ -398,44 +413,22 @@ class EscamboWindow(Adw.ApplicationWindow):
                 self.headers_page.set_badge_number(len(_content))
                 self.group_overrides_headers.set_description("")
             case "body":
-                title: str = _args[2]
-                subtitle: str = _args[3]
-                id: str = _args[4]
-                insertion_date = id or dt.today().isoformat()
-
-                if any(title == each[0] for each in self.body.values()):
-                    self.toast_overlay.add_toast(
-                        Adw.Toast.new(_(f"Key “{title}” already exists"))
-                    )
-                    return
-
-                # Insert Body
-                with open(BODY, "r+") as file:
-                    file_content = json.load(file)
-                    # Save Body
-                    file_content[insertion_date] = [title, subtitle]
-                    file.truncate(0)
-                    file.seek(0)
-                    json.dump(file_content, file, indent=2)
-
-                    # Populate UI
-                    _entry = self.__create_populator_entry(BODY, id, key, value, None)
-                    if not any(
-                        [i == insertion_date for i in self.body.keys()]
-                    ):
-                        GLib.idle_add(self.group_overrides_body.add, _entry)
-                        self.toast_overlay.add_toast(
-                            Adw.Toast.new(_("Body created"))
-                        )
-                    else:
-                        self.toast_overlay.add_toast(
-                            Adw.Toast.new(_("Body edited"))
-                        )
-
-                self.body = file_content
-                self.body_counter(file_content)
-
-                # Clean up field
+                if key == "" and value == "": return
+                elif isinstance(self.body, str): 
+                    self.body = {}
+                    self.__write_file(BODY, {})
+                elif any(bodyId != id and value[0] == key for (bodyId,value) in self.body.items()):
+                    return self.toast_overlay.add_toast(Adw.Toast.new(_(f"Key “{key}” already exists")))
+                _content = self.__add_item_to_file(BODY, id, [key, value])
+                if not any(i == id for i in self.body.keys()):
+                    _entry = self.__create_populator_entry(BODY, id, key, value, remove=lambda w: self.__body_widgets.remove(w))
+                    self.__body_widgets.append(_entry)
+                    GLib.idle_add(self.group_overrides_body.add, _entry)
+                    self.toast_overlay.add_toast(Adw.Toast.new(_("Body created")))
+                else:
+                    self.toast_overlay.add_toast(Adw.Toast.new(_("Body edited")))
+                self.body = _content
+                self.body_counter(_content)
                 self.group_overrides_body.set_description("")
             case "param":
                 if key == "" and value == "": return
@@ -465,7 +458,11 @@ class EscamboWindow(Adw.ApplicationWindow):
     def __read_file(self, path: str):
         with open(path, "r") as json_file:
             return json.load(json_file)
-    
+        
+    def __write_file(self, path: str, content) -> None:
+        with open(path, "w") as file:
+            file.write(json.dumps(content, indent=2))
+
     def __create_populator_entry(self, path: str, id: str, key: str, value: str, remove) -> PopulatorEntry:
         return PopulatorEntry(
             window=self,
@@ -499,7 +496,7 @@ class EscamboWindow(Adw.ApplicationWindow):
         list_len = len(file[id])
         if is_list and list_len > 1:
             key = file[id][0]
-            value = file[id][0]
+            value = file[id][1]
         elif is_list and list_len == 1:
             value = file[id][0]
         return { 'key': key, 'value': value }
@@ -522,10 +519,6 @@ class EscamboWindow(Adw.ApplicationWindow):
     def update_states(self) -> None:
         # populate lists
 
-        # body
-        self.body = self.__read_file(BODY)
-        self.populate_overrides_list("body", BODY, self.body, None, None)
-
         # method
         method = self.settings.get_int("method-type")
         self.__populate_method(method)
@@ -535,12 +528,14 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.__populate_url(url_entry)
 
         # body
-        self.expander_row_body.set_enable_expansion(
-            self.settings.get_boolean("body")
-        )
-        self.body_counter(self.body)
-        self.is_raw = self.settings.get_boolean("body-type")
-        self.form_data_toggle_button_body.props.active = not self.is_raw
+        self.body = self.__read_file(BODY)
+        if isinstance(self.body, str): self.raw_source_view_body.get_buffer().set_text(self.body)
+        else: self.populate_overrides_list("body", BODY, self.body, None, None)
+        use_body = self.settings.get_boolean("body")
+        has_body = len(self.body) > 0
+        is_raw = isinstance(self.body, str)
+        self.__body_status_changed(use_body and has_body)
+        self.__populate_body_status(use_body and has_body, is_raw)
 
         # parameters
         self.param = self.__read_file(PARAM)
@@ -627,8 +622,19 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_body_switch_changed(self, widget, args) -> None:
-        self.settings.set_boolean("body", widget.get_enable_expansion())
+        self.__body_status_changed(widget.get_enable_expansion())
         self.body_counter(self.body)
+
+    def __body_status_changed(self, status: bool) -> None:
+        self.settings.set_boolean("body", status)
+
+    def __populate_body_status(self, status: bool, is_raw: bool) -> None:
+        self.expander_row_body.set_expanded(status)
+        self.expander_row_body.set_enable_expansion(status)
+        if is_raw: self.body_counter({})
+        else: self.body_counter(self.body)
+        self.is_raw = is_raw
+        self.form_data_toggle_button_body.props.active = not self.is_raw
 
     @Gtk.Template.Callback()
     def on_body_type_changed(self, widget) -> None:
