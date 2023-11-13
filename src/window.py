@@ -530,7 +530,13 @@ class EscamboWindow(Adw.ApplicationWindow):
         # body
         self.body = self.__read_file(BODY)
         if isinstance(self.body, str): self.raw_source_view_body.get_buffer().set_text(self.body)
-        else: self.populate_overrides_list("body", BODY, self.body, None, None)
+        else: self.populate_overrides_list(
+            "body", 
+            BODY, 
+            self.body, 
+            lambda w: self.__body_widgets.append(w), 
+            lambda w: self.__body_widgets.remove(w),
+        )
         use_body = self.settings.get_boolean("body")
         has_body = len(self.body) > 0
         is_raw = isinstance(self.body, str)
@@ -635,6 +641,7 @@ class EscamboWindow(Adw.ApplicationWindow):
         else: self.body_counter(self.body)
         self.is_raw = is_raw
         self.form_data_toggle_button_body.props.active = not self.is_raw
+        self.raw_toggle_button_body.props.active = self.is_raw
 
     @Gtk.Template.Callback()
     def on_body_type_changed(self, widget) -> None:
@@ -741,6 +748,19 @@ class EscamboWindow(Adw.ApplicationWindow):
             for key in params:
                 self.__save_override(None, "param", key, params[key], None)
 
+        #Body
+        body = curl.body
+        has_body = body != None
+        is_raw = isinstance(body, str)
+        self.__clear_body()
+        self.__body_status_changed(has_body)
+        self.__populate_body_status(has_body, is_raw)
+        print(has_body, body)
+        if has_body and is_raw: self.raw_source_view_body.get_buffer().set_text(body)
+        elif has_body:
+            for item in body:
+                self.__save_override(None, "body", item, body[item], None)
+
 
         self.set_needs_attention()
 
@@ -777,3 +797,11 @@ class EscamboWindow(Adw.ApplicationWindow):
         for widget in self.__params_widgets:
             self.group_overrides_param.remove(widget)
         self.__params_widgets.clear()
+
+    def __clear_body(self) -> None:
+        self.body = {}
+        self.__clear_file(BODY)
+        self.raw_source_view_body.get_buffer().set_text("")
+        for widget in self.__body_widgets:
+            self.group_overrides_body.remove(widget)
+        self.__body_widgets.clear()
