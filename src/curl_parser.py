@@ -5,8 +5,8 @@ import re
 class CurlParser():
 
     def __init__(self, curl: str):
-        self.__curl = curl
-        argv = split(curl.strip())
+        self.__curl = re.sub(r"\s*[\\\^\`]{1}\s*", " ", curl)
+        argv = split(self.__curl.strip())
         del argv[0]
         try:
             self.__data = self.__get_parser().parse_args(argv)
