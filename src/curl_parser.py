@@ -17,6 +17,7 @@ class CurlParser():
             self.__cookies = self.__create_cookies_dict(self.__data.cookies)
             self.__params = self.__create_params_dict(self.__data.url)
             self.__body = self.__create_data_dict(self.__data.data)
+            self.__form = self.__create_data_dict(self.__data.form)
 
     def __get_parser(self) -> ArgumentParser:
         parser = ArgumentParser(add_help=False, exit_on_error=False)
@@ -25,6 +26,7 @@ class CurlParser():
         parser.add_argument('-H', '--header', dest='headers', action='append')
         parser.add_argument('-b', '--cookie', dest='cookies', action='append')
         parser.add_argument('-d', '--data', dest='data', action='append')
+        parser.add_argument('-F', '--form', dest='form', action='append')
         parser.add_argument('--data-raw', dest='data_raw', default=None)
         parser.add_argument('--data-binary', dest='data_binary', default=None)
         parser.add_argument('--compressed', action='store_true')
@@ -111,6 +113,7 @@ class CurlParser():
     @property 
     def body(self) -> str | dict[str, str] | None:
         if self.__data.data_raw: return self.__data.data_raw
+        elif self.__data.form: return self.__form
         elif self.__data.data: return self.__body
         else: return None 
     
