@@ -587,6 +587,7 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.__populate_headers_status(use_headers and has_headers)
 
         # auths
+        self.auths = self.__read_file(AUTHS)
         auth_type = self.settings.get_int("auth-type")
         self.__populate_auth(False, auth_type)
 
