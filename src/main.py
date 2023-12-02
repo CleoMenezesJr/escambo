@@ -26,9 +26,8 @@ gi.require_version("Adw", "1")
 gi.require_version("GtkSource", "5")
 
 from gi.repository import Adw, Gio, Gtk
-
 from .window import EscamboWindow
-
+from .dialog_import import ImportDialog
 
 class EscamboApplication(Adw.Application):
     """The main application singleton class."""
@@ -40,6 +39,7 @@ class EscamboApplication(Adw.Application):
         )
         self.create_action("quit", self.quit, ["<primary>q"])
         self.create_action("about", self.on_about_action)
+        self.create_action("import", self.on_import_action)
         # self.create_action("preferences", self.on_preferences_action)
 
     def do_activate(self):
@@ -64,6 +64,12 @@ class EscamboApplication(Adw.Application):
             win._EscamboWindow__set_response_visibility,
             ["<primary>r"],
         )
+
+    def on_import_action(self, *args):
+        importWindow = ImportDialog(
+            parent=self.props.active_window
+        )
+        importWindow.present()
 
     def on_about_action(self, *args):
         """Callback for the app.about action."""

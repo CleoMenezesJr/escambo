@@ -14,20 +14,22 @@ class PopulatorEntry(Adw.ActionRow):
 
     # region Widgets
     btn_remove = Gtk.Template.Child()
+    btn_edit = Gtk.Template.Child()
 
-    def __init__(self, window, override, content, **kwargs):
+    def __init__(self, window, override, content, remove, **kwargs):
         super().__init__(**kwargs)
 
         # common variables and references
         self.window = window
         self.override = override
         self.content = content
+        self.remove = remove
 
         """
         Set the DLL name as ActionRow title and set the
         combo_type to the type of override
         """
-        if any(i in self.content for i in ["cookies", "headers", "body"]):
+        if any(i in self.content for i in ["cookies", "headers", "body", "param"]):
             self.set_title(self.override[1][0] or "—")
             self.set_subtitle(self.override[1][1] or "—")
         elif "auths" in self.content:
@@ -43,7 +45,7 @@ class PopulatorEntry(Adw.ActionRow):
             self.window.bearer_token.set_text(self.override["Bearer Token"][0])
 
         # update status
-        self.window.update_subtitle_parameters()
+        self.window.update_subtitle_parameters(self.window.settings.get_boolean("parameters"))
         # connect signals
         self.btn_remove.connect("clicked", self.__remove_override)
 
@@ -94,7 +96,7 @@ class PopulatorEntry(Adw.ActionRow):
                             ).set_description((f"No {file} added."))
 
                 # update status
-                self.window.update_subtitle_parameters()
+                self.window.update_subtitle_parameters(self.window.settings.get_boolean("parameters"))
 
                 self.window.cookies_page.set_badge_number(
                     len(self.window.cookies)
@@ -105,7 +107,7 @@ class PopulatorEntry(Adw.ActionRow):
                 self.window.body_counter(self.window.body)
                 # TODO
                 # Remove query parameter on subtitle
-
+                if self.remove != None: self.remove(self)
                 self.get_parent().remove(self)
 
         subtitle = f"\n{self.get_subtitle()}" if self.get_subtitle() else ""

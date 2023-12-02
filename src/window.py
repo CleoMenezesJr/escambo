@@ -30,11 +30,12 @@ from escambo.date_row import DateRow
 from escambo.dialog_body import BodyDialog
 from escambo.dialog_cookies import CookieDialog
 from escambo.dialog_headers import HeaderDialog
-from escambo.populator_entry import PopulatorEntry
+from .populator_entry import PopulatorEntry
 from escambo.restapi import ResolveRequests
 from escambo.sourceview import SourceView
 from gi.repository import Adw, Gio, GLib, Gtk
 from requests import Session, exceptions
+from .curl_parser import CurlParser
 
 # constants
 COOKIES = os.path.join(GLib.get_user_config_dir(), "escambo", "cookies.json")
@@ -104,6 +105,11 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     spinner = Gtk.Template.Child()
 
+    __headers_widgets = []
+    __cookies_widgets = []
+    __params_widgets = []
+    __body_widgets = []
+
     def __init__(self, **kwargs: dict) -> None:
         super().__init__(**kwargs)
 
@@ -134,8 +140,17 @@ class EscamboWindow(Adw.ApplicationWindow):
             "apply", self.on_auth_entry_active, "bearer_token"
         )
         self.btn_add_parameter.connect(
-            "clicked", self.__save_override, "param"
+            "clicked", 
+            lambda button: self.__save_override(
+                button, 
+                "param", 
+                self.entry_param_key.get_text(), 
+                self.entry_param_value.get_text(),
+                None
+            )
         )
+
+        self.connect("close-request", lambda e: self.__on_close())
 
         # General
         self.cookies = self.headers = self.auths = self.body = self.param = {}
@@ -147,6 +162,18 @@ class EscamboWindow(Adw.ApplicationWindow):
         self.raw_buffer = self.raw_source_view_body.get_buffer()
         self.response_buffer = self.response_source_view.get_buffer()
         self.response_source_view.props.editable = False
+
+    def __on_close(self) -> None:
+        if self.is_raw: self.__save_raw_body_to_file()
+        elif isinstance(self.body, str): 
+            self.__write_file(BODY, {}) 
+        else: 
+            self.__write_file(BODY, self.body)
+
+    def __save_raw_body_to_file(self) -> None:
+        start = self.raw_source_view_body.get_buffer().get_start_iter()
+        end = self.raw_source_view_body.get_buffer().get_end_iter()
+        self.__write_file(BODY, self.raw_source_view_body.get_buffer().get_text(start, end, True))
 
     def __on_send(self, *_args: tuple) -> None:
         """
@@ -271,29 +298,20 @@ class EscamboWindow(Adw.ApplicationWindow):
     def go_home(self, widget) -> None:
         self.leaflet.set_visible_child(self.home)
 
-    def update_subtitle_parameters(self, *_args) -> None:
-        if self.settings.get_boolean("parameters"):
+    def update_subtitle_parameters(self, status: bool) -> None:
+        if status == False: subtitle = ""
+        else:
             url_entry = self.entry_url.get_text()
             parameters = [f"{i}={self.param[i]}" for i in self.param]
             parsed_url = urlparse(url_entry)
             url_query_params = parsed_url.query.split("&")
-
-            if parsed_url.query:
-                parameters += url_query_params
-
+            if parsed_url.query: parameters += url_query_params
             param_position = url_entry.find("?")
-            url = (
-                url_entry[:param_position]
-                if has_parameter(url_entry)
-                else url_entry
-            )
-
+            url = (url_entry[:param_position] if has_parameter(url_entry) else url_entry)
             subtitle = (
                 f"{'https://' if not url_entry else url}"
                 + f"?{html.escape('&').join(parameters)}"
             )
-        else:
-            subtitle = ""
 
         GLib.idle_add(self.expander_row_parameters.set_subtitle, subtitle)
 
@@ -366,233 +384,122 @@ class EscamboWindow(Adw.ApplicationWindow):
         ] = entry_content
 
     def __save_override(self, *_args: tuple) -> None:
-        """
-        This function check if the override name is not empty, then
-        store it in the configuration and add a new entry to
-        the list. It also clears the entry field
-        """
+        key: str = _args[2].strip()
+        value: str = _args[3].strip()
+        id: str = _args[4] or dt.today().isoformat()
         match _args[1]:
             case "cookies":
-                title: str = _args[2]
-                subtitle: str = _args[3]
-                id: str = _args[4]
-                insertion_date = id or dt.today().isoformat()
-
-                # Insert Cookie
-                with open(COOKIES, "r+") as file:
-                    file_content = json.load(file)
-                    # Save Cookies
-                    file_content[insertion_date] = [title, subtitle]
-                    file.truncate(0)
-                    file.seek(0)
-                    json.dump(file_content, file, indent=2)
-
-                    # Populate UI
-                    _entry = PopulatorEntry(
-                        window=self,
-                        override=[
-                            insertion_date,
-                            [title, subtitle],
-                        ],
-                        content=COOKIES,
-                    )
-                    if not any(
-                        [i == insertion_date for i in self.cookies.keys()]
-                    ):
-                        GLib.idle_add(
-                            self.group_overrides_cookies.add,
-                            _entry,
-                        )
-                        self.toast_overlay.add_toast(
-                            Adw.Toast.new(_("Cookie created"))
-                        )
-                    else:
-                        self.toast_overlay.add_toast(
-                            Adw.Toast.new(_("Cookie edited"))
-                        )
-
-                self.cookies = file_content
-                self.cookies_page.set_badge_number(len(file_content))
-
-                # Clean up field
+                _content = self.__add_item_to_file(COOKIES, id, [key, value])
+                if not any([i == id for i in self.cookies.keys()]):
+                    _entry = self.__create_populator_entry(COOKIES, id, key, value, remove=lambda widget: self.__cookies_widgets.remove(widget))
+                    self.__cookies_widgets.append(_entry)
+                    GLib.idle_add(self.group_overrides_cookies.add, _entry)
+                    self.toast_overlay.add_toast(Adw.Toast.new(_("Cookie created")))
+                else:
+                    self.toast_overlay.add_toast(Adw.Toast.new(_("Cookie edited")))
+                self.cookies = _content
+                self.cookies_page.set_badge_number(len(_content))
                 self.group_overrides_cookies.set_description("")
             case "headers":
-                title: str = _args[2].strip()
-                subtitle: str = _args[3].strip()
-                id: str = _args[4]
-                insertion_date = id or dt.today().isoformat()
-
-                # Insert Header
-                with open(HEADERS, "r+") as file:
-                    file_content = json.load(file)
-                    # Save Header
-                    file_content[insertion_date] = [title, subtitle]
-                    file.truncate(0)
-                    file.seek(0)
-                    json.dump(file_content, file, indent=2)
-
-                    # Populate UI
-                    _entry = PopulatorEntry(
-                        window=self,
-                        override=[
-                            insertion_date,
-                            [title, subtitle],
-                        ],
-                        content=HEADERS,
-                    )
-                    if not any(
-                        [i == insertion_date for i in self.headers.keys()]
-                    ):
-                        GLib.idle_add(self.group_overrides_headers.add, _entry)
-                        self.toast_overlay.add_toast(
-                            Adw.Toast.new(_("Header created"))
-                        )
-                    else:
-                        self.toast_overlay.add_toast(
-                            Adw.Toast.new(_("Header edited"))
-                        )
-
-                self.headers = file_content
-                self.headers_page.set_badge_number(len(file_content))
-
-                # Clean up field
+                _content = self.__add_item_to_file(HEADERS, id, [key, value])
+                if not any([i == id for i in self.headers.keys()]): 
+                    _entry = self.__create_populator_entry(HEADERS, id, key, value, remove=lambda widget: self.__headers_widgets.remove(widget))
+                    self.__headers_widgets.append(_entry)
+                    GLib.idle_add(self.group_overrides_headers.add, _entry)
+                    self.toast_overlay.add_toast(Adw.Toast.new(_("Header created")))
+                else:
+                    self.toast_overlay.add_toast(Adw.Toast.new(_("Header edited")))
+                self.headers = _content
+                self.headers_page.set_badge_number(len(_content))
                 self.group_overrides_headers.set_description("")
             case "body":
-                title: str = _args[2]
-                subtitle: str = _args[3]
-                id: str = _args[4]
-                insertion_date = id or dt.today().isoformat()
-
-                if any(title == each[0] for each in self.body.values()):
-                    self.toast_overlay.add_toast(
-                        Adw.Toast.new(_(f"Key “{title}” already exists"))
-                    )
-                    return
-
-                # Insert Body
-                with open(BODY, "r+") as file:
-                    file_content = json.load(file)
-                    # Save Body
-                    file_content[insertion_date] = [title, subtitle]
-                    file.truncate(0)
-                    file.seek(0)
-                    json.dump(file_content, file, indent=2)
-
-                    # Populate UI
-                    _entry = PopulatorEntry(
-                        window=self,
-                        override=[
-                            insertion_date,
-                            [title, subtitle],
-                        ],
-                        content=BODY,
-                    )
-                    if not any(
-                        [i == insertion_date for i in self.body.keys()]
-                    ):
-                        GLib.idle_add(self.group_overrides_body.add, _entry)
-                        self.toast_overlay.add_toast(
-                            Adw.Toast.new(_("Body created"))
-                        )
-                    else:
-                        self.toast_overlay.add_toast(
-                            Adw.Toast.new(_("Body edited"))
-                        )
-
-                self.body = file_content
-                self.body_counter(file_content)
-
-                # Clean up field
+                if key == "" and value == "": return
+                elif isinstance(self.body, str): 
+                    self.body = {}
+                    self.__write_file(BODY, {})
+                elif any(bodyId != id and value[0] == key for (bodyId,value) in self.body.items()):
+                    return self.toast_overlay.add_toast(Adw.Toast.new(_(f"Key “{key}” already exists")))
+                _content = self.__add_item_to_file(BODY, id, [key, value])
+                if not any(i == id for i in self.body.keys()):
+                    _entry = self.__create_populator_entry(BODY, id, key, value, remove=lambda w: self.__body_widgets.remove(w))
+                    self.__body_widgets.append(_entry)
+                    GLib.idle_add(self.group_overrides_body.add, _entry)
+                    self.toast_overlay.add_toast(Adw.Toast.new(_("Body created")))
+                else:
+                    self.toast_overlay.add_toast(Adw.Toast.new(_("Body edited")))
+                self.body = _content
+                self.body_counter(_content)
                 self.group_overrides_body.set_description("")
             case "param":
-                param_key = self.entry_param_key.get_text()
-                param_value = self.entry_param_value.get_text()
+                if key == "" and value == "": return
+                elif any([i == key for i in self.param.keys()]):
+                    return self.toast_overlay.add_toast(Adw.Toast.new(_(f"Key “{key}” already exists")))
+                _content = self.__add_item_to_file(PARAM, key, value)
+                _entry = self.__create_populator_entry(PARAM, key, key, value, remove=lambda w: self.__params_widgets.remove(w))
+                _entry.btn_edit.set_visible(False)
+                self.__params_widgets.append(_entry)
+                GLib.idle_add(self.group_overrides_param.add, _entry)
+                self.param = _content
+                self.update_subtitle_parameters(True)
+                self.group_overrides_param.set_description("")
+                self.entry_param_key.set_text("")
+                self.entry_param_value.set_text("")
 
-                if param_key != "" and param_value != "":
-                    with open(PARAM, "r+") as file:
-                        file_content = json.load(file)
-                        if not any(
-                            [i == param_key for i in file_content.keys()]
-                        ):
-                            # Save Parameters
-                            file_content.update({param_key: param_value})
-                            file.seek(0)
-                            json.dump(file_content, file, indent=2)
+    def __add_item_to_file(self, path: str, id: str, value: str | list[str]) -> dict:
+        with open(path, "r+") as file:
+            file_content = json.load(file)
+            # Save Header
+            file_content[id] = value
+            file.truncate(0)
+            file.seek(0)
+            json.dump(file_content, file, indent=2)
+            return file_content
 
-                            # Populate UI
-                            _entry = PopulatorEntry(
-                                window=self,
-                                override=[param_key, param_value],
-                                content=PARAM,
-                            )
-                            GLib.idle_add(
-                                self.group_overrides_param.add, _entry
-                            )
-                        else:
-                            return self.toast_overlay.add_toast(
-                                Adw.Toast.new(_("Key already exists"))
-                            )
+    def __read_file(self, path: str):
+        with open(path, "r") as json_file:
+            return json.load(json_file)
+        
+    def __write_file(self, path: str, content) -> None:
+        with open(path, "w") as file:
+            file.write(json.dumps(content, indent=2))
 
-                    self.param = file_content
-                    self.update_subtitle_parameters()
+    def __create_populator_entry(self, path: str, id: str, key: str, value: str, remove) -> PopulatorEntry:
+        return PopulatorEntry(
+            window=self,
+            override=[
+                id,
+                [key, value],
+            ],
+            content=path,
+            remove=remove 
+        )
 
-                    # Clean up fields
-                    self.group_overrides_param.set_description("")
-                    self.entry_param_key.set_text("")
-                    self.entry_param_value.set_text("")
+    def populate_overrides_list(self, container_name: str, path: str, file, add, remove, hide_edit = False) -> None:
+        if not bool(file):
+            getattr(self, f"group_overrides_{container_name}").set_description((f"No {container_name} added."))
+            return
+        getattr(self, f"group_overrides_{container_name}").set_description("")
+        for entry_id in file:
+            _content = self.__read_entry_from_file(entry_id, file)
+            _entry = self.__create_populator_entry(path, entry_id, _content['key'], _content['value'], remove)
+            if add: add(_entry)
+            if hide_edit: _entry.btn_edit.set_visible(False)
+            GLib.idle_add(
+                getattr(self, f"group_overrides_{container_name}").add, 
+                _entry
+            )
 
-    def populate_overrides_list(self) -> None:
-        # TODO populate url preview with parameters
-
-        """
-        This function populate rows from json files
-        """
-        files = {
-            "cookie": [COOKIES, "cookies"],
-            "body": [BODY, "body"],
-            "parameter": [PARAM, "param"],
-            "header": [HEADERS, "headers"],
-            "authorization": [AUTHS, "auths"],
-        }
-
-        for file in files:
-            with open(files[file][0], "r") as json_file:
-                overrides = json.load(json_file)
-                self.cookies = overrides if "cookie" in file else self.cookies
-                self.body = overrides if "body" in file else self.body
-                self.param = overrides if "parameter" in file else self.param
-                self.headers = overrides if "header" in file else self.headers
-                self.auths = (
-                    overrides if "authorization" in file else self.auths
-                )
-                if file != "authorization":
-                    if not bool(overrides):
-                        getattr(
-                            self, f"group_overrides_{files[file][1]}"
-                        ).set_description((f"No {file} added."))
-                    else:
-                        getattr(
-                            self, f"group_overrides_{files[file][1]}"
-                        ).set_description("")
-                        for override in overrides:
-                            _entry = PopulatorEntry(
-                                window=self,
-                                override=[override, overrides[override]],
-                                content=files[file][0],
-                            )
-
-                            GLib.idle_add(
-                                getattr(
-                                    self, f"group_overrides_{files[file][1]}"
-                                ).add,
-                                _entry,
-                            )
-                else:
-                    PopulatorEntry(
-                        window=self,
-                        override=overrides,
-                        content=files[file][0],
-                    )
+    def __read_entry_from_file(self, id: str, file) -> {}:
+        key = id
+        value = file[id]
+        is_list = isinstance(file[id], list)
+        list_len = len(file[id])
+        if is_list and list_len > 1:
+            key = file[id][0]
+            value = file[id][1]
+        elif is_list and list_len == 1:
+            value = file[id][0]
+        return { 'key': key, 'value': value }
 
     def body_counter(self, overrides) -> None:
         """Body counter and its visibility"""
@@ -611,63 +518,131 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     def update_states(self) -> None:
         # populate lists
-        self.populate_overrides_list()
 
         # method
         method = self.settings.get_int("method-type")
-        self.entry_method.set_selected(method)
+        self.__populate_method(method)
 
         # url entry
         url_entry = self.settings.get_string("entry-url")
-        self.entry_url.set_text(url_entry)
-
-        # parameters
-        self.expander_row_parameters.set_enable_expansion(
-            self.settings.get_boolean("parameters")
-        )
-        self.update_subtitle_parameters()
+        self.__populate_url(url_entry)
 
         # body
-        self.expander_row_body.set_enable_expansion(
-            self.settings.get_boolean("body")
+        self.body = self.__read_file(BODY)
+        if isinstance(self.body, str): self.raw_source_view_body.get_buffer().set_text(self.body)
+        else: self.populate_overrides_list(
+            "body", 
+            BODY, 
+            self.body, 
+            lambda w: self.__body_widgets.append(w), 
+            lambda w: self.__body_widgets.remove(w),
         )
-        self.body_counter(self.body)
-        self.is_raw = self.settings.get_boolean("body-type")
-        self.form_data_toggle_button_body.props.active = not self.is_raw
+        use_body = self.settings.get_boolean("body")
+        has_body = len(self.body) > 0
+        is_raw = isinstance(self.body, str)
+        self.__body_status_changed(use_body and has_body)
+        self.__populate_body_status(use_body and has_body, is_raw)
+
+        # parameters
+        self.param = self.__read_file(PARAM)
+        self.populate_overrides_list(
+            "param", 
+            PARAM, 
+            self.param, 
+            lambda w: self.__params_widgets.append(w), 
+            lambda w: self.__params_widgets.remove(w),
+            True
+        )
+        use_params = self.settings.get_boolean("parameters")
+        has_params = len(self.param) > 0
+        self.__param_status_changed(use_params and has_params)
+        self.__populate_params_status(use_params and has_params)
 
         # cookies
-        self.switch_cookies.set_active(self.settings.get_boolean("cookies"))
-        self.cookies_page.set_badge_number(len(self.cookies))
+        self.cookies = self.__read_file(COOKIES)
+        self.populate_overrides_list(
+            "cookies", 
+            COOKIES, 
+            self.cookies, 
+            lambda w: self.__cookies_widgets.append(w), 
+            lambda w: self.__cookies_widgets.remove(w)
+        )
+        use_cookies = self.settings.get_boolean("cookies")
+        has_cookies = len(self.cookies) > 0
+        self.__cookies_status_changed(use_cookies and has_cookies)
+        self.__populate_cookies_status(use_cookies and has_cookies)
 
         # headers
-        self.switch_headers.set_active(self.settings.get_boolean("headers"))
-        self.headers_page.set_badge_number(len(self.headers))
+        self.headers = self.__read_file(HEADERS)
+        self.populate_overrides_list(
+            "headers", 
+            HEADERS, 
+            self.headers, 
+            lambda w: self.__headers_widgets.append(w), 
+            lambda w: self.__headers_widgets.remove(w)
+        )
+        use_headers: bool = self.settings.get_boolean("headers")
+        has_headers: bool = len(self.headers) > 0
+        self.__headers_status_changed(use_headers and has_headers)
+        self.__populate_headers_status(use_headers and has_headers)
 
         # auths
-        self.switch_auths.set_active(self.settings.get_boolean("auths"))
+        self.auths = self.__read_file(AUTHS)
         auth_type = self.settings.get_int("auth-type")
-        self.auth_type.set_selected(auth_type)
+        self.__populate_auth(False, auth_type)
 
         self.set_needs_attention()
 
     @Gtk.Template.Callback()
     def on_entry_method_changed(self, widget, args) -> None:
-        self.settings.set_int("method-type", widget.get_selected())
+        self.__method_changed(widget.get_selected())
+
+    def __method_changed(self, value: int) -> None:
+        self.settings.set_int("method-type", value)
+
+    def __populate_method(self, value: int) -> None:
+        self.entry_method.set_selected(value)
 
     @Gtk.Template.Callback()
     def on_entry_url_changed(self, widget) -> None:
-        self.settings.set_string("entry-url", widget.get_text())
-        self.update_subtitle_parameters()
+        self.__url_changed(widget.get_text())
+
+    def __url_changed(self, value: str) -> None:
+        self.settings.set_string("entry-url", value)
+        self.update_subtitle_parameters(self.settings.get_boolean("parameters"))
+        
+    def __populate_url(self, value: str) -> None:
+        self.entry_url.set_text(value)
 
     @Gtk.Template.Callback()
-    def on_param_switch_changed(self, widget, args) -> None:
-        self.settings.set_boolean("parameters", widget.get_enable_expansion())
-        self.update_subtitle_parameters()
+    def on_param_switch_changed(self, widget: Adw.ExpanderRow, args) -> None:
+        self.__param_status_changed(widget.get_enable_expansion())
+        self.update_subtitle_parameters(self.settings.get_boolean("parameters"))
+
+    def __param_status_changed(self, status: bool) -> None:
+        self.settings.set_boolean("parameters", status)
+
+    def __populate_params_status(self, status: bool) -> None:
+        self.expander_row_parameters.set_expanded(status)
+        self.expander_row_parameters.set_enable_expansion(status)
+        self.update_subtitle_parameters(status)
 
     @Gtk.Template.Callback()
     def on_body_switch_changed(self, widget, args) -> None:
-        self.settings.set_boolean("body", widget.get_enable_expansion())
+        self.__body_status_changed(widget.get_enable_expansion())
         self.body_counter(self.body)
+
+    def __body_status_changed(self, status: bool) -> None:
+        self.settings.set_boolean("body", status)
+
+    def __populate_body_status(self, status: bool, is_raw: bool) -> None:
+        self.expander_row_body.set_expanded(status)
+        self.expander_row_body.set_enable_expansion(status)
+        if is_raw: self.body_counter({})
+        else: self.body_counter(self.body)
+        self.is_raw = is_raw
+        self.form_data_toggle_button_body.props.active = not self.is_raw
+        self.raw_toggle_button_body.props.active = self.is_raw
 
     @Gtk.Template.Callback()
     def on_body_type_changed(self, widget) -> None:
@@ -676,25 +651,158 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_cookies_switch_state_change(self, widget, state) -> None:
-        self.settings.set_boolean("cookies", state)
+        self.__cookies_status_changed(state)
         self.cookies_page.set_badge_number(len(self.cookies))
         self.set_needs_attention(switches=["cookies"])
 
+    def __cookies_status_changed(self, status: bool) -> None:
+        self.settings.set_boolean("cookies", status)
+
+    def __populate_cookies_status(self, status: bool) -> None:
+        self.switch_cookies.set_active(status)
+        self.cookies_page.set_badge_number(len(self.cookies))
+
     @Gtk.Template.Callback()
     def on_headers_switch_state_change(self, widget, state) -> None:
-        self.settings.set_boolean("headers", state)
+        self.__headers_status_changed(state)
         self.headers_page.set_badge_number(len(self.headers))
         self.set_needs_attention(switches=["headers"])
 
+    def __headers_status_changed(self, status: bool) -> None:
+        self.settings.set_boolean("headers", status)
+
+    def __populate_headers_status(self, status: bool) -> None:
+        self.switch_headers.set_active(status)
+        self.headers_page.set_badge_number(len(self.headers))
+
     @Gtk.Template.Callback()
     def on_auths_switch_state_change(self, widget, state) -> None:
-        self.settings.set_boolean("auths", state)
+        self.__auths_state_changed(state)
         self.set_needs_attention(switches=["auths"])
+
+    def __auths_state_changed(self, state: bool) -> None:
+        self.settings.set_boolean("auths", state)
 
     @Gtk.Template.Callback()
     def on_auth_type_changed(self, widget, args):
-        self.settings.set_int("auth-type", widget.get_selected())
+        selected = widget.get_selected()
+        self.__auths_type_changed(selected)
 
-        type = widget.props.selected_item.get_string()
-        self.bearer_token_prefs.props.visible = type == "Bearer Token"
-        self.api_key_prefs.props.visible = type == "Api Key"
+    def __auths_type_changed(self, value: int) -> None:
+        self.settings.set_int("auth-type", value)
+        self.bearer_token_prefs.props.visible = value == 1
+        self.api_key_prefs.props.visible = value == 0
+
+    def populate_from_curl(self, curl: CurlParser) -> None:
+
+        # URL
+        self.__url_changed(curl.url)
+        self.__populate_url(curl.url)
+
+        # Method
+        method_list = {
+            "get": 0,
+            "post": 1,
+            "put": 2,
+            "patch": 3,
+            "delete": 4,
+        }
+        method_id = method_list[curl.method.lower()]
+        self.__method_changed(method_id)
+        self.__populate_method(method_id)
+
+        #Authorization
+        token = curl.authorization
+        self.__auths_state_changed(token != None)
+        self.__auths_type_changed(1)
+        self.__populate_auth(token != None, 1)
+        if token != None: self.__populate_token(token)
+        else: self.__populate_token("")
+
+        #Headers
+        headers = curl.headers
+        has_headers = len(headers) > 0
+        self.__clear_headers()
+        self.__headers_status_changed(has_headers)
+        self.__populate_headers_status(has_headers)
+        if (has_headers):
+            for key in headers:
+                self.__save_override(None, "headers", key, headers[key], None)
+
+        #Cookies
+        cookies = curl.cookies
+        has_cookies = len(cookies) > 0
+        self.__clear_cookies()
+        self.__cookies_status_changed(has_cookies)
+        self.__populate_cookies_status(has_cookies)
+        if (has_cookies):
+            for key in cookies:
+                self.__save_override(None, "cookies", key, cookies[key], None)
+
+        #Params
+        params = curl.params
+        has_params = len(params) > 0
+        self.__clear_params()
+        self.__param_status_changed(has_params)
+        self.__populate_params_status(has_params)
+        if has_params:
+            for key in params:
+                self.__save_override(None, "param", key, params[key], None)
+
+        #Body
+        body = curl.body
+        has_body = body != None
+        is_raw = isinstance(body, str)
+        self.__clear_body()
+        self.__body_status_changed(has_body)
+        self.__populate_body_status(has_body, is_raw)
+        print(has_body, body)
+        if has_body and is_raw: self.raw_source_view_body.get_buffer().set_text(body)
+        elif has_body:
+            for item in body:
+                self.__save_override(None, "body", item, body[item], None)
+
+
+        self.set_needs_attention()
+
+    def __populate_auth(self, use_auth: bool, auth_type: int) -> None:
+        self.switch_auths.set_active(use_auth)
+        self.auth_type.set_selected(auth_type)
+
+    def __populate_token(self, token: str) -> None:
+        self.bearer_token.set_text(token)
+
+    def __clear_headers(self) -> None:
+        self.headers = {}
+        self.__clear_file(HEADERS)
+        for widget in self.__headers_widgets:
+            self.group_overrides_headers.remove(widget)
+        self.__headers_widgets.clear()
+
+    def __clear_file(self, file: str) -> None:
+        with open(file, "w") as json_file:
+            json_file.write(
+                json.dumps({})
+            )
+
+    def __clear_cookies(self) -> None:
+        self.cookies = {}
+        self.__clear_file(COOKIES)
+        for widget in self.__cookies_widgets:
+            self.group_overrides_cookies.remove(widget)
+        self.__cookies_widgets.clear()
+
+    def __clear_params(self) -> None:
+        self.param = {}
+        self.__clear_file(PARAM)
+        for widget in self.__params_widgets:
+            self.group_overrides_param.remove(widget)
+        self.__params_widgets.clear()
+
+    def __clear_body(self) -> None:
+        self.body = {}
+        self.__clear_file(BODY)
+        self.raw_source_view_body.get_buffer().set_text("")
+        for widget in self.__body_widgets:
+            self.group_overrides_body.remove(widget)
+        self.__body_widgets.clear()
