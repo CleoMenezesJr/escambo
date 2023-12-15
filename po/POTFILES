@@ -1,0 +1,6 @@
+data/io.github.cleomenezesjr.Escambo.desktop.in
+data/io.github.cleomenezesjr.Escambo.metainfo.xml.in
+data/io.github.cleomenezesjr.Escambo.gschema.xml
+src/main.py
+src/window.py
+src/window.ui

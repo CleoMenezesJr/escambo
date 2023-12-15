@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=escambo
+Exec=escambo
+Icon=io.github.cleomenezesjr.Escambo
+Terminal=false
+Type=Application
+Categories=GTK;
+StartupNotify=true
