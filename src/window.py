@@ -19,10 +19,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 SPDX-License-Identifier: GPL-3.0-or-later
 """
 
+from typing import Any
+
+from escambo.define import APP_ID, APP_PATH, PROFILE
 from gi.repository import Adw, Gtk
 
 
-@Gtk.Template(resource_path="/io/github/cleomenezesjr/Escambo/ui/window.ui")
+@Gtk.Template(resource_path=f"{APP_PATH}/ui/window.ui")
 class EscamboWindow(Adw.ApplicationWindow):
     """
     A custom Adw.ApplicationWindow class for the Escambo application.
@@ -32,5 +35,8 @@ class EscamboWindow(Adw.ApplicationWindow):
 
     label = Gtk.Template.Child()
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Any):
         super().__init__(**kwargs)
+
+        if PROFILE == "development":
+            self.add_css_class("devel")

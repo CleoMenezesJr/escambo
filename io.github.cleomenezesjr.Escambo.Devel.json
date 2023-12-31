@@ -1,7 +1,7 @@
 {
-  "app-id": "io.github.cleomenezesjr.Escambo",
+  "app-id": "io.github.cleomenezesjr.Escambo.Devel",
   "runtime": "org.gnome.Platform",
-  "runtime-version": "45",
+  "runtime-version": "master",
   "sdk": "org.gnome.Sdk",
   "command": "escambo",
   "finish-args": [
@@ -39,6 +39,7 @@
       "name": "escambo",
       "builddir": true,
       "buildsystem": "meson",
+      "config-opts": ["-Dprofile=development"],
       "sources": [
         {
           "type": "dir",

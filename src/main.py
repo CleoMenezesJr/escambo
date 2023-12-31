@@ -26,6 +26,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 
+from escambo.define import APP_ID, VERSION
 from gi.repository import Adw, Gio, Gtk
 
 from .window import EscamboWindow
@@ -36,7 +37,7 @@ class EscamboApplication(Adw.Application):
 
     def __init__(self):
         super().__init__(
-            application_id="io.github.cleomenezesjr.Escambo",
+            application_id=APP_ID,
             flags=Gio.ApplicationFlags.DEFAULT_FLAGS,
         )
         self.create_action("quit", lambda *_: self.quit(), ["<primary>q"])
@@ -59,9 +60,9 @@ class EscamboApplication(Adw.Application):
         about = Adw.AboutWindow(
             transient_for=self.props.active_window,
             application_name="escambo",
-            application_icon="io.github.cleomenezesjr.Escambo",
+            application_icon=APP_ID,
             developer_name="Cleo Menezes Jr.",
-            version="0.1.0",
+            version=VERSION,
             developers=["Cleo Menezes Jr."],
             copyright="© 2023 Cleo Menezes Jr.",
         )

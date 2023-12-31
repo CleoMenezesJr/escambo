@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=escambo
+Name=Escambo
 Exec=escambo
-Icon=io.github.cleomenezesjr.Escambo
+Icon=@APP_ID@
 Terminal=false
 Type=Application
 Categories=GTK;
