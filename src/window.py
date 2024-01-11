@@ -21,7 +21,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 from typing import Any
 
-from escambo.define import APP_ID, APP_PATH, PROFILE
+from escambo.define import APP_PATH, PROFILE
 from gi.repository import Adw, Gtk
 
 

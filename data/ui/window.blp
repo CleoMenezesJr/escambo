@@ -2,48 +2,49 @@ using Gtk 4.0;
 using Adw 1;
 
 template $EscamboWindow : Adw.ApplicationWindow {
-  modal: true;
   width-request: 360;
   height-request: 200;
   default-width: 640;
   default-height: 480;
-  title: _("Navigation Split View");
+  title: _("Escambo");
 
   Adw.Breakpoint {
     condition ("max-width: 400sp")
 
     setters {
       split_view.collapsed: true;
-      button.visible: true;
+      // button.visible: true;
     }
   }
 
   content: Adw.NavigationSplitView split_view {
     min-sidebar-width: 300;
     sidebar: Adw.NavigationPage {
-      title: _("Sidebar");
+      title: _("Collections");
       tag: "sidebar";
 
       child: Adw.ToolbarView {
         [top]
         Adw.HeaderBar {
-          show-title: false;
+          [start]
+          Button {
+            icon-name: "plus-large-symbolic";
+          }
+
+          [end]
+          MenuButton button_menu {
+            menu-model: menu_app;
+            icon-name: "open-menu-symbolic";
+          }
         }
+        content: Stack stack {
+          transition-type: none;
 
-        content: Adw.StatusPage {
-          title: _("Sidebar");
-
-          Button button {
-            visible: false;
-            halign: center;
-            can-shrink: true;
-            label: _("Open Content");
-            action-name: "navigation.push";
-            action-target: "'content'";
-
-            styles [
-              "pill"
-            ]
+          Adw.StatusPage status_page {
+            title: _("No Collection Added");
+            description: _("Click \"+\" to create");
+            icon-name: "io.github.cleomenezesjr.Escambo.Devel-symbolic";
+            styles ["compact"]
           }
         };
       };
@@ -70,4 +71,18 @@ template $EscamboWindow : Adw.ApplicationWindow {
       };
     };
   };
+}
+
+menu menu_app {
+  section {
+    item {
+      label: _("Keyboard Shortcuts");
+      action: "app.shortcuts";
+    }
+
+    item {
+      label: _("About App");
+      action: "app.about";
+    }
+  }
 }

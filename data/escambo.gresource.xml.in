@@ -2,6 +2,6 @@
 <gresources>
   <gresource prefix="@PREFIX@">
     <file preprocess="xml-stripblanks">ui/window.ui</file>
-    <!-- <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file> -->
+    <file preprocess="xml-stripblanks">icons/scalable/emblems/plus-large-symbolic.svg</file>
   </gresource>
 </gresources>
